@@ -133,6 +133,36 @@ tr:last-child td{border-bottom:none}
 .fields{display:flex;gap:6px;flex-wrap:wrap}
 .fields .tag{background:var(--surface)}
 
+/* block diagrams */
+.dg-wrap{background:var(--sunk);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.dg-wrap .eyebrow{font-size:11px}
+.dg{display:flex;align-items:center;min-width:0}
+.dg-col{display:flex;flex-direction:column;gap:8px;flex:1 1 0;min-width:0}
+.node{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;font-weight:600;line-height:1.3;text-align:center;overflow-wrap:anywhere}
+.node small{display:block;font:400 11px/1.35 var(--mono);color:var(--muted);margin-top:3px}
+.node.accent{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.node.ok{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+.node.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad);text-decoration:line-through}
+.node.ghost{border-style:dashed;background:transparent;color:var(--muted);font-weight:500}
+.node.accent small,.node.ok small,.node.bad small{color:inherit;opacity:.8}
+.dg-arrow{flex:0 0 26px;display:grid;place-items:center;color:var(--muted)}
+.dg-arrow svg{width:22px;height:22px}
+.dg.v{flex-direction:column;align-items:stretch}
+.dg.v .dg-col{flex-direction:row;flex-wrap:wrap;justify-content:center}
+.dg.v .dg-col .node{flex:1 1 140px}
+.dg.v .dg-arrow{flex-basis:24px}
+.dg.v .dg-arrow svg{transform:rotate(90deg)}
+.dg-cap{font-size:13px;color:var(--muted)}
+.pm-dgs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:640px){
+  .dg{flex-direction:column;align-items:stretch}
+  .dg-col{flex-direction:row;flex-wrap:wrap;justify-content:center}
+  .dg-col .node{flex:1 1 130px}
+  .dg-arrow{flex-basis:24px}
+  .dg-arrow svg{transform:rotate(90deg)}
+  .pm-dgs{grid-template-columns:1fr}
+}
+
 .empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:24px;color:var(--muted);text-align:center}
 
 @media (max-width:600px){
@@ -169,26 +199,61 @@ const SESSIONS = [
     lessons: [
       { title: "An LLM is just an API call.",
         body: ["Underneath every chatbot, copilot or agent is the same thing: send text, get text back. Your code follows four steps that every AI product uses: authenticate, choose a model, send messages, read the response."],
-        widget: "steps" },
+        widget: "steps",
+        diagram: { label: "Every AI product, underneath", cols: [
+          [{t:"Your code", k:"accent"}],
+          [{t:"Authenticate", s:"API key"}],
+          [{t:"Choose a model"}],
+          [{t:"Send messages", s:"send text"}],
+          [{t:"Read the response", s:"get text back", k:"ok"}] ] } },
       { title: "Keys are credentials, and you handle them like passwords.",
-        body: ["You kept keys out of the code by storing them in Colab Secrets. In real products they go in environment variables or a secrets vault. You also saw how easily a key can leak (the one printed in your screenshot)."] },
+        body: ["You kept keys out of the code by storing them in Colab Secrets. In real products they go in environment variables or a secrets vault. You also saw how easily a key can leak (the one printed in your screenshot)."],
+        diagram: { label: "Where the key lives", cols: [
+          [{t:"Colab Secrets", s:"what you used"}, {t:"Environment variables", s:"real products"}, {t:"Secrets vault", s:"real products"}],
+          [{t:"Your code", s:"reads the key, never stores it", k:"accent"}],
+          [{t:"Provider API"}] ],
+          caption: "Avoid: a key written in the code, or printed in output (like the one in your screenshot)." } },
       { title: "Models are interchangeable parts.",
         body: ["Groq and OpenRouter worked with OpenAI’s library just by changing <code>base_url</code>. So you can swap the model under a product without rewriting it, and the <code>ask()</code> function is a tiny version of what engineers call an “LLM gateway” or “model router”."],
-        widget: "swap" },
+        widget: "swap",
+        diagram: { label: "ask() as a tiny LLM gateway / model router", cols: [
+          [{t:"Your product"}],
+          [{t:"ask()", s:"LLM gateway / model router", k:"accent"}],
+          [{t:"OpenAI’s library", s:"change base_url only"}],
+          [{t:"Groq"}, {t:"OpenRouter"}] ] } },
       { title: "Every provider is slightly different.",
-        body: ["Claude needs <code>max_tokens</code> and rejects <code>temperature</code>, and each provider puts the answer text somewhere different in its response. That’s why teams build a wrapper layer, so these differences stay in one place."] },
+        body: ["Claude needs <code>max_tokens</code> and rejects <code>temperature</code>, and each provider puts the answer text somewhere different in its response. That’s why teams build a wrapper layer, so these differences stay in one place."],
+        diagram: { label: "The wrapper layer keeps differences in one place", cols: [
+          [{t:"Your product", s:"one way to call any model"}],
+          [{t:"Wrapper layer", s:"handles each provider’s rules", k:"accent"}],
+          [{t:"Claude", s:"needs max_tokens · rejects temperature"}, {t:"Other providers", s:"answer text in a different place"}] ] } },
       { title: "Picking a model is a trade-off.",
         body: ["You compared big against small (gpt-oss-120b vs 20b), free against paid, and fast against smart. You also found that a model list contains non-chat models: safety filters, speech to text, text to speech. Choosing the right model for each job is a core engineering decision."],
-        widget: "tradeoffs" },
+        widget: "tradeoffs",
+        diagram: { label: "What a model list contains", cols: [
+          [{t:"Model list", k:"accent"}],
+          [{t:"Chat models", s:"big vs small · free vs paid · fast vs smart"}, {t:"Non-chat models", s:"safety filters · speech to text · text to speech", k:"ghost"}],
+          [{t:"Right model for each job", k:"ok"}] ] } },
       { title: "Settings control behaviour.",
         body: ["Temperature trades predictability for creativity. For extraction or contract checks you want it low, and for brainstorming you want it higher. Some models no longer let you change it, so you control them with clear prompts instead."],
-        widget: "temperature" },
+        widget: "temperature",
+        diagram: { label: "Two ways to control behaviour", cols: [
+          [{t:"Your task", k:"accent"}],
+          [{t:"Temperature", s:"low: extraction, contract checks · higher: brainstorming"}, {t:"Clear prompts", s:"for models that no longer let you change it"}],
+          [{t:"Model behaviour", k:"ok"}] ] } },
       { title: "Debugging is most of the job.",
         body: ["You worked through errors in each layer:"],
         after: ["Reading the last line of an error message and asking which layer broke is exactly how AI engineers work."],
-        widget: "errors" },
+        widget: "errors",
+        diagram: { label: "Which layer broke? Read the last line, then walk the layers", v: true, cols: [
+          [{t:"Read the last line of the error", k:"accent"}],
+          [{t:"Authentication", s:"SecretNotFoundError, 401"}, {t:"Model choice", s:"404 model not found"}, {t:"Environment and dependencies", s:"ImportError (version clash)"}, {t:"Runtime state", s:"NameError after a restart"}, {t:"API contract changes", s:"TypeError: temperature"}] ] } },
       { title: "APIs and models change all the time.",
-        body: ["Model names get retired and parameters get removed. The habit to keep is to list the available models and check the docs, rather than hard-coding names and assuming they’ll keep working."] }
+        body: ["Model names get retired and parameters get removed. The habit to keep is to list the available models and check the docs, rather than hard-coding names and assuming they’ll keep working."],
+        diagram: { label: "The habit to keep", cols: [
+          [{t:"List the available models"}, {t:"Check the docs"}],
+          [{t:"Call the model", k:"ok"}] ],
+          caption: "Instead of hard-coding names and assuming they’ll keep working." } }
     ],
     errors: [
       ["SecretNotFoundError, 401", "Authentication"],
@@ -203,6 +268,15 @@ const SESSIONS = [
       ["Cost control", "a small or free model for routine tasks, and a big one only where quality matters."],
       ["Risk", "key management, provider outages and models being retired belong on the risk register."],
       ["Guardrails", "the prompt-guard model you hit by accident is a real product component, used to screen prompts before they reach the main model."]
+    ],
+    pmDiagrams: [
+      { label: "Cost control", v: true, cols: [
+        [{t:"Task", k:"accent"}],
+        [{t:"Small or free model", s:"routine tasks"}, {t:"Big model", s:"only where quality matters"}] ] },
+      { label: "Guardrails", v: true, cols: [
+        [{t:"Prompt", k:"accent"}],
+        [{t:"Prompt-guard model", s:"screens prompts"}],
+        [{t:"Main model", k:"ok"}] ] }
     ],
     next: "A good next step is to make one call useful for procurement: send a sample supplier clause to Gemini and ask for the key fields back as JSON (party, payment terms, penalties). That covers structured output, the foundation of most enterprise AI features. I can set that up in the notebook if you’d like.",
     nextFields: ["party", "payment terms", "penalties"]
@@ -248,6 +322,7 @@ function render(){
         <span class="num">${i + 1}</span><h3>${l.title}</h3>${chev}</button>
       <div class="lesson-body" id="lb${i}" hidden>
         ${l.body.map(p => `<p>${p}</p>`).join("")}
+        ${l.diagram ? diagram(l.diagram) : ""}
         ${l.widget ? widget(l.widget, s) : ""}
         ${(l.after || []).map(p => `<p>${p}</p>`).join("")}
         <button class="done-toggle" data-key="${key}">${isDone ? "✓ Understood" : "Mark as understood"}</button>
@@ -256,7 +331,8 @@ function render(){
   h += `</div>`;
 
   h += `<div class="section" style="margin-top:20px"><div><span class="eyebrow">Product view</span><h2>${esc(s.pmIntro)}</h2></div>
-    <div class="pm-grid">${s.pm.map(([t, d]) => `<div class="pm"><h3>${esc(t)}</h3><p>${esc(d)}</p></div>`).join("")}</div></div>`;
+    <div class="pm-grid">${s.pm.map(([t, d]) => `<div class="pm"><h3>${esc(t)}</h3><p>${esc(d)}</p></div>`).join("")}</div>
+    ${s.pmDiagrams ? `<div class="pm-dgs">${s.pmDiagrams.map(diagram).join("")}</div>` : ""}</div>`;
 
   h += `<div class="next" style="margin-top:20px"><span class="eyebrow">Next step</span><p>${esc(s.next)}</p>
     <div class="fields">${s.nextFields.map(f => `<span class="tag">"${esc(f)}": …</span>`).join("")}</div></div>`;
@@ -264,6 +340,15 @@ function render(){
   $("#main").innerHTML = h;
   bind();
   progress();
+}
+
+const arrow = `<div class="dg-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>`;
+function diagram(d){
+  const cols = d.cols.map(col => `<div class="dg-col">${col.map(n =>
+    `<div class="node ${n.k || ""}">${esc(n.t)}${n.s ? `<small>${esc(n.s)}</small>` : ""}</div>`).join("")}</div>`).join(arrow);
+  return `<figure class="dg-wrap" style="margin:0"><span class="eyebrow">Diagram · ${esc(d.label)}</span>
+    <div class="dg${d.v ? " v" : ""}" role="img" aria-label="${esc(d.label)}">${cols}</div>
+    ${d.caption ? `<figcaption class="dg-cap">${esc(d.caption)}</figcaption>` : ""}</figure>`;
 }
 
 function widget(kind, s){
