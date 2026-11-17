@@ -20,6 +20,7 @@
   --ok:#4fd19a; --ok-soft:#173a2b; --bad:#ff9a6b; --bad-soft:#3d2219; color-scheme:dark}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--body);
   background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
   background-size:28px 28px;background-attachment:fixed}
@@ -163,7 +164,61 @@ tr:last-child td{border-bottom:none}
   .pm-dgs{grid-template-columns:1fr}
 }
 
+/* learning concepts */
+.tab.concept{border-color:var(--accent);color:var(--accent)}
+.tab.concept[aria-selected="true"]{color:var(--accent-fg)}
+.subtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);background:var(--bg)}
+.subtab{background:none;border:none;border-bottom:2px solid transparent;padding:10px 14px;font:600 15px var(--display);color:var(--muted);margin-bottom:-1px}
+.subtab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.concept-body{display:flex;flex-direction:column;gap:22px}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:66ch}
+.prose ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.fig-cap{font-size:13px;color:var(--muted);max-width:66ch}
+.fig-cap b{color:var(--fg)}
+.fig-cap small{display:block;font-size:12px;margin-top:2px}
+.demo{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.prompt-box{background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:18px 16px;font-size:17px;min-height:64px}
+.prompt-box mark{background:var(--accent-soft);color:var(--accent);padding:0 4px;border-radius:4px;font-weight:600}
+.toks{display:flex;flex-direction:column;gap:6px}
+.tok{display:grid;grid-template-columns:92px 1fr 46px;gap:12px;align-items:center;font:13px var(--mono);padding:2px 4px;border-radius:5px}
+.tok .track{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden}
+.tok .fill{height:100%;background:var(--muted);opacity:.55;border-radius:99px;transition:width .35s ease}
+.tok .pct{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.tok.picked{background:var(--accent-soft)}
+.tok.picked .fill{background:var(--accent);opacity:1}
+.tok.picked .name,.tok.picked .pct{color:var(--accent);font-weight:600}
+.controls{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding-top:14px;flex-wrap:wrap}
+.controls label{font-size:14px;color:var(--muted)}
+.controls input[type=range]{flex:1;min-width:140px;accent-color:var(--fg)}
+.controls .tv{font:600 14px var(--mono);min-width:3ch;font-variant-numeric:tabular-nums}
+.btn.ghost{background:var(--surface);color:var(--accent)}
+.hist{display:flex;flex-wrap:wrap;gap:4px;font-size:13px;color:var(--muted);align-items:center;min-height:24px}
+.hist .tag.fav{border-color:var(--accent);color:var(--accent)}
+.mol{width:100%;height:150px;display:block;background:var(--sunk);border-radius:8px}
+.hc{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hc div{background:var(--sunk);border-radius:8px;padding:10px 12px;font-size:14px}
+.hc b{display:block;font-family:var(--display);margin-bottom:2px}
+.hist3{display:flex;flex-direction:column;gap:0}
+.hist3 .row{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+.hist3 .row:first-child{border-top:none;padding-top:0}
+.hist3 .era{font:500 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--accent)}
+.hist3 .era small{display:block;color:var(--muted);letter-spacing:0;text-transform:none}
+.runs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.runs pre{font-size:12.5px}
+.runs h4{margin:0 0 6px;font:600 14px var(--display)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px}
+.kv dt{font-weight:600}
+.kv dd{margin:0;color:var(--muted)}
+@media (max-width:600px){
+  .tok{grid-template-columns:78px 1fr 40px;gap:8px}
+  .hc,.runs{grid-template-columns:1fr}
+  .hist3 .row{grid-template-columns:1fr;gap:4px}
+}
+
 /* notebook */
+.nb-out{margin-top:4px;border-left:3px solid var(--line);background:var(--bg)!important;color:var(--muted)}
+.nb-out-label{font:11px var(--mono);color:var(--muted);padding:6px 2px 2px}
 .nb-body{display:flex;flex-direction:column;gap:10px}
 .nb-cell{min-width:0}
 .nb-md{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;font-size:15px}
@@ -206,7 +261,7 @@ const SESSIONS = [
     id: "calling-llms-through-apis",
     label: "Calling LLMs through APIs",
     title: "Calling LLMs through APIs",
-    notebook: { file: "Calling_LLMs_through_APIs.ipynb", cells: [{"t": "markdown", "s": "# Connect to AI models from different platforms\nSame pattern for every platform:\n1. **Get an API key** from the platform's website\n2. **Save it in Colab Secrets** (🔑 icon on the left) with the exact name shown, and turn on *Notebook access*\n3. **Run the cell**: it reads the key with `userdata.get(...)`, sends a prompt and prints the reply\n\n| Platform | Secret name | Where to get the key | Free? |\n|---|---|---|---|\n| Google Gemini | `GEMINI_API_KEY` | aistudio.google.com/apikey | Yes (free tier) |\n| OpenAI (GPT) | `OPENAI_API_KEY` | platform.openai.com/api-keys | Paid |\n| Anthropic (Claude) | `ANTHROPIC_API_KEY` | console.anthropic.com | Paid (separate from Claude Pro) |\n| Groq (Llama, Qwen…) | `GROQ_API_KEY` | console.groq.com/keys | Yes (free tier) |\n| OpenRouter (300+ models, one key) | `OPENROUTER_API_KEY` | openrouter.ai/keys | Some free models |\n\n**Tip:** model names change often. If you see a *model not found* error, run the \"list models\" line in that section and copy a current name."}, {"t": "code", "s": "# STEP 0: Install the client libraries cleanly to avoid dependency conflicts\n!pip install --force-reinstall -q -U google-genai openai anthropic"}, {"t": "code", "s": "# Import \"userdata\": Colab's tool for reading the secrets you saved under the key icon\nfrom google.colab import userdata\n\n# The question we will send to every AI model.\n# Stored in a variable so we write it once and reuse it everywhere.\nPROMPT = \"Explain what a invoice is in one sentence.\"\nprint(PROMPT)"}, {"t": "markdown", "s": "## 1. Google Gemini"}, {"t": "code", "s": "# Import Google's Gen AI library (the code that knows how to talk to Gemini)\nfrom google import genai\n# Import \"types\": ready-made settings boxes, e.g. for temperature\nfrom google.genai import types\n\n# Create a \"client\": a connection to Google, logged in with your key.\ngemini = genai.Client(api_key=userdata.get(\"GEMINI_API_KEY\"))\n\n# Send the request to Gemini and wait for the answer\nresp = gemini.models.generate_content(\n    model=\"gemini-3.8-flash\",   # Fixed: Using a valid, current Gemini model\n    contents=PROMPT,\n    config=types.GenerateContentConfig(temperature=0.7),\n)\n\nprint(resp.text)"}, {"t": "code", "s": "!pip install -q --force-reinstall --no-deps openai"}, {"t": "markdown", "s": "## 2. OpenAI (GPT)"}, {"t": "code", "s": "# Import OpenAI's library\nfrom openai import OpenAI\n\n# Create the connection, logged in with your OpenAI key from Colab Secrets\nopenai_client = OpenAI(api_key=userdata.get(\"OPENAI_API_KEY\"))\n\n# Fixed: Changed from non-existent gpt-5-mini to a current model\nOPENAI_MODEL = \"gpt-6.1-sol\"\n\n# Send a chat request\nresp = openai_client.chat.completions.create(\n    model=OPENAI_MODEL,\n    messages=[{\"role\": \"user\", \"content\": PROMPT}],\n)\n\nprint(resp.choices[0].message.content)"}, {"t": "markdown", "s": "## 3. Anthropic (Claude)\nNote: this needs an API key from console.anthropic.com. A Claude Pro/Max chat subscription does not include API credits."}, {"t": "code", "s": "# Import Anthropic's library (the code that knows how to talk to Claude)\nimport anthropic\n\n# Create the connection, logged in with your Anthropic key from Colab Secrets\nclaude = anthropic.Anthropic(api_key=userdata.get(\"ANTHROPIC_API_KEY\"))\n\n# Send the message to Claude\nresp = claude.messages.create(\n    model=\"claude-sonnet-5-5\",   # which Claude model to use\n    max_tokens=500,              # REQUIRED for Claude: the maximum length of the answer (~1 token = 3/4 of a word)\n    ##temperature=0.7,             # creativity setting, same idea as before\n    messages=[{\"role\": \"user\", \"content\": PROMPT}],   # same message format as OpenAI\n)\n\n# Claude's answer is a list of \"content blocks\"; [0].text = the text of the first block\nprint(resp.content[0].text)\n\n# OPTIONAL: remove the \"#\" below to list the Claude models available to you\n# for m in claude.models.list(): print(m.id)"}, {"t": "markdown", "s": "## 4. Groq (open-source models, very fast, free tier)\nGroq speaks the **same format as OpenAI**, so you reuse the OpenAI library and only change `base_url`."}, {"t": "code", "s": "# We reuse OpenAI's library, because Groq accepts the same request format\nfrom openai import OpenAI\n\n# Create the connection, but pointed at Groq's servers\ngroq = OpenAI(\n    api_key=userdata.get(\"GROQ_API_KEY\"),        # your Groq key from Colab Secrets\n    base_url=\"https://api.groq.com/openai/v1\",   # the KEY change: send requests to Groq, not OpenAI\n)\n\n# Print every model Groq currently offers, so you can copy a valid name into the next cell\nfor m in groq.models.list():   # loop through each model in the list\n    print(m.id)                # print its name (id)"}, {"t": "code", "s": "# Which model to run on Groq. If you get \"model not found\", copy a name printed by the cell above.\nGROQ_MODEL = \"openai/gpt-oss-120b\"\n\n# Exactly the same call as OpenAI, because Groq is OpenAI-compatible\nresp = groq.chat.completions.create(\n    model=GROQ_MODEL,                                  # which model\n    messages=[{\"role\": \"user\", \"content\": PROMPT}],    # what we ask\n    temperature=0.7,                                   # how creative\n)\n\n# Pull out the answer text (same path as OpenAI)\nprint(resp.choices[0].message.content)"}, {"t": "code", "s": "from google.colab import userdata\nimport os\n\ntry:\n    key = userdata.get('OPENROUTER_API_KEY')\n    if not key:\n        print(\"❌ 'OPENROUTER_API_KEY' is empty or not set in Colab Secrets.\")\n    else:\n        print(\"✅ 'OPENROUTER_API_KEY' found in Secrets!\")\n        # Let's check if the key is structurally valid (typically starts with sk-or-)\n        if key.startswith(\"sk-or-\"):\n            print(\"✅ Key format looks correct (starts with 'sk-or-').\")\n        else:\n            print(\"⚠️ Warning: OpenRouter keys usually start with 'sk-or-'. Please double check your key.\")\nexcept Exception as e:\n    print(f\"❌ Error accessing secret: {e}\")\n    print(\"Please click the 🔑 icon in the left sidebar, add a secret named 'OPENROUTER_API_KEY', and turn on 'Notebook access'.\")"}, {"t": "markdown", "s": "## 6. One function for every platform\nMany platforms accept the OpenAI format, so one helper can call them all. Add a platform by adding one line to `PLATFORMS`."}, {"t": "code", "s": "from openai import OpenAI\n\n# A \"dictionary\" (lookup table): platform name -> (its secret name, its server address)\n# base_url = None means \"use OpenAI's default address\"\nPLATFORMS = {\n    # name:       (secret name,          base_url)\n    \"openai\":     (\"OPENAI_API_KEY\",     None),\n    \"groq\":       (\"GROQ_API_KEY\",       \"https://api.groq.com/openai/v1\"),\n    #\"openrouter\": (\"OPENROUTER_API_KEY\", \"https://openrouter.ai/api/v1\"),\n    \"gemini\":     (\"GEMINI_API_KEY\",     \"https://generativelanguage.googleapis.com/v1beta/openai/\"),  # Gemini's OpenAI-compatible address\n}\n\n# \"def\" defines a reusable function, a mini-machine you can call again and again.\n# Inputs: which platform, which model, the question, and temperature (0.7 if you don't give one)\ndef ask(platform, model, prompt, temperature=0.7):\n    # Look up this platform's secret name and address in the table above\n    secret, base_url = PLATFORMS[platform]\n    # Connect to that platform with its key\n    client = OpenAI(api_key=userdata.get(secret), base_url=base_url)\n    # Send the question\n    r = client.chat.completions.create(\n        model=model,\n        messages=[{\"role\": \"user\", \"content\": prompt}],\n        temperature=temperature,\n    )\n    # Hand the answer text back to whoever called ask()\n    return r.choices[0].message.content\n\n# Try it: ask Gemini through the shared function\n#print(ask(\"gemini\", \"gemini-flash-latest\", PROMPT))\n# Switching platform takes one word, e.g.:\nprint(ask(\"groq\", \"openai/gpt-oss-120b\", PROMPT))"}, {"t": "markdown", "s": "## 7. Experiment: see temperature in action\nSame prompt, run 3 times at low vs high temperature. Low → nearly identical answers. High → more varied."}, {"t": "code", "s": "# A creative question, where answers can vary a lot\nq = \"Give me a catchy name for a procurement analytics startup. Reply with the name only.\"\n\n# Try two temperatures: 0.0 (safe) and 1.5 (adventurous)\nfor t in [0.0, 1.5]:\n    print(f\"\\n--- temperature = {t} ---\")\n    # Ask the same question 3 times at this temperature\n    for i in range(3):\n        resp = groq.chat.completions.create(\n            model=\"openai/gpt-oss-20b\",                   # a chat model from your Groq list\n            messages=[{\"role\": \"user\", \"content\": q}],    # the question\n            temperature=t,                                # the setting we're testing\n        )\n        print(resp.choices[0].message.content.strip())\n\n# Expected: at 0.0 the names barely change; at 1.5 they vary a lot"}, {"t": "code", "s": "# Two prompt styles: one asks for consistency, one asks for creativity\nprompts = {\n    \"SAFE (like low temperature)\":\n        \"Give me the most obvious, conventional name for a procurement analytics startup. Reply with the name only.\",\n    \"CREATIVE (like high temperature)\":\n        \"Give me a bold, unusual, surprising name for a procurement analytics startup. Avoid common words like 'procure' or 'spend'. Reply with the name only.\",\n}\n\nfor label, p in prompts.items():\n    print(f\"\\n--- {label} ---\")\n    for i in range(3):                       # ask 3 times to see how much it varies\n        resp = claude.messages.create(\n            model=\"claude-sonnet-5-5\",\n            max_tokens=50,                   # a short answer is enough\n            messages=[{\"role\": \"user\", \"content\": p}],\n        )\n        print(resp.content[0].text.strip())"}, {"t": "code", "s": "# Save the question in a variable called q\n# \"Reply with the name only\" keeps answers short and easy to compare\nq = \"Give me a catchy name for a procurement analytics startup. Reply with the name only.\"\n\n# Outer loop: runs twice, with t = 0.0 (safe) the first time and t = 1.5 (adventurous) the second\nfor t in [0.0, 1.5]:\n    # Print a heading. f\"...\" puts the value of t into the text; \\n adds a blank line before it\n    print(f\"\\n--- temperature = {t} ---\")\n\n    # Inner loop: range(3) gives 0, 1, 2, so we ask the same question 3 times\n    for i in range(3):\n        # Send the question to Groq and store the full reply in \"resp\"\n        resp = groq.chat.completions.create(\n            model=\"openai/gpt-oss-20b\",                   # which AI model answers (a chat model from your Groq list)\n            messages=[{\"role\": \"user\", \"content\": q}],    # the conversation: one message from you (\"user\") with question q\n            temperature=t,                                # the setting we're testing: 0.0 first, then 1.5\n        )                                                 # close the request\n\n        # Pull out the answer text and print it:\n        # choices[0] = the first answer, .message.content = its text, .strip() = remove extra spaces\n        print(resp.choices[0].message.content.strip())\n\n# Total: 2 temperatures x 3 tries = 6 answers\n# Expected: at 0.0 the names barely change; at 1.5 they vary a lot"}, {"t": "code", "s": "# A dictionary (lookup table): label -> prompt\n# Two versions of the same question: one asks for an obvious name, one for a creative name\nprompts = {\n    # SAFE version: asks for the most obvious, conventional answer (acts like low temperature)\n    \"SAFE (like low temperature)\":\n        \"Give me the most obvious, conventional name for a procurement analytics startup. Reply with the name only.\",\n    # CREATIVE version: asks for something bold and bans predictable words (acts like high temperature)\n    \"CREATIVE (like high temperature)\":\n        \"Give me a bold, unusual, surprising name for a procurement analytics startup. Avoid common words like 'procure' or 'spend'. Reply with the name only.\",\n}\n\n# Loop through the table: .items() gives each pair -> label gets the heading, p gets the prompt text\nfor label, p in prompts.items():\n    # Print the heading for this round, with a blank line before it\n    print(f\"\\n--- {label} ---\")\n\n    # Ask each prompt 3 times to see how much the answers vary\n    for i in range(3):\n        # Send the request to Claude and store the reply in \"resp\"\n        resp = claude.messages.create(\n            model=\"claude-sonnet-5-5\",                    # which Claude model to use\n            max_tokens=50,                                # required by Claude: max answer length (~35 words, keeps it short and cheap)\n            messages=[{\"role\": \"user\", \"content\": p}],    # send the current prompt p as your message\n            # no temperature here: Claude's API removed it\n        )                                                 # close the request\n\n        # Print Claude's answer\n        # content[0] = the first block of the reply, .text = its text, .strip() = remove extra spaces\n        print(resp.content[0].text.strip())\n\n# Groq: same prompt, temperature changes -> different variety\n# Claude: same settings, prompt wording changes -> different variety"}, {"t": "markdown", "s": "## Common errors\n| Error | Meaning | Fix |\n|---|---|---|\n| `SecretNotFoundError` | Secret name doesn't match, or notebook access is off | Check the spelling in 🔑 and turn on the toggle |\n| `401 / invalid api key` | Wrong or expired key | Create a new key and paste it again |\n| `404 / model not found` | Model name retired or misspelled | Run the list-models line and pick a current name |\n| `429 / rate limit / quota` | Free-tier limit reached, or no credits | Wait a minute, or add billing |"}] },
+    notebook: { file: "Calling_LLMs_through_APIs.ipynb", cells: [{"t": "markdown", "s": "# Connect to AI models from different platforms\nSame pattern for every platform:\n1. **Get an API key** from the platform's website\n2. **Save it in Colab Secrets** (🔑 icon on the left) with the exact name shown, and turn on *Notebook access*\n3. **Run the cell**: it reads the key with `userdata.get(...)`, sends a prompt and prints the reply\n\n| Platform | Secret name | Where to get the key | Free? |\n|---|---|---|---|\n| Google Gemini | `GEMINI_API_KEY` | aistudio.google.com/apikey | Yes (free tier) |\n| OpenAI (GPT) | `OPENAI_API_KEY` | platform.openai.com/api-keys | Paid |\n| Anthropic (Claude) | `ANTHROPIC_API_KEY` | console.anthropic.com | Paid (separate from Claude Pro) |\n| Groq (Llama, Qwen…) | `GROQ_API_KEY` | console.groq.com/keys | Yes (free tier) |\n| OpenRouter (300+ models, one key) | `OPENROUTER_API_KEY` | openrouter.ai/keys | Some free models |\n\n**Tip:** model names change often. If you see a *model not found* error, run the \"list models\" line in that section and copy a current name."}, {"t": "markdown", "s": "**0. Pre Requisite**"}, {"t": "code", "s": "\n# STEP 0: Install the client libraries\n# WHY (tech): Downloads each provider's Python SDK, which handles HTTP requests, authentication and response parsing.\n# ELI5: Download translator apps so Python can talk to each AI company.\n# WHY (tech): --force-reinstall replaces half-updated files; -U gets the newest version; -q hides install logs.\n# ELI5: Throw away old copies and quietly fetch fresh ones.\n!pip install --force-reinstall -q -U google-genai openai anthropic\n# AFTER THIS CELL: Runtime -> Restart session, so Python loads the new versions (avoids ImportError).\n# ELI5: Restart the machine so it uses the new parts."}, {"t": "code", "s": "# WHY (tech): Imports Colab's secrets manager so API keys are read at runtime, never hard-coded.\n# ELI5: Get the key to the locked drawer where your passwords live.\nfrom google.colab import userdata\n\n# WHY (tech): One shared prompt variable means every provider gets identical input, making comparisons fair.\n# ELI5: Write the question once on a card and show it to everyone.\nPROMPT = \"Explain what a invoice is in one sentence.\"\n\n# WHY (tech): Prints the variable to confirm it was assigned correctly before any API call.\n# ELI5: Read the card aloud to check it says the right thing.\nprint(PROMPT)", "o": "Explain what a invoice is in one sentence."}, {"t": "code", "s": "  #from google.colab import userdata\n  #print(userdata.get(\"GEMINI_API_KEY\"))\n\n  # WHY (tech): Reads the key from Colab Secrets into a variable without displaying the full value.\n# ELI5: Take the key out of the drawer, but keep it in your pocket.\nfrom google.colab import userdata\nkey = userdata.get(\"GEMINI_API_KEY\")\n\n# WHY (tech): Prints only the first 6 characters and the length, enough to confirm the key loaded.\n# ELI5: Show just the tip of the key to prove you have it.\nprint(key[:6], \"... length:\", len(key))", "o": "AQ.Ab8 ... length: 53"}, {"t": "code", "s": "# WHY (tech): Reads the OpenAI key from Colab Secrets into a variable, without displaying it.\n# ELI5: Take OpenAI's key out of the drawer.\nfrom google.colab import userdata\nkey = userdata.get(\"OPENAI_API_KEY\")\n\n# WHY (tech): Prints only the first 6 characters to confirm the key loaded, keeping the rest hidden.\n# ELI5: Show just the tip of the key.\nprint(key[:6], \"...\")"}, {"t": "code", "s": "# WHY (tech): Reads the Anthropic key from Colab Secrets into a variable, without displaying it.\n# ELI5: Take Claude's key out of the drawer.\nfrom google.colab import userdata\nkey = userdata.get(\"ANTHROPIC_API_KEY\")\n\n# WHY (tech): Prints only the first 6 characters to confirm the key loaded, keeping the rest hidden.\n# ELI5: Show just the tip of the key.\nprint(key[:6], \"...\")"}, {"t": "code", "s": "# WHY (tech): Reads the Groq key from Colab Secrets into a variable, without displaying it.\n# ELI5: Take Groq's key out of the drawer.\nfrom google.colab import userdata\nkey = userdata.get(\"GROQ_API_KEY\")\n\n# WHY (tech): Prints only the first 6 characters to confirm the key loaded, keeping the rest hidden.\n# ELI5: Show just the tip of the key.\nprint(key[:6], \"...\")"}, {"t": "markdown", "s": "## 1. Google Gemini"}, {"t": "code", "s": "# WHY (tech): Imports Google's Gen AI SDK, which provides the Client class used to call Gemini.\n# ELI5: Bring in Google's phone so we can call Gemini.\nfrom google import genai\n\n# WHY (tech): Imports typed config objects so settings like temperature are validated before sending.\n# ELI5: Get Google's order form with a box for each setting.\nfrom google.genai import types\n\n# WHY (tech): Creates an authenticated client once; every later request reuses this connection and key.\n# ELI5: Call Google and show your ID card once.\ngemini = genai.Client(api_key=userdata.get(\"GEMINI_API_KEY\"))\n\n# WHY (tech): Sends one generation request and blocks until Gemini returns the full response object.\n# ELI5: Hand over your question and wait for the answer.\nresp = gemini.models.generate_content(\n    # WHY (tech): Exact model ID to use; a misspelled or retired name returns a 404 error.\n    # ELI5: Choose which Gemini brain answers.\n    model=\"gemini-3.8-flash\",\n    # WHY (tech): The input text the model reads before generating its reply.\n    # ELI5: The question itself.\n    contents=PROMPT,\n    # WHY (tech): Temperature scales sampling randomness: low gives consistent output, high gives varied output.\n    # ELI5: How adventurous the AI is when choosing words.\n    config=types.GenerateContentConfig(temperature=0.7),\n)\n\n# WHY (tech): .text extracts only the generated answer from a response that also holds metadata and token counts.\n# ELI5: Open the envelope and read only the letter.\nprint(resp.text)"}, {"t": "code", "s": "# WHY (tech): Reinstalls only the openai package, without touching dependencies, to fix the version-mismatch ImportError.\n# ELI5: Replace just the broken part, not the whole machine.\n!pip install -q --force-reinstall --no-deps openai\n# AFTER THIS CELL: Runtime -> Restart session so the fixed version is loaded.\n# ELI5: Restart so the new part is actually used."}, {"t": "markdown", "s": "## 2. OpenAI (GPT)"}, {"t": "code", "s": "# WHY (tech): Imports OpenAI's SDK; many providers (Groq, Gemini, OpenRouter) accept this same request format.\n# ELI5: Bring in OpenAI's phone, which can also dial other companies.\nfrom openai import OpenAI\n\n# WHY (tech): Authenticated client using the default endpoint api.openai.com, with the key read from Secrets.\n# ELI5: Call OpenAI and show your ID card.\nopenai_client = OpenAI(api_key=userdata.get(\"OPENAI_API_KEY\"))\n\n# WHY (tech): Keeping the model name in a variable lets you swap models without editing the request.\n# ELI5: Write the brain's name on a sticky note that's easy to change.\nOPENAI_MODEL = \"gpt-6.1-sol\"\n\n# WHY (tech): Chat Completions endpoint takes a conversation and returns the model's next assistant message.\n# ELI5: Hand over the chat and wait for the reply.\nresp = openai_client.chat.completions.create(\n    # WHY (tech): Tells the API which model processes this request; affects quality, speed and cost.\n    # ELI5: Which brain answers.\n    model=OPENAI_MODEL,\n    # WHY (tech): List of role/content messages; \"user\" marks this text as coming from the human.\n    # ELI5: The chat history; here, just your one question.\n    messages=[{\"role\": \"user\", \"content\": PROMPT}],\n)\n\n# WHY (tech): Response holds a list of choices; we take the first one's message text.\n# ELI5: Pick the first reply and read it.\nprint(resp.choices[0].message.content)", "o": "An invoice is a document a seller sends to a buyer listing the goods or services provided, their costs, and the amount and deadline for payment."}, {"t": "markdown", "s": "## 3. Anthropic (Claude)\nNote: this needs an API key from console.anthropic.com. A Claude Pro/Max chat subscription does not include API credits."}, {"t": "code", "s": "# WHY (tech): Imports Anthropic's SDK, which handles Claude's Messages API format and authentication headers.\n# ELI5: Bring in Anthropic's phone to call Claude.\nimport anthropic\n\n# WHY (tech): Authenticated client; Claude API usage is billed separately from Claude Pro chat subscriptions.\n# ELI5: Call Claude and show your ID card.\nclaude = anthropic.Anthropic(api_key=userdata.get(\"ANTHROPIC_API_KEY\"))\n\n# WHY (tech): Calls Claude's Messages API; the request resembles OpenAI's, but the response shape differs.\n# ELI5: Send Claude your note and wait for a reply.\nresp = claude.messages.create(\n    # WHY (tech): Selects the Claude model ID; if it errors, check claude.models.list() for current names.\n    # ELI5: Choose which Claude brain answers.\n    model=\"claude-sonnet-5-5\",\n    # WHY (tech): Required by Claude; caps output tokens, which also limits cost and response time.\n    # ELI5: Tell Claude the most words it may write.\n    max_tokens=500,\n    # WHY (tech): Disabled because Claude's 2026 API removed temperature; sending it raises a TypeError.\n    # ELI5: Claude no longer has a creativity knob, so we skip it.\n    ##temperature=0.7,\n    # WHY (tech): Same role/content format as OpenAI, so prompts stay portable across providers.\n    # ELI5: Your question, written the same way as before.\n    messages=[{\"role\": \"user\", \"content\": PROMPT}],\n)\n\n# WHY (tech): Claude returns a list of content blocks; the first block holds the text answer.\n# ELI5: Open the first page of Claude's reply and read it.\nprint(resp.content[0].text)\n\n# OPTIONAL - WHY (tech): Lists model IDs your key can access; useful when a model name gets retired.\n# ELI5: Ask Claude's shop for its menu.\n# for m in claude.models.list(): print(m.id)", "o": "An invoice is a document a seller gives a buyer that itemizes the goods or services provided, states the amount owed, and sets out the payment terms."}, {"t": "markdown", "s": "## 4. Groq (open-source models, very fast, free tier)\nGroq speaks the **same format as OpenAI**, so you reuse the OpenAI library and only change `base_url`."}, {"t": "code", "s": "# WHY (tech): Groq exposes an OpenAI-compatible API, so the same SDK works without another library.\n# ELI5: Groq speaks OpenAI's language, so we reuse the same phone.\nfrom openai import OpenAI\n\n# WHY (tech): Creates a client aimed at Groq's servers instead of OpenAI's.\n# ELI5: Set up a phone line to Groq.\ngroq = OpenAI(\n    # WHY (tech): Groq needs its own key; each provider authenticates separately, even with a shared SDK.\n    # ELI5: Groq needs its own ID card.\n    api_key=userdata.get(\"GROQ_API_KEY\"),\n    # WHY (tech): Redirects every request to Groq's endpoint; this single line switches the provider.\n    # ELI5: Same phone, different phone number.\n    base_url=\"https://api.groq.com/openai/v1\",\n)\n\n# WHY (tech): Fetches Groq's live model catalogue so we use valid IDs instead of guessing names.\n# ELI5: Ask Groq for its menu.\nfor m in groq.models.list():\n    # WHY (tech): Prints each model's ID, the exact string the model parameter expects.\n    # ELI5: Read each dish name aloud.\n    print(m.id)", "o": "openai/gpt-oss-safeguard-20b\ncanopylabs/orpheus-arabic-saudi\nwhisper-large-v3-turbo\nopenai/gpt-oss-20b\nopenai/gpt-oss-120b\nallam-2-7b\nwhisper-large-v3\nmeta-llama/llama-prompt-guard-2-86m\nmeta-llama/llama-prompt-guard-2-22m\nqwen/qwen3.8-27b\ncanopylabs/orpheus-v1-english"}, {"t": "code", "s": "# WHY (tech): Picks a chat-capable model; others in the list are guards, speech-to-text or text-to-speech.\n# ELI5: Pick a brain that can actually chat.\nGROQ_MODEL = \"openai/gpt-oss-120b\"\n\n# WHY (tech): Identical call to OpenAI's, because Groq follows the same API contract.\n# ELI5: Same order form, different shop.\nresp = groq.chat.completions.create(\n    # WHY (tech): Which hosted open-source model processes the request.\n    # ELI5: Which brain answers.\n    model=GROQ_MODEL,\n    # WHY (tech): Standard role/content message list, unchanged from the OpenAI example.\n    # ELI5: Your question.\n    messages=[{\"role\": \"user\", \"content\": PROMPT}],\n    # WHY (tech): Groq still supports temperature, so we can control output randomness here.\n    # ELI5: How adventurous the AI is with words.\n    temperature=0.7,\n)\n\n# WHY (tech): Same response structure as OpenAI: first choice, then its message text.\n# ELI5: Pick the first reply and read it.\nprint(resp.choices[0].message.content)", "o": "An invoice is a formal document issued by a seller to a buyer that itemizes goods or services provided, specifies the amounts owed, and requests payment by a designated due date."}, {"t": "code", "s": "# WHY (tech): Re-imports the secrets reader so this cell works on its own after a session restart.\n# ELI5: Grab the drawer key again in case it was forgotten.\nfrom google.colab import userdata\n# WHY (tech): Imported but not used in this cell; harmless and safe to delete.\n# ELI5: An extra tool we brought but never used.\nimport os\n\n# WHY (tech): try/except catches errors like missing secrets and prints guidance instead of crashing.\n# ELI5: Try carefully; if something breaks, explain instead of panicking.\ntry:\n    # WHY (tech): Reads the stored OpenRouter key into a variable, only for local validation checks.\n    # ELI5: Take the key out of the drawer to inspect it.\n    key = userdata.get('OPENROUTER_API_KEY')\n    # WHY (tech): Detects an empty value before any network call wastes time or fails confusingly.\n    # ELI5: Check the drawer isn't empty.\n    if not key:\n        print(\"❌ 'OPENROUTER_API_KEY' is empty or not set in Colab Secrets.\")\n    else:\n        print(\"✅ 'OPENROUTER_API_KEY' found in Secrets!\")\n        # WHY (tech): OpenRouter keys start with \"sk-or-\"; another prefix suggests the wrong key was pasted.\n        # ELI5: Check the key has the right shape.\n        # NOTE: a correct shape does not prove the key is active; only a real API call proves that.\n        if key.startswith(\"sk-or-\"):\n            print(\"✅ Key format looks correct (starts with 'sk-or-').\")\n        else:\n            print(\"⚠️ Warning: OpenRouter keys usually start with 'sk-or-'. Please double check your key.\")\n# WHY (tech): Catches any access error, e.g. notebook access switched off, and shows the reason.\n# ELI5: If the drawer won't open, say why.\nexcept Exception as e:\n    print(f\"❌ Error accessing secret: {e}\")\n    print(\"Please click the 🔑 icon in the left sidebar, add a secret named 'OPENROUTER_API_KEY', and turn on 'Notebook access'.\")", "o": "❌ Error accessing secret: Secret OPENROUTER_API_KEY does not exist.\nPlease click the 🔑 icon in the left sidebar, add a secret named 'OPENROUTER_API_KEY', and turn on 'Notebook access'."}, {"t": "markdown", "s": "## 6. One function for every platform\nMany platforms accept the OpenAI format, so one helper can call them all. Add a platform by adding one line to `PLATFORMS`."}, {"t": "code", "s": "# WHY (tech): One SDK can call every OpenAI-compatible provider, so we import it once for all.\n# ELI5: One universal phone for many companies.\nfrom openai import OpenAI\n\n# WHY (tech): Config table mapping each provider to its secret name and endpoint; adding a provider is one line.\n# ELI5: An address book: company name, its password drawer, its phone number.\nPLATFORMS = {\n    # name:       (secret name,          base_url)\n    # WHY (tech): None means the SDK uses OpenAI's default endpoint.\n    # ELI5: No number needed; OpenAI is the default.\n    \"openai\":     (\"OPENAI_API_KEY\",     None),\n    \"groq\":       (\"GROQ_API_KEY\",       \"https://api.groq.com/openai/v1\"),\n    # WHY (tech): Commented out because this OpenRouter key returned 401; re-enable once a valid key works.\n    # ELI5: Switched off until the key is fixed.\n    #\"openrouter\": (\"OPENROUTER_API_KEY\", \"https://openrouter.ai/api/v1\"),\n    # WHY (tech): Gemini also offers an OpenAI-compatible endpoint, so the same code works for it.\n    # ELI5: Google also answers OpenAI's phone line.\n    \"gemini\":     (\"GEMINI_API_KEY\",     \"https://generativelanguage.googleapis.com/v1beta/openai/\"),\n}\n\n# WHY (tech): Reusable function hides provider differences behind one interface, a mini \"LLM gateway\".\n# ELI5: A machine: put in company, brain and question; get an answer.\ndef ask(platform, model, prompt, temperature=0.7):\n    # WHY (tech): Unpacks the provider's secret name and endpoint from the config table.\n    # ELI5: Look up the company in the address book.\n    secret, base_url = PLATFORMS[platform]\n    # WHY (tech): Builds a client for the chosen provider using its own key and endpoint.\n    # ELI5: Dial that company with its own ID card.\n    client = OpenAI(api_key=userdata.get(secret), base_url=base_url)\n    # WHY (tech): Sends a standard chat request; identical code regardless of which provider is called.\n    # ELI5: Ask the question the same way every time.\n    r = client.chat.completions.create(\n        model=model,\n        messages=[{\"role\": \"user\", \"content\": prompt}],\n        temperature=temperature,\n    )\n    # WHY (tech): Returns only the answer text so callers never deal with provider-specific response objects.\n    # ELI5: Hand back just the answer.\n    return r.choices[0].message.content\n\n# WHY (tech): Same function, different arguments: switching provider needs no code changes.\n# ELI5: Change one word to call a different company.\n#print(ask(\"gemini\", \"gemini-flash-latest\", PROMPT))\nprint(ask(\"groq\", \"openai/gpt-oss-120b\", PROMPT))", "o": "An invoice is a formal document issued by a seller to a buyer that itemizes goods or services provided, states the amount owed, and requests payment by a specified due date."}, {"t": "markdown", "s": "## 7. Experiment: see temperature in action\nSame prompt, run 3 times at low vs high temperature. Low → nearly identical answers. High → more varied."}, {"t": "code", "s": "# WHY (tech): Open-ended creative question, where randomness visibly changes outputs, making temperature effects obvious.\n# ELI5: A question with many possible answers, so differences show up.\nq = \"Give me a catchy name for a procurement analytics startup. Reply with the name only.\"\n\n# WHY (tech): Loops over two temperature values to compare deterministic and highly random sampling.\n# ELI5: Try the safe setting first, then the adventurous one.\nfor t in [0.0, 1.5]:\n    # WHY (tech): f-string inserts t into a heading; \\n adds a blank line for readability.\n    # ELI5: Print a label showing which setting is running.\n    print(f\"\\n--- temperature = {t} ---\")\n    # WHY (tech): Repeats the identical request 3 times to measure output variance at this temperature.\n    # ELI5: Ask the same question three times.\n    for i in range(3):\n        # WHY (tech): Groq is used because it still accepts temperature; Claude's API no longer does.\n        # ELI5: Use Groq, which still has the creativity knob.\n        resp = groq.chat.completions.create(\n            # WHY (tech): Small, fast chat model; cheap for running many repeated test calls.\n            # ELI5: A quick brain for quick tests.\n            model=\"openai/gpt-oss-20b\",\n            # WHY (tech): Same question every time, so only temperature varies between runs.\n            # ELI5: Keep the question identical.\n            messages=[{\"role\": \"user\", \"content\": q}],\n            # WHY (tech): The variable under test; it rescales token probabilities before sampling.\n            # ELI5: Turn the creativity knob.\n            temperature=t,\n        )\n        # WHY (tech): Extracts the answer text; .strip() removes stray whitespace for cleaner comparison.\n        # ELI5: Print the answer neatly.\n        print(resp.choices[0].message.content.strip())\n\n# EXPECTED: at 0.0 the names barely change; at 1.5 they vary a lot.", "o": "--- temperature = 0.0 ---\nSpendSight\nSpendSight\nSpendSight\n\n--- temperature = 1.5 ---\nAcquisytics\nBidVision Analytics\nSpendScope"}, {"t": "code", "s": "# WHY (tech): Claude has no temperature setting, so we steer output variety through prompt instructions instead.\n# ELI5: No creativity knob, so we tell Claude how creative to be.\n# WHY (tech): Dictionary maps a label to a prompt, letting one loop test both styles.\n# ELI5: Two versions of the same question, each with a name tag.\nprompts = {\n    # WHY (tech): Asks for the most conventional answer, mimicking low-temperature behaviour.\n    # ELI5: \"Give me the obvious answer.\"\n    \"SAFE (like low temperature)\":\n        \"Give me the most obvious, conventional name for a procurement analytics startup. Reply with the name only.\",\n    # WHY (tech): Asks for novelty and bans predictable words, mimicking high-temperature behaviour.\n    # ELI5: \"Surprise me, and don't use the boring words.\"\n    \"CREATIVE (like high temperature)\":\n        \"Give me a bold, unusual, surprising name for a procurement analytics startup. Avoid common words like 'procure' or 'spend'. Reply with the name only.\",\n}\n\n# WHY (tech): .items() yields each (label, prompt) pair so both styles run through the same code.\n# ELI5: Go through each version one by one.\nfor label, p in prompts.items():\n    # WHY (tech): Prints a heading so outputs from each prompt style are easy to compare.\n    # ELI5: Print which version is running.\n    print(f\"\\n--- {label} ---\")\n    # WHY (tech): Three identical calls show how much Claude's output varies for each prompt.\n    # ELI5: Ask each version three times.\n    for i in range(3):\n        resp = claude.messages.create(\n            # WHY (tech): Same Claude model for both styles, so only the prompt wording differs.\n            # ELI5: Same brain each time.\n            model=\"claude-sonnet-5-5\",\n            # WHY (tech): A low cap suits one-name answers and keeps repeated calls cheap.\n            # ELI5: Only a few words allowed.\n            max_tokens=50,\n            # WHY (tech): Sends the current prompt variant; no temperature, since Claude's API removed it.\n            # ELI5: Send this version of the question.\n            messages=[{\"role\": \"user\", \"content\": p}],\n        )\n        # WHY (tech): First content block holds the text; .strip() tidies whitespace.\n        # ELI5: Print Claude's answer neatly.\n        print(resp.content[0].text.strip())\n\n# TAKEAWAY: Groq = same prompt, temperature changes variety. Claude = same settings, prompt wording changes variety.", "o": "--- SAFE (like low temperature) ---\nProcurify\nProcurify\nProcurify\n\n--- CREATIVE (like high temperature) ---\nQuillfire\nLedgerfox\nQuillfire"}, {"t": "markdown", "s": "## Common errors\n| Error | Meaning | Fix |\n|---|---|---|\n| `SecretNotFoundError` | Secret name doesn't match, or notebook access is off | Check the spelling in 🔑 and turn on the toggle |\n| `401 / invalid api key` | Wrong or expired key | Create a new key and paste it again |\n| `404 / model not found` | Model name retired or misspelled | Run the list-models line and pick a current name |\n| `429 / rate limit / quota` | Free-tier limit reached, or no credits | Wait a minute, or add billing |"}] },
     intro: "From an AI engineer’s point of view, here’s what you actually learned today:",
     lessons: [
       { title: "An LLM is just an API call.",
@@ -302,13 +357,16 @@ const store = {
 };
 let done = store.get("fieldnotes-done", {});
 let current = SESSIONS.find(s => "#" + s.id === location.hash) || SESSIONS[0];
+let view = location.hash === "#learning-concepts" ? "concepts" : "topic";
 const $ = s => document.querySelector(s);
 const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function renderTabs(){
   $("#tabs").innerHTML = SESSIONS.map(s =>
     `<button class="tab" role="tab" aria-selected="${s === current}" data-id="${s.id}">${esc(s.label)}</button>`
-  ).join("") + `<span class="tab add" aria-hidden="true">+ next topic</span>`;
+  ).join("") + `<button class="tab concept" role="tab" aria-selected="${view === "concepts"}" data-id="learning-concepts">Learning Concepts</button>`
+    + `<span class="tab add" aria-hidden="true">+ next topic</span>`;
+  if (view === "concepts") $("#tabs").querySelectorAll(".tab:not(.concept)").forEach(b => b.setAttribute("aria-selected", "false"));
   $("#tabs").querySelectorAll("[data-id]").forEach(b => b.onclick = () => { location.hash = b.dataset.id; });
 }
 
@@ -323,6 +381,9 @@ const chev = `<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentC
 
 function render(){
   renderTabs();
+  stopMolecules();
+  $(".progress").hidden = view === "concepts";
+  if (view === "concepts") return renderConcepts();
   $("#lede").textContent = current.intro;
   const s = current;
   let h = `<div class="section"><div class="toolbar"><div><span class="eyebrow">Topic ${SESSIONS.indexOf(s) + 1}</span><h2>${esc(s.title)}</h2></div>
@@ -352,6 +413,12 @@ function render(){
   if (s.notebook) h += notebookView(s.notebook);
 
   $("#main").innerHTML = h;
+  bindNotebook();
+  bind();
+  progress();
+}
+
+function bindNotebook(){
   document.querySelectorAll(".nb-copy").forEach(b => b.onclick = async () => {
     const pre = b.closest(".nb-cell").querySelector("pre");
     try { await navigator.clipboard.writeText(pre.textContent); b.textContent = "Copied"; }
@@ -361,8 +428,214 @@ function render(){
   const nbt = $("#nbToggle");
   if (nbt) nbt.onclick = () => { const body = $("#nbBody"); body.hidden = !body.hidden;
     nbt.setAttribute("aria-expanded", !body.hidden); nbt.textContent = body.hidden ? "Show notebook" : "Hide notebook"; };
-  bind();
-  progress();
+}
+
+/* ============================================================
+   LEARNING CONCEPTS — short explainers, one sub-tab each.
+   ============================================================ */
+const CONCEPTS = [
+  { id: "temperature", label: "Temperature" },
+  { id: "sdk", label: "SDK" }
+];
+let concept = store.get("fieldnotes-concept", "temperature");
+
+const GOA = [["November",34],["between",23],["from",16],["during",9],["in",7],["winter",5],["October",3],["December",2]];
+function tempProbs(T){
+  if (T < 0.05){ const m = Math.max(...GOA.map(g => g[1])); return GOA.map(g => g[1] === m ? 1 : 0); }
+  const w = GOA.map(g => Math.pow(g[1], 1 / T)), sum = w.reduce((a, b) => a + b, 0);
+  return w.map(x => x / sum);
+}
+
+function renderConcepts(){
+  $("#lede").textContent = "Short explainers for ideas that come up across topics. Each one links back to the notebook where you used it.";
+  const nb = SESSIONS[0].notebook;
+  let h = `<div class="section"><div><span class="eyebrow">Learning Concepts</span><h2>Ideas behind the code</h2></div>
+    <div class="subtabs" role="tablist">${CONCEPTS.map(c =>
+      `<button class="subtab" role="tab" aria-selected="${c.id === concept}" data-c="${c.id}">${c.label}</button>`).join("")}</div>
+    <div class="concept-body">${concept === "sdk" ? sdkView() : temperatureView()}</div></div>`;
+  if (nb) h += notebookView(nb);
+  $("#main").innerHTML = h;
+  document.querySelectorAll("[data-c]").forEach(b => b.onclick = () => {
+    concept = b.dataset.c; store.set("fieldnotes-concept", concept); stopMolecules(); renderConcepts(); });
+  bindNotebook();
+  if (concept === "temperature") bindTemperature();
+}
+
+function temperatureView(){
+  return `
+  <div class="demo" id="tdemo">
+    <div class="prompt-box" id="tprompt">The best time to visit Goa is …</div>
+    <div class="toks" id="ttoks">${GOA.map((g, i) => `<div class="tok" data-i="${i}"><span class="name">${g[0]}</span><div class="track"><div class="fill"></div></div><span class="pct"></span></div>`).join("")}</div>
+    <div class="controls">
+      <label for="tslider">Temperature</label>
+      <input type="range" id="tslider" min="0" max="2" step="0.1" value="0.9">
+      <span class="tv" id="tval">0.9</span>
+      <button class="btn" id="tgen">▶ Generate</button>
+      <button class="btn ghost" id="tgen10">Generate ×10</button>
+    </div>
+    <div class="hist" id="thist"><span>Your picks will show here.</span></div>
+  </div>
+  <p class="fig-cap"><b>Figure 1.</b> The model gives every possible next token a probability, then picks one. Low temperature almost always picks the favourite. High temperature gives the long shots a real chance.<small>Illustrative numbers</small></p>
+
+  <div class="prose">
+    <h3>Temperature</h3>
+    <p><b>Temperature</b> controls how the model picks from those probabilities.</p>
+    <ul>
+      <li><b>Low temperature (near 0):</b> it almost always picks the most likely token. Answers are focused and repeatable. Good for extracting data, following rules, writing code.</li>
+      <li><b>High temperature (1 and above):</b> less likely tokens get a real chance. Answers are more varied and creative, and more likely to go off track.</li>
+    </ul>
+    <p>Run the demo above a few times at each setting and watch how often the answer changes.</p>
+  </div>
+
+  <div class="card">
+    <h3>Hot and cold, with molecules</h3>
+    <canvas class="mol" id="mol" aria-label="Molecules moving faster as temperature rises"></canvas>
+    <p class="fig-cap">These molecules follow the same slider. Move it and watch them speed up or settle.</p>
+    <div class="hc">
+      <div><b>Cold</b>Molecules barely move and settle into the lowest-energy spot. The model settles on its most likely token, every time.</div>
+      <div><b>Hot</b>Molecules bounce around and reach places they rarely visit when cold. The model wanders to less likely tokens.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Where the word comes from</h3>
+    <div class="hist3">
+      <div class="row"><span class="era">Physics<small>1870s</small></span><p>Ludwig Boltzmann showed that temperature decides how particles spread across energy states: when it is cold almost all of them sit in the lowest state, and when it is hot they spread out.</p></div>
+      <div class="row"><span class="era">Maths<small>Softmax</small></span><p>The same formula, without the physics, became the softmax function: it turns any list of scores into probabilities, and a temperature value makes the result sharper or flatter.</p></div>
+      <div class="row"><span class="era">AI<small>1980s to today</small></span><p>Machine learning borrowed the idea in the 1980s (Boltzmann machines, simulated annealing), and today every LLM scores each possible next token and uses softmax with temperature to choose one.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What you saw in your notebook</h3>
+    <div class="runs">
+      <div><h4>Groq: same prompt, temperature changes</h4><pre>--- temperature = 0.0 ---
+SpendSight
+SpendSight
+SpendSight
+
+--- temperature = 1.5 ---
+Acquisytics
+BidVision Analytics
+SpendScope</pre></div>
+      <div><h4>Claude: no temperature, prompt wording changes</h4><pre>--- SAFE (like low temperature) ---
+Procurify
+Procurify
+Procurify
+
+--- CREATIVE (like high temperature) ---
+Quillfire
+Ledgerfox
+Quillfire</pre></div>
+    </div>
+    <p class="fig-cap">Groq = same prompt, temperature changes variety. Claude = same settings, prompt wording changes variety. See section 7 of the reference notebook below.</p>
+  </div>`;
+}
+
+function bindTemperature(){
+  const sl = $("#tslider"), rows = [...document.querySelectorAll("#ttoks .tok")];
+  let picks = [];
+  const draw = () => {
+    const T = +sl.value, p = tempProbs(T);
+    $("#tval").textContent = T.toFixed(1);
+    rows.forEach((r, i) => { r.querySelector(".fill").style.width = (p[i] * 100) + "%";
+      r.querySelector(".pct").textContent = Math.round(p[i] * 100) + "%"; });
+    molT = T;
+  };
+  const pick = () => {
+    const p = tempProbs(+sl.value); let x = Math.random(), i = 0;
+    for (; i < p.length - 1; i++){ x -= p[i]; if (x <= 0) break; }
+    return i;
+  };
+  const show = idx => {
+    rows.forEach((r, i) => r.classList.toggle("picked", i === idx));
+    $("#tprompt").innerHTML = `The best time to visit Goa is <mark>${GOA[idx][0]}</mark> …`;
+    const fav = picks.filter(i => i === 0).length;
+    $("#thist").innerHTML = `<span>Last ${picks.length} at ${(+sl.value).toFixed(1)}:</span>` +
+      picks.slice(-12).map(i => `<span class="tag${i === 0 ? " fav" : ""}">${GOA[i][0]}</span>`).join("") +
+      `<span>· favourite picked ${fav} of ${picks.length}</span>`;
+  };
+  sl.oninput = () => { picks = []; draw(); rows.forEach(r => r.classList.remove("picked"));
+    $("#tprompt").textContent = "The best time to visit Goa is …"; $("#thist").innerHTML = "<span>Your picks will show here.</span>"; };
+  $("#tgen").onclick = () => { const i = pick(); picks.push(i); show(i); };
+  $("#tgen10").onclick = () => { let i; for (let k = 0; k < 10; k++){ i = pick(); picks.push(i); } show(i); };
+  draw();
+  startMolecules();
+}
+
+/* molecule canvas: speed follows the temperature slider */
+let molT = 0.9, molRaf = 0;
+function stopMolecules(){ cancelAnimationFrame(molRaf); molRaf = 0; }
+function startMolecules(){
+  const c = $("#mol"); if (!c) return;
+  const ctx = c.getContext("2d"), dpr = window.devicePixelRatio || 1;
+  const size = () => { c.width = c.clientWidth * dpr; c.height = c.clientHeight * dpr; };
+  size();
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const pts = Array.from({ length: 46 }, () => ({ x: Math.random(), y: Math.random(), a: Math.random() * Math.PI * 2 }));
+  const frame = () => {
+    if (!document.body.contains(c)) return;
+    if (c.width !== c.clientWidth * dpr) size();
+    const cs = getComputedStyle(document.documentElement);
+    const W = c.width, H = c.height, sp = 0.0006 + molT * 0.0045;
+    ctx.clearRect(0, 0, W, H);
+    pts.forEach(p => {
+      if (!still){
+        p.a += (Math.random() - .5) * 0.4 * molT;
+        p.x += Math.cos(p.a) * sp * (H / W); p.y += Math.sin(p.a) * sp;
+        if (molT < 0.05) p.y += 0.004;
+        if (p.x < 0.02 || p.x > 0.98){ p.a = Math.PI - p.a; p.x = Math.min(.98, Math.max(.02, p.x)); }
+        if (p.y < 0.05 || p.y > 0.95){ p.a = -p.a; p.y = Math.min(.95, Math.max(.05, p.y)); }
+      }
+      ctx.beginPath(); ctx.arc(p.x * W, p.y * H, 4.5 * dpr, 0, Math.PI * 2);
+      ctx.fillStyle = molT > 1 ? cs.getPropertyValue("--bad") : cs.getPropertyValue("--accent"); ctx.fill();
+    });
+    if (!still) molRaf = requestAnimationFrame(frame);
+  };
+  frame();
+}
+
+function sdkView(){
+  return `
+  <div class="prose">
+    <h3>SDK in short</h3>
+    <p><b>SDK</b> stands for Software Development Kit. For an AI provider it is the Python library you install (<code>google-genai</code>, <code>openai</code>, <code>anthropic</code>) so your code can call their API without writing raw web requests.</p>
+    <p class="fig-cap">ELI5, from your notebook: download translator apps so Python can talk to each AI company.</p>
+  </div>
+  ${diagram({ label: "What the SDK does between your code and the model", cols: [
+    [{t:"Your code", s:"client.create(...)", k:"accent"}],
+    [{t:"SDK", s:"adds your key · builds the request · reads the reply"}],
+    [{t:"HTTPS request"}],
+    [{t:"Provider API", k:"ok"}] ] })}
+
+  <div class="card">
+    <h3>What it handles for you</h3>
+    <dl class="kv">
+      <dt>Authentication</dt><dd>Puts your API key in every request.</dd>
+      <dt>Requests</dt><dd>Turns <code>create(model=..., messages=...)</code> into the right web call.</dd>
+      <dt>Responses</dt><dd>Turns the reply into Python objects, e.g. <code>resp.text</code>.</dd>
+      <dt>Errors</dt><dd>Turns failures into readable Python errors, like 401 or 404.</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h3>The three SDKs in your notebook</h3>
+    <div class="tbl"><table><thead><tr><th>Install</th><th>Create client</th><th>Send</th><th>Read answer</th></tr></thead><tbody>
+      <tr><td class="mono">google-genai</td><td class="mono">genai.Client(api_key=…)</td><td class="mono">models.generate_content(…)</td><td class="mono">resp.text</td></tr>
+      <tr><td class="mono">openai</td><td class="mono">OpenAI(api_key=…, base_url=…)</td><td class="mono">chat.completions.create(…)</td><td class="mono">resp.choices[0].message.content</td></tr>
+      <tr><td class="mono">anthropic</td><td class="mono">anthropic.Anthropic(api_key=…)</td><td class="mono">messages.create(…)</td><td class="mono">resp.content[0].text</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="card">
+    <h3>Remember</h3>
+    <div class="prose"><ul>
+      <li><b>One SDK, many providers.</b> Groq and Gemini accept the OpenAI format, so the <code>openai</code> SDK reaches them by changing <code>base_url</code>.</li>
+      <li><b>Install, then restart.</b> After <code>pip install</code>, restart the Colab session so Python loads the new version.</li>
+      <li><b>Versions clash.</b> The <code>ImportError</code> you hit was a version clash, fixed by reinstalling only <code>openai</code> with <code>--no-deps</code>.</li>
+      <li><b>Each SDK has its own shape.</b> Same idea, different method names and answer paths. That is why <code>ask()</code> wraps them.</li>
+    </ul></div>
+  </div>`;
 }
 
 /* tiny markdown renderer for notebook text cells: headings, tables, lists, bold, inline code */
@@ -390,11 +663,12 @@ function notebookView(nb){
   let n = 0;
   const cells = nb.cells.map(c => c.t === "markdown"
     ? `<div class="nb-cell nb-md">${md(c.s)}</div>`
-    : `<div class="nb-cell"><div class="nb-bar"><span class="mono">In [${++n}]</span><button class="nb-copy">Copy</button></div><pre>${esc(c.s)}</pre></div>`).join("");
+    : `<div class="nb-cell"><div class="nb-bar"><span class="mono">In [${++n}]</span><button class="nb-copy">Copy</button></div><pre>${esc(c.s)}</pre>${
+        c.o ? `<div class="nb-out-label">Output</div><pre class="nb-out">${esc(c.o)}</pre>` : ""}</div>`).join("");
   return `<div class="section nb" style="margin-top:20px">
     <div class="toolbar"><div><span class="eyebrow">Reference notebook</span><h2>${esc(nb.file)}</h2></div>
       <button class="linkbtn" id="nbToggle" aria-expanded="false" aria-controls="nbBody">Show notebook</button></div>
-    <p class="dg-cap">The Colab notebook used in this topic, cell by cell. Code is shown without outputs; copy any cell into Colab to run it.</p>
+    <p class="dg-cap">The Colab notebook used in this topic, cell by cell. Outputs are from your last run; copy any code cell into Colab to run it again.</p>
     <div id="nbBody" class="nb-body" hidden>${cells}</div></div>`;
 }
 
@@ -508,7 +782,11 @@ function quiz(errors){
   show();
 }
 
-window.addEventListener("hashchange", () => { current = SESSIONS.find(s => "#" + s.id === location.hash) || SESSIONS[0]; render(); });
+window.addEventListener("hashchange", () => {
+  view = location.hash === "#learning-concepts" ? "concepts" : "topic";
+  current = SESSIONS.find(s => "#" + s.id === location.hash) || SESSIONS[0]; render();
+  const first = document.querySelector(".lesson"); if (first) toggle(first, true);
+});
 render();
-toggle(document.querySelector(".lesson"), true);
+const firstLesson = document.querySelector(".lesson"); if (firstLesson) toggle(firstLesson, true);
 </script>
