@@ -1,0 +1,373 @@
+<title>AI Engineering Field Notes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: lab-notebook column; session switcher on top, numbered lessons as expandable entries, PM mapping and next step below. */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --sunk:#eceef3; --fg:#171a21; --muted:#5b6170;
+  --line:#d9dce4; --accent:#3a4fd6; --accent-soft:#e3e7fb; --accent-fg:#ffffff;
+  --ok:#1f8a5b; --ok-soft:#dcf2e7; --bad:#c2410c; --bad-soft:#fde7dc;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12141a; --surface:#1a1d25; --sunk:#232733; --fg:#e8eaf0; --muted:#9aa0b0;
+  --line:#2e3341; --accent:#8b9bff; --accent-soft:#262c4d; --accent-fg:#10121a;
+  --ok:#4fd19a; --ok-soft:#173a2b; --bad:#ff9a6b; --bad-soft:#3d2219; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12141a; --surface:#1a1d25; --sunk:#232733; --fg:#e8eaf0; --muted:#9aa0b0;
+  --line:#2e3341; --accent:#8b9bff; --accent-soft:#262c4d; --accent-fg:#10121a;
+  --ok:#4fd19a; --ok-soft:#173a2b; --bad:#ff9a6b; --bad-soft:#3d2219; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--body);
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:28px 28px;background-attachment:fixed}
+.wrap{max-width:860px;margin:0 auto;padding-block:40px 80px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:28px}
+.sheet{background:var(--bg);border-radius:14px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);letter-spacing:-.01em}
+h2{font-size:22px}
+h3{font-size:18px}
+p{margin:0}
+.eyebrow{font:500 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+code,.mono{font-family:var(--mono);font-size:.9em}
+code{background:var(--sunk);padding:1px 6px;border-radius:5px}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header{display:flex;flex-direction:column;gap:14px;background:var(--bg);padding:8px 0}
+.lede{color:var(--muted);max-width:62ch}
+
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:999px;font-weight:500;font-size:14px}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.tab.add{border-style:dashed;color:var(--muted);cursor:default}
+
+.progress{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
+.bar{flex:1;height:8px;background:var(--sunk);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+.progress b{font-variant-numeric:tabular-nums;color:var(--fg)}
+
+.section{display:flex;flex-direction:column;gap:12px}
+.toolbar{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+.linkbtn{background:none;border:none;color:var(--accent);font-size:14px;padding:4px 0}
+
+.lesson{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.lesson.done{border-color:var(--ok)}
+.lesson-head{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;width:100%;
+  text-align:left;background:none;border:none;padding:16px 18px}
+.num{font:600 14px/1 var(--mono);width:30px;height:30px;border-radius:8px;display:grid;place-items:center;
+  background:var(--accent-soft);color:var(--accent);font-variant-numeric:tabular-nums}
+.lesson.done .num{background:var(--ok-soft);color:var(--ok)}
+.lesson-head h3{padding-top:3px}
+.chev{width:22px;height:22px;margin-top:4px;color:var(--muted);transition:transform .2s}
+.lesson.open .chev{transform:rotate(180deg)}
+.lesson-body{padding:0 18px 18px 62px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.lesson-body p{max-width:66ch}
+.done-toggle{align-self:flex-start;display:flex;align-items:center;gap:8px;font-size:14px;
+  border:1px solid var(--line);background:var(--bg);padding:6px 12px;border-radius:8px}
+.lesson.done .done-toggle{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+
+.widget{background:var(--sunk);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.widget .eyebrow{font-size:11px}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.step{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px;text-align:left;
+  display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:500}
+.step small{font:500 11px var(--mono);color:var(--muted)}
+.step.on{border-color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent)}
+.flow-note{font:13px var(--mono);color:var(--muted)}
+
+/* swap */
+.swap{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);padding:6px 12px;border-radius:999px;font-size:14px}
+.chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+pre{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto;font:13px/1.5 var(--mono)}
+pre .hl{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 2px}
+
+/* tradeoffs */
+.pairs{display:grid;gap:8px}
+.pair{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.pair button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px;font-size:14px}
+.pair button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.pair span{font:12px var(--mono);color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font:12px var(--mono);padding:3px 8px;border-radius:6px;background:var(--surface);border:1px solid var(--line)}
+
+/* temperature */
+.temp-row{display:flex;align-items:center;gap:12px}
+.temp-row input{flex:1;accent-color:var(--accent)}
+.temp-val{font:600 15px var(--mono);font-variant-numeric:tabular-nums;min-width:3ch;text-align:right}
+.scale{display:flex;justify-content:space-between;font:12px var(--mono);color:var(--muted)}
+.temp-out{font-size:14px;padding:8px 10px;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
+
+/* error table + quiz */
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;background:var(--surface);border-radius:8px;overflow:hidden}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);background:var(--sunk)}
+tr:last-child td{border-bottom:none}
+.quiz{display:flex;flex-direction:column;gap:10px}
+.quiz-q{font:500 15px var(--mono);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px}
+.opts button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px;font-size:14px;text-align:left}
+.opts button.right{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+.opts button.wrong{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.quiz-foot{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted);gap:8px;flex-wrap:wrap}
+.quiz-foot b{font-variant-numeric:tabular-nums;color:var(--fg)}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);border-radius:8px;padding:6px 12px;font-size:14px;font-weight:500}
+.btn[disabled]{opacity:.45;cursor:default}
+
+/* PM */
+.pm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pm{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.pm h3{font-size:16px}
+.pm p{font-size:15px;color:var(--muted)}
+
+.next{background:var(--accent-soft);border:1px solid var(--accent);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.next .eyebrow{color:var(--accent)}
+.fields{display:flex;gap:6px;flex-wrap:wrap}
+.fields .tag{background:var(--surface)}
+
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:24px;color:var(--muted);text-align:center}
+
+@media (max-width:600px){
+  .lesson-body{padding:0 14px 16px 14px}
+  .lesson-head{padding:14px}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .pm-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">AI engineering · learning log</span>
+    <h1>AI Engineering Field Notes</h1>
+    <p class="lede" id="lede"></p>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="progress"><span><b id="pcount">0</b> of <b id="ptotal">0</b> understood</span><div class="bar"><i id="pbar"></i></div></div>
+  </header>
+  <main id="main"></main>
+</div>
+
+<script>
+/* ============================================================
+   CONTENT — add new sessions to this array.
+   Each lesson: { title, body: [paragraph html...], widget?: key }
+   ============================================================ */
+const SESSIONS = [
+  {
+    id: "session-1",
+    label: "Session 1",
+    title: "Calling LLMs through APIs",
+    intro: "From an AI engineer’s point of view, here’s what you actually learned today:",
+    lessons: [
+      { title: "An LLM is just an API call.",
+        body: ["Underneath every chatbot, copilot or agent is the same thing: send text, get text back. Your code follows four steps that every AI product uses: authenticate, choose a model, send messages, read the response."],
+        widget: "steps" },
+      { title: "Keys are credentials, and you handle them like passwords.",
+        body: ["You kept keys out of the code by storing them in Colab Secrets. In real products they go in environment variables or a secrets vault. You also saw how easily a key can leak (the one printed in your screenshot)."] },
+      { title: "Models are interchangeable parts.",
+        body: ["Groq and OpenRouter worked with OpenAI’s library just by changing <code>base_url</code>. So you can swap the model under a product without rewriting it, and the <code>ask()</code> function is a tiny version of what engineers call an “LLM gateway” or “model router”."],
+        widget: "swap" },
+      { title: "Every provider is slightly different.",
+        body: ["Claude needs <code>max_tokens</code> and rejects <code>temperature</code>, and each provider puts the answer text somewhere different in its response. That’s why teams build a wrapper layer, so these differences stay in one place."] },
+      { title: "Picking a model is a trade-off.",
+        body: ["You compared big against small (gpt-oss-120b vs 20b), free against paid, and fast against smart. You also found that a model list contains non-chat models: safety filters, speech to text, text to speech. Choosing the right model for each job is a core engineering decision."],
+        widget: "tradeoffs" },
+      { title: "Settings control behaviour.",
+        body: ["Temperature trades predictability for creativity. For extraction or contract checks you want it low, and for brainstorming you want it higher. Some models no longer let you change it, so you control them with clear prompts instead."],
+        widget: "temperature" },
+      { title: "Debugging is most of the job.",
+        body: ["You worked through errors in each layer:"],
+        after: ["Reading the last line of an error message and asking which layer broke is exactly how AI engineers work."],
+        widget: "errors" },
+      { title: "APIs and models change all the time.",
+        body: ["Model names get retired and parameters get removed. The habit to keep is to list the available models and check the docs, rather than hard-coding names and assuming they’ll keep working."] }
+    ],
+    errors: [
+      ["SecretNotFoundError, 401", "Authentication"],
+      ["404 model not found", "Model choice"],
+      ["ImportError (version clash)", "Environment and dependencies"],
+      ["NameError after a restart", "Runtime state"],
+      ["TypeError: temperature", "API contract changes"]
+    ],
+    pmIntro: "For you as a PM, this maps to product decisions:",
+    pm: [
+      ["Vendor lock-in", "a provider-agnostic design lets you switch models the way you’d switch suppliers, on cost, quality or availability."],
+      ["Cost control", "a small or free model for routine tasks, and a big one only where quality matters."],
+      ["Risk", "key management, provider outages and models being retired belong on the risk register."],
+      ["Guardrails", "the prompt-guard model you hit by accident is a real product component, used to screen prompts before they reach the main model."]
+    ],
+    next: "A good next step is to make one call useful for procurement: send a sample supplier clause to Gemini and ask for the key fields back as JSON (party, payment terms, penalties). That covers structured output, the foundation of most enterprise AI features. I can set that up in the notebook if you’d like.",
+    nextFields: ["party", "payment terms", "penalties"]
+  }
+];
+
+/* ============================================================ */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let done = store.get("fieldnotes-done", {});
+let current = SESSIONS.find(s => "#" + s.id === location.hash) || SESSIONS[0];
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function renderTabs(){
+  $("#tabs").innerHTML = SESSIONS.map(s =>
+    `<button class="tab" role="tab" aria-selected="${s === current}" data-id="${s.id}">${esc(s.label)}</button>`
+  ).join("") + `<span class="tab add" aria-hidden="true">+ next session</span>`;
+  $("#tabs").querySelectorAll("[data-id]").forEach(b => b.onclick = () => { location.hash = b.dataset.id; });
+}
+
+function progress(){
+  const n = current.lessons.length;
+  const c = current.lessons.filter((_, i) => done[current.id + ":" + i]).length;
+  $("#pcount").textContent = c; $("#ptotal").textContent = n;
+  $("#pbar").style.width = (n ? c / n * 100 : 0) + "%";
+}
+
+const chev = `<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>`;
+
+function render(){
+  renderTabs();
+  $("#lede").textContent = current.intro;
+  const s = current;
+  let h = `<div class="section"><div class="toolbar"><div><span class="eyebrow">${esc(s.label)}</span><h2>${esc(s.title)}</h2></div>
+    <button class="linkbtn" id="expandAll">Expand all</button></div>`;
+  s.lessons.forEach((l, i) => {
+    const key = s.id + ":" + i, isDone = !!done[key];
+    h += `<article class="lesson ${isDone ? "done" : ""}" data-i="${i}">
+      <button class="lesson-head" aria-expanded="false" aria-controls="lb${i}">
+        <span class="num">${i + 1}</span><h3>${l.title}</h3>${chev}</button>
+      <div class="lesson-body" id="lb${i}" hidden>
+        ${l.body.map(p => `<p>${p}</p>`).join("")}
+        ${l.widget ? widget(l.widget, s) : ""}
+        ${(l.after || []).map(p => `<p>${p}</p>`).join("")}
+        <button class="done-toggle" data-key="${key}">${isDone ? "✓ Understood" : "Mark as understood"}</button>
+      </div></article>`;
+  });
+  h += `</div>`;
+
+  h += `<div class="section" style="margin-top:20px"><div><span class="eyebrow">Product view</span><h2>${esc(s.pmIntro)}</h2></div>
+    <div class="pm-grid">${s.pm.map(([t, d]) => `<div class="pm"><h3>${esc(t)}</h3><p>${esc(d)}</p></div>`).join("")}</div></div>`;
+
+  h += `<div class="next" style="margin-top:20px"><span class="eyebrow">Next step</span><p>${esc(s.next)}</p>
+    <div class="fields">${s.nextFields.map(f => `<span class="tag">"${esc(f)}": …</span>`).join("")}</div></div>`;
+
+  $("#main").innerHTML = h;
+  bind();
+  progress();
+}
+
+function widget(kind, s){
+  if (kind === "steps") return `<div class="widget"><span class="eyebrow">Click through the four steps</span>
+    <div class="steps">${["authenticate","choose a model","send messages","read the response"].map((t,i)=>
+      `<button class="step${i===0?" on":""}" data-step="${i}"><small>step ${i+1}</small>${t}</button>`).join("")}</div>
+    <div class="flow-note" id="flowNote">send text → get text back</div></div>`;
+
+  if (kind === "swap") return `<div class="widget"><span class="eyebrow">Swap the provider, keep the code</span>
+    <div class="swap">${["Groq","OpenRouter"].map((p,i)=>`<button class="chip" aria-pressed="${i===0}" data-prov="${p}">${p}</button>`).join("")}</div>
+    <pre id="swapCode"></pre></div>`;
+
+  if (kind === "tradeoffs") return `<div class="widget"><span class="eyebrow">Pick a side of each trade-off</span>
+    <div class="pairs">${[["big","gpt-oss-120b"],["small","gpt-oss-20b"],["free"],["paid"],["fast"],["smart"]]
+      .reduce((a,_,i,arr)=> i%2? a : a.concat([[arr[i],arr[i+1]]]), [])
+      .map(([a,b],r)=>`<div class="pair" data-row="${r}">
+        <button aria-pressed="true">${a[0]}${a[1]?` <span class="mono">(${a[1]})</span>`:""}</button><span>vs</span>
+        <button aria-pressed="false">${b[0]}${b[1]?` <span class="mono">(${b[1]})</span>`:""}</button></div>`).join("")}</div>
+    <span class="eyebrow" style="margin-top:4px">Non-chat models in the list</span>
+    <div class="tags"><span class="tag">safety filters</span><span class="tag">speech to text</span><span class="tag">text to speech</span></div></div>`;
+
+  if (kind === "temperature") return `<div class="widget"><span class="eyebrow">Drag the temperature</span>
+    <div class="temp-row"><span class="mono">temperature</span><input type="range" id="temp" min="0" max="1" step="0.1" value="0.2" aria-label="Temperature"><span class="temp-val" id="tempVal">0.2</span></div>
+    <div class="scale"><span>predictability</span><span>creativity</span></div>
+    <div class="temp-out" id="tempOut"></div></div>`;
+
+  if (kind === "errors") return `<div class="tbl"><table><thead><tr><th>Error</th><th>Layer</th></tr></thead><tbody>
+    ${s.errors.map(([e,l])=>`<tr><td class="mono">${esc(e)}</td><td>${esc(l)}</td></tr>`).join("")}</tbody></table></div>
+    <div class="widget quiz" id="quiz"><span class="eyebrow">Which layer broke?</span>
+      <div class="quiz-q" id="qq"></div><div class="opts" id="qo"></div>
+      <div class="quiz-foot"><span>Score <b id="qs">0</b> / <b id="qt">0</b></span><button class="btn" id="qn" disabled>Next error</button></div></div>`;
+  return "";
+}
+
+function bind(){
+  document.querySelectorAll(".lesson-head").forEach(btn => btn.onclick = () => toggle(btn.parentElement));
+  $("#expandAll").onclick = e => {
+    const all = [...document.querySelectorAll(".lesson")], open = all.some(a => !a.classList.contains("open"));
+    all.forEach(a => toggle(a, open)); e.target.textContent = open ? "Collapse all" : "Expand all";
+  };
+  document.querySelectorAll(".done-toggle").forEach(b => b.onclick = () => {
+    const k = b.dataset.key; done[k] = !done[k]; if (!done[k]) delete done[k]; store.set("fieldnotes-done", done);
+    b.closest(".lesson").classList.toggle("done", !!done[k]);
+    b.textContent = done[k] ? "✓ Understood" : "Mark as understood"; progress();
+  });
+
+  // steps
+  const notes = ["your key proves who you are", "pick which model answers", "send text", "get text back"];
+  document.querySelectorAll(".step").forEach(b => b.onclick = () => {
+    document.querySelectorAll(".step").forEach(x => x.classList.toggle("on", x === b));
+    $("#flowNote").textContent = `step ${+b.dataset.step + 1} of 4 · ${notes[b.dataset.step]}`;
+  });
+
+  // swap
+  const code = p => `client = OpenAI(\n    api_key=...,\n    <span class="hl">base_url="&lt;${p} base_url&gt;"</span>,\n)\nask("Hello")   <span style="color:var(--muted)"># same function, different provider</span>`;
+  if ($("#swapCode")) $("#swapCode").innerHTML = code("Groq");
+  document.querySelectorAll("[data-prov]").forEach(b => b.onclick = () => {
+    document.querySelectorAll("[data-prov]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    $("#swapCode").innerHTML = code(b.dataset.prov);
+  });
+
+  // tradeoffs
+  document.querySelectorAll(".pair").forEach(r => r.querySelectorAll("button").forEach(b => b.onclick = () =>
+    r.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b))));
+
+  // temperature
+  const t = $("#temp");
+  if (t){ const upd = () => { const v = +t.value; $("#tempVal").textContent = v.toFixed(1);
+      $("#tempOut").textContent = v <= 0.3 ? "Low: suits extraction or contract checks."
+        : v >= 0.7 ? "Higher: suits brainstorming." : "Middle: trading predictability for creativity."; };
+    t.oninput = upd; upd(); }
+
+  if ($("#quiz")) quiz(current.errors);
+}
+
+function toggle(el, force){
+  const open = force === undefined ? !el.classList.contains("open") : force;
+  el.classList.toggle("open", open);
+  el.querySelector(".lesson-head").setAttribute("aria-expanded", open);
+  el.querySelector(".lesson-body").hidden = !open;
+}
+
+function quiz(errors){
+  const layers = errors.map(e => e[1]);
+  let order = errors.map((_, i) => i).sort(() => Math.random() - .5), pos = 0, score = 0, answered = 0;
+  const show = () => {
+    const [err, layer] = errors[order[pos]];
+    $("#qq").textContent = err; $("#qn").disabled = true;
+    $("#qo").innerHTML = layers.map(l => `<button>${esc(l)}</button>`).join("");
+    $("#qo").querySelectorAll("button").forEach(b => b.onclick = () => {
+      if (!$("#qn").disabled) return;
+      answered++; if (b.textContent === layer) score++;
+      $("#qo").querySelectorAll("button").forEach(x => {
+        if (x.textContent === layer) x.classList.add("right"); else if (x === b) x.classList.add("wrong"); });
+      $("#qs").textContent = score; $("#qt").textContent = answered;
+      $("#qn").disabled = false; $("#qn").textContent = pos === errors.length - 1 ? "Start again" : "Next error";
+    });
+  };
+  $("#qn").onclick = () => { pos++; if (pos >= errors.length){ pos = 0; score = 0; answered = 0;
+      order.sort(() => Math.random() - .5); $("#qs").textContent = 0; $("#qt").textContent = 0; } show(); };
+  show();
+}
+
+window.addEventListener("hashchange", () => { current = SESSIONS.find(s => "#" + s.id === location.hash) || SESSIONS[0]; render(); });
+render();
+toggle(document.querySelector(".lesson"), true);
+</script>
