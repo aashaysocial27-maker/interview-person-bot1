@@ -163,6 +163,17 @@ tr:last-child td{border-bottom:none}
   .pm-dgs{grid-template-columns:1fr}
 }
 
+/* notebook */
+.nb-body{display:flex;flex-direction:column;gap:10px}
+.nb-cell{min-width:0}
+.nb-md{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;font-size:15px}
+.nb-md ol{margin:0;padding-left:22px}
+.nb-h{font-family:var(--display);font-weight:600}
+.nb-h1{font-size:20px}.nb-h2{font-size:17px}
+.nb-bar{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);padding:0 2px 4px}
+.nb-copy{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:2px 10px;font-size:12px}
+.nb pre{white-space:pre;tab-size:4}
+
 .empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:24px;color:var(--muted);text-align:center}
 
 @media (max-width:600px){
@@ -192,9 +203,10 @@ tr:last-child td{border-bottom:none}
    ============================================================ */
 const SESSIONS = [
   {
-    id: "session-1",
-    label: "Session 1",
+    id: "calling-llms-through-apis",
+    label: "Calling LLMs through APIs",
     title: "Calling LLMs through APIs",
+    notebook: { file: "Calling_LLMs_through_APIs.ipynb", cells: [{"t": "markdown", "s": "# Connect to AI models from different platforms\nSame pattern for every platform:\n1. **Get an API key** from the platform's website\n2. **Save it in Colab Secrets** (🔑 icon on the left) with the exact name shown, and turn on *Notebook access*\n3. **Run the cell**: it reads the key with `userdata.get(...)`, sends a prompt and prints the reply\n\n| Platform | Secret name | Where to get the key | Free? |\n|---|---|---|---|\n| Google Gemini | `GEMINI_API_KEY` | aistudio.google.com/apikey | Yes (free tier) |\n| OpenAI (GPT) | `OPENAI_API_KEY` | platform.openai.com/api-keys | Paid |\n| Anthropic (Claude) | `ANTHROPIC_API_KEY` | console.anthropic.com | Paid (separate from Claude Pro) |\n| Groq (Llama, Qwen…) | `GROQ_API_KEY` | console.groq.com/keys | Yes (free tier) |\n| OpenRouter (300+ models, one key) | `OPENROUTER_API_KEY` | openrouter.ai/keys | Some free models |\n\n**Tip:** model names change often. If you see a *model not found* error, run the \"list models\" line in that section and copy a current name."}, {"t": "code", "s": "# STEP 0: Install the client libraries cleanly to avoid dependency conflicts\n!pip install --force-reinstall -q -U google-genai openai anthropic"}, {"t": "code", "s": "# Import \"userdata\": Colab's tool for reading the secrets you saved under the key icon\nfrom google.colab import userdata\n\n# The question we will send to every AI model.\n# Stored in a variable so we write it once and reuse it everywhere.\nPROMPT = \"Explain what a invoice is in one sentence.\"\nprint(PROMPT)"}, {"t": "markdown", "s": "## 1. Google Gemini"}, {"t": "code", "s": "# Import Google's Gen AI library (the code that knows how to talk to Gemini)\nfrom google import genai\n# Import \"types\": ready-made settings boxes, e.g. for temperature\nfrom google.genai import types\n\n# Create a \"client\": a connection to Google, logged in with your key.\ngemini = genai.Client(api_key=userdata.get(\"GEMINI_API_KEY\"))\n\n# Send the request to Gemini and wait for the answer\nresp = gemini.models.generate_content(\n    model=\"gemini-3.8-flash\",   # Fixed: Using a valid, current Gemini model\n    contents=PROMPT,\n    config=types.GenerateContentConfig(temperature=0.7),\n)\n\nprint(resp.text)"}, {"t": "code", "s": "!pip install -q --force-reinstall --no-deps openai"}, {"t": "markdown", "s": "## 2. OpenAI (GPT)"}, {"t": "code", "s": "# Import OpenAI's library\nfrom openai import OpenAI\n\n# Create the connection, logged in with your OpenAI key from Colab Secrets\nopenai_client = OpenAI(api_key=userdata.get(\"OPENAI_API_KEY\"))\n\n# Fixed: Changed from non-existent gpt-5-mini to a current model\nOPENAI_MODEL = \"gpt-6.1-sol\"\n\n# Send a chat request\nresp = openai_client.chat.completions.create(\n    model=OPENAI_MODEL,\n    messages=[{\"role\": \"user\", \"content\": PROMPT}],\n)\n\nprint(resp.choices[0].message.content)"}, {"t": "markdown", "s": "## 3. Anthropic (Claude)\nNote: this needs an API key from console.anthropic.com. A Claude Pro/Max chat subscription does not include API credits."}, {"t": "code", "s": "# Import Anthropic's library (the code that knows how to talk to Claude)\nimport anthropic\n\n# Create the connection, logged in with your Anthropic key from Colab Secrets\nclaude = anthropic.Anthropic(api_key=userdata.get(\"ANTHROPIC_API_KEY\"))\n\n# Send the message to Claude\nresp = claude.messages.create(\n    model=\"claude-sonnet-5-5\",   # which Claude model to use\n    max_tokens=500,              # REQUIRED for Claude: the maximum length of the answer (~1 token = 3/4 of a word)\n    ##temperature=0.7,             # creativity setting, same idea as before\n    messages=[{\"role\": \"user\", \"content\": PROMPT}],   # same message format as OpenAI\n)\n\n# Claude's answer is a list of \"content blocks\"; [0].text = the text of the first block\nprint(resp.content[0].text)\n\n# OPTIONAL: remove the \"#\" below to list the Claude models available to you\n# for m in claude.models.list(): print(m.id)"}, {"t": "markdown", "s": "## 4. Groq (open-source models, very fast, free tier)\nGroq speaks the **same format as OpenAI**, so you reuse the OpenAI library and only change `base_url`."}, {"t": "code", "s": "# We reuse OpenAI's library, because Groq accepts the same request format\nfrom openai import OpenAI\n\n# Create the connection, but pointed at Groq's servers\ngroq = OpenAI(\n    api_key=userdata.get(\"GROQ_API_KEY\"),        # your Groq key from Colab Secrets\n    base_url=\"https://api.groq.com/openai/v1\",   # the KEY change: send requests to Groq, not OpenAI\n)\n\n# Print every model Groq currently offers, so you can copy a valid name into the next cell\nfor m in groq.models.list():   # loop through each model in the list\n    print(m.id)                # print its name (id)"}, {"t": "code", "s": "# Which model to run on Groq. If you get \"model not found\", copy a name printed by the cell above.\nGROQ_MODEL = \"openai/gpt-oss-120b\"\n\n# Exactly the same call as OpenAI, because Groq is OpenAI-compatible\nresp = groq.chat.completions.create(\n    model=GROQ_MODEL,                                  # which model\n    messages=[{\"role\": \"user\", \"content\": PROMPT}],    # what we ask\n    temperature=0.7,                                   # how creative\n)\n\n# Pull out the answer text (same path as OpenAI)\nprint(resp.choices[0].message.content)"}, {"t": "code", "s": "from google.colab import userdata\nimport os\n\ntry:\n    key = userdata.get('OPENROUTER_API_KEY')\n    if not key:\n        print(\"❌ 'OPENROUTER_API_KEY' is empty or not set in Colab Secrets.\")\n    else:\n        print(\"✅ 'OPENROUTER_API_KEY' found in Secrets!\")\n        # Let's check if the key is structurally valid (typically starts with sk-or-)\n        if key.startswith(\"sk-or-\"):\n            print(\"✅ Key format looks correct (starts with 'sk-or-').\")\n        else:\n            print(\"⚠️ Warning: OpenRouter keys usually start with 'sk-or-'. Please double check your key.\")\nexcept Exception as e:\n    print(f\"❌ Error accessing secret: {e}\")\n    print(\"Please click the 🔑 icon in the left sidebar, add a secret named 'OPENROUTER_API_KEY', and turn on 'Notebook access'.\")"}, {"t": "markdown", "s": "## 6. One function for every platform\nMany platforms accept the OpenAI format, so one helper can call them all. Add a platform by adding one line to `PLATFORMS`."}, {"t": "code", "s": "from openai import OpenAI\n\n# A \"dictionary\" (lookup table): platform name -> (its secret name, its server address)\n# base_url = None means \"use OpenAI's default address\"\nPLATFORMS = {\n    # name:       (secret name,          base_url)\n    \"openai\":     (\"OPENAI_API_KEY\",     None),\n    \"groq\":       (\"GROQ_API_KEY\",       \"https://api.groq.com/openai/v1\"),\n    #\"openrouter\": (\"OPENROUTER_API_KEY\", \"https://openrouter.ai/api/v1\"),\n    \"gemini\":     (\"GEMINI_API_KEY\",     \"https://generativelanguage.googleapis.com/v1beta/openai/\"),  # Gemini's OpenAI-compatible address\n}\n\n# \"def\" defines a reusable function, a mini-machine you can call again and again.\n# Inputs: which platform, which model, the question, and temperature (0.7 if you don't give one)\ndef ask(platform, model, prompt, temperature=0.7):\n    # Look up this platform's secret name and address in the table above\n    secret, base_url = PLATFORMS[platform]\n    # Connect to that platform with its key\n    client = OpenAI(api_key=userdata.get(secret), base_url=base_url)\n    # Send the question\n    r = client.chat.completions.create(\n        model=model,\n        messages=[{\"role\": \"user\", \"content\": prompt}],\n        temperature=temperature,\n    )\n    # Hand the answer text back to whoever called ask()\n    return r.choices[0].message.content\n\n# Try it: ask Gemini through the shared function\n#print(ask(\"gemini\", \"gemini-flash-latest\", PROMPT))\n# Switching platform takes one word, e.g.:\nprint(ask(\"groq\", \"openai/gpt-oss-120b\", PROMPT))"}, {"t": "markdown", "s": "## 7. Experiment: see temperature in action\nSame prompt, run 3 times at low vs high temperature. Low → nearly identical answers. High → more varied."}, {"t": "code", "s": "# A creative question, where answers can vary a lot\nq = \"Give me a catchy name for a procurement analytics startup. Reply with the name only.\"\n\n# Try two temperatures: 0.0 (safe) and 1.5 (adventurous)\nfor t in [0.0, 1.5]:\n    print(f\"\\n--- temperature = {t} ---\")\n    # Ask the same question 3 times at this temperature\n    for i in range(3):\n        resp = groq.chat.completions.create(\n            model=\"openai/gpt-oss-20b\",                   # a chat model from your Groq list\n            messages=[{\"role\": \"user\", \"content\": q}],    # the question\n            temperature=t,                                # the setting we're testing\n        )\n        print(resp.choices[0].message.content.strip())\n\n# Expected: at 0.0 the names barely change; at 1.5 they vary a lot"}, {"t": "code", "s": "# Two prompt styles: one asks for consistency, one asks for creativity\nprompts = {\n    \"SAFE (like low temperature)\":\n        \"Give me the most obvious, conventional name for a procurement analytics startup. Reply with the name only.\",\n    \"CREATIVE (like high temperature)\":\n        \"Give me a bold, unusual, surprising name for a procurement analytics startup. Avoid common words like 'procure' or 'spend'. Reply with the name only.\",\n}\n\nfor label, p in prompts.items():\n    print(f\"\\n--- {label} ---\")\n    for i in range(3):                       # ask 3 times to see how much it varies\n        resp = claude.messages.create(\n            model=\"claude-sonnet-5-5\",\n            max_tokens=50,                   # a short answer is enough\n            messages=[{\"role\": \"user\", \"content\": p}],\n        )\n        print(resp.content[0].text.strip())"}, {"t": "code", "s": "# Save the question in a variable called q\n# \"Reply with the name only\" keeps answers short and easy to compare\nq = \"Give me a catchy name for a procurement analytics startup. Reply with the name only.\"\n\n# Outer loop: runs twice, with t = 0.0 (safe) the first time and t = 1.5 (adventurous) the second\nfor t in [0.0, 1.5]:\n    # Print a heading. f\"...\" puts the value of t into the text; \\n adds a blank line before it\n    print(f\"\\n--- temperature = {t} ---\")\n\n    # Inner loop: range(3) gives 0, 1, 2, so we ask the same question 3 times\n    for i in range(3):\n        # Send the question to Groq and store the full reply in \"resp\"\n        resp = groq.chat.completions.create(\n            model=\"openai/gpt-oss-20b\",                   # which AI model answers (a chat model from your Groq list)\n            messages=[{\"role\": \"user\", \"content\": q}],    # the conversation: one message from you (\"user\") with question q\n            temperature=t,                                # the setting we're testing: 0.0 first, then 1.5\n        )                                                 # close the request\n\n        # Pull out the answer text and print it:\n        # choices[0] = the first answer, .message.content = its text, .strip() = remove extra spaces\n        print(resp.choices[0].message.content.strip())\n\n# Total: 2 temperatures x 3 tries = 6 answers\n# Expected: at 0.0 the names barely change; at 1.5 they vary a lot"}, {"t": "code", "s": "# A dictionary (lookup table): label -> prompt\n# Two versions of the same question: one asks for an obvious name, one for a creative name\nprompts = {\n    # SAFE version: asks for the most obvious, conventional answer (acts like low temperature)\n    \"SAFE (like low temperature)\":\n        \"Give me the most obvious, conventional name for a procurement analytics startup. Reply with the name only.\",\n    # CREATIVE version: asks for something bold and bans predictable words (acts like high temperature)\n    \"CREATIVE (like high temperature)\":\n        \"Give me a bold, unusual, surprising name for a procurement analytics startup. Avoid common words like 'procure' or 'spend'. Reply with the name only.\",\n}\n\n# Loop through the table: .items() gives each pair -> label gets the heading, p gets the prompt text\nfor label, p in prompts.items():\n    # Print the heading for this round, with a blank line before it\n    print(f\"\\n--- {label} ---\")\n\n    # Ask each prompt 3 times to see how much the answers vary\n    for i in range(3):\n        # Send the request to Claude and store the reply in \"resp\"\n        resp = claude.messages.create(\n            model=\"claude-sonnet-5-5\",                    # which Claude model to use\n            max_tokens=50,                                # required by Claude: max answer length (~35 words, keeps it short and cheap)\n            messages=[{\"role\": \"user\", \"content\": p}],    # send the current prompt p as your message\n            # no temperature here: Claude's API removed it\n        )                                                 # close the request\n\n        # Print Claude's answer\n        # content[0] = the first block of the reply, .text = its text, .strip() = remove extra spaces\n        print(resp.content[0].text.strip())\n\n# Groq: same prompt, temperature changes -> different variety\n# Claude: same settings, prompt wording changes -> different variety"}, {"t": "markdown", "s": "## Common errors\n| Error | Meaning | Fix |\n|---|---|---|\n| `SecretNotFoundError` | Secret name doesn't match, or notebook access is off | Check the spelling in 🔑 and turn on the toggle |\n| `401 / invalid api key` | Wrong or expired key | Create a new key and paste it again |\n| `404 / model not found` | Model name retired or misspelled | Run the list-models line and pick a current name |\n| `429 / rate limit / quota` | Free-tier limit reached, or no credits | Wait a minute, or add billing |"}] },
     intro: "From an AI engineer’s point of view, here’s what you actually learned today:",
     lessons: [
       { title: "An LLM is just an API call.",
@@ -296,7 +308,7 @@ const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'
 function renderTabs(){
   $("#tabs").innerHTML = SESSIONS.map(s =>
     `<button class="tab" role="tab" aria-selected="${s === current}" data-id="${s.id}">${esc(s.label)}</button>`
-  ).join("") + `<span class="tab add" aria-hidden="true">+ next session</span>`;
+  ).join("") + `<span class="tab add" aria-hidden="true">+ next topic</span>`;
   $("#tabs").querySelectorAll("[data-id]").forEach(b => b.onclick = () => { location.hash = b.dataset.id; });
 }
 
@@ -313,7 +325,7 @@ function render(){
   renderTabs();
   $("#lede").textContent = current.intro;
   const s = current;
-  let h = `<div class="section"><div class="toolbar"><div><span class="eyebrow">${esc(s.label)}</span><h2>${esc(s.title)}</h2></div>
+  let h = `<div class="section"><div class="toolbar"><div><span class="eyebrow">Topic ${SESSIONS.indexOf(s) + 1}</span><h2>${esc(s.title)}</h2></div>
     <button class="linkbtn" id="expandAll">Expand all</button></div>`;
   s.lessons.forEach((l, i) => {
     const key = s.id + ":" + i, isDone = !!done[key];
@@ -337,9 +349,53 @@ function render(){
   h += `<div class="next" style="margin-top:20px"><span class="eyebrow">Next step</span><p>${esc(s.next)}</p>
     <div class="fields">${s.nextFields.map(f => `<span class="tag">"${esc(f)}": …</span>`).join("")}</div></div>`;
 
+  if (s.notebook) h += notebookView(s.notebook);
+
   $("#main").innerHTML = h;
+  document.querySelectorAll(".nb-copy").forEach(b => b.onclick = async () => {
+    const pre = b.closest(".nb-cell").querySelector("pre");
+    try { await navigator.clipboard.writeText(pre.textContent); b.textContent = "Copied"; }
+    catch(e){ const r = document.createRange(); r.selectNodeContents(pre); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); b.textContent = "Selected, press Ctrl+C"; }
+    setTimeout(() => b.textContent = "Copy", 1800);
+  });
+  const nbt = $("#nbToggle");
+  if (nbt) nbt.onclick = () => { const body = $("#nbBody"); body.hidden = !body.hidden;
+    nbt.setAttribute("aria-expanded", !body.hidden); nbt.textContent = body.hidden ? "Show notebook" : "Hide notebook"; };
   bind();
   progress();
+}
+
+/* tiny markdown renderer for notebook text cells: headings, tables, lists, bold, inline code */
+function md(src){
+  const inline = t => esc(t).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/\*([^*]+)\*/g, "<i>$1</i>");
+  const lines = src.split("\n"), out = []; let i = 0;
+  while (i < lines.length){
+    const l = lines[i];
+    if (/^#{1,6} /.test(l)){ const n = l.match(/^#+/)[0].length; out.push(`<p class="nb-h nb-h${n}">${inline(l.replace(/^#+ /, ""))}</p>`); i++; }
+    else if (l.trim().startsWith("|")){
+      const rows = []; while (i < lines.length && lines[i].trim().startsWith("|")) rows.push(lines[i++]);
+      const cells = r => r.trim().replace(/^\||\|$/g, "").split("|").map(c => c.trim());
+      const body = rows.filter((_, k) => k !== 1);
+      out.push(`<div class="tbl"><table><thead><tr>${cells(body[0]).map(c => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${
+        body.slice(1).map(r => `<tr>${cells(r).map(c => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`);
+    }
+    else if (/^\d+\. /.test(l)){ const it = []; while (i < lines.length && /^\d+\. /.test(lines[i])) it.push(lines[i++].replace(/^\d+\. /, "")); out.push(`<ol>${it.map(x => `<li>${inline(x)}</li>`).join("")}</ol>`); }
+    else if (l.trim()){ out.push(`<p>${inline(l)}</p>`); i++; }
+    else i++;
+  }
+  return out.join("");
+}
+
+function notebookView(nb){
+  let n = 0;
+  const cells = nb.cells.map(c => c.t === "markdown"
+    ? `<div class="nb-cell nb-md">${md(c.s)}</div>`
+    : `<div class="nb-cell"><div class="nb-bar"><span class="mono">In [${++n}]</span><button class="nb-copy">Copy</button></div><pre>${esc(c.s)}</pre></div>`).join("");
+  return `<div class="section nb" style="margin-top:20px">
+    <div class="toolbar"><div><span class="eyebrow">Reference notebook</span><h2>${esc(nb.file)}</h2></div>
+      <button class="linkbtn" id="nbToggle" aria-expanded="false" aria-controls="nbBody">Show notebook</button></div>
+    <p class="dg-cap">The Colab notebook used in this topic, cell by cell. Code is shown without outputs; copy any cell into Colab to run it.</p>
+    <div id="nbBody" class="nb-body" hidden>${cells}</div></div>`;
 }
 
 const arrow = `<div class="dg-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>`;
