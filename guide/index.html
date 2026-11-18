@@ -241,6 +241,9 @@ tr:last-child td{border-bottom:none}
   .hist3 .row{grid-template-columns:1fr;gap:4px}
 }
 
+/* plain list inside lessons */
+.plain-list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:66ch}
+
 /* attachment card */
 .attach{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;min-width:0}
 .attach-head{display:flex;gap:14px;align-items:center;min-width:0}
@@ -305,7 +308,7 @@ const SESSIONS = [
       prompt: "prompt: \"Explain an AI agent in 2 lines\"",
       response: "response: \"An AI agent is...\""
     },
-    notebooks: [{"file": "Calling_LLMs_through_APIs.ipynb", "path": "guide/Calling_LLMs_through_APIs.ipynb", "kb": 34, "cells": 25, "code": 16, "sections": ["Connect to AI models from different platforms", "0. Pre Requisite", "1. Google Gemini", "2. OpenAI (GPT)", "3. Anthropic (Claude)", "4. Groq (open-source models, very fast, free tier)", "6. One function for every platform", "7. Experiment: see temperature in action", "Common errors"], "outputs": true}, {"file": "Basic_Chatbots_for_all_models_using_python_Explained.ipynb", "path": "guide/Basic_Chatbots_for_all_models_using_python_Explained.ipynb", "kb": 24, "cells": 30, "code": 24, "outputs": false, "sections": ["Step 0: install the SDKs", "Gemini CHATBOT", "OPENAI CHATBOT", "Antropic Claud Chatbot", "Groq Chat Bot"]}],
+    notebooks: [{"file": "Calling_LLMs_through_APIs.ipynb", "path": "guide/Calling_LLMs_through_APIs.ipynb", "kb": 34, "cells": 25, "code": 16, "sections": ["Connect to AI models from different platforms", "0. Pre Requisite", "1. Google Gemini", "2. OpenAI (GPT)", "3. Anthropic (Claude)", "4. Groq (open-source models, very fast, free tier)", "6. One function for every platform", "7. Experiment: see temperature in action", "Common errors"], "outputs": true}],
     intro: "From an AI engineer’s point of view, here’s what you actually learned today:",
     lessons: [
       { title: "An LLM is just an API call.",
@@ -391,6 +394,78 @@ const SESSIONS = [
     ],
     next: "A good next step is to make one call useful for procurement: send a sample supplier clause to Gemini and ask for the key fields back as JSON (party, payment terms, penalties). That covers structured output, the foundation of most enterprise AI features. I can set that up in the notebook if you’d like.",
     nextFields: ["party", "payment terms", "penalties"]
+  },
+  {
+    "id": "chatbots",
+    "label": "Chatbots",
+    "title": "Basic Chatbots",
+    "intro": "What building these chatbots taught you",
+    "lessons": [
+      {
+        "title": "Models have no memory.",
+        "body": [
+          "Every API call starts fresh. The \"memory\" in ChatGPT or Claude's app is an illusion created by software around the model. You proved this: without history, the model doesn't know your name."
+        ]
+      },
+      {
+        "title": "A chatbot is a loop plus a history list.",
+        "body": [
+          "Every chatbot follows the same cycle: add the user's message, send the whole conversation, get the reply, save the reply, repeat. That's the core of chat products."
+        ]
+      },
+      {
+        "title": "Memory can be kept in three places:",
+        "body": [
+          "<ul class=\"plain-list\"><li>SDK-managed: Gemini's <code>chats.create<\/code> keeps the history for you.<\/li><li>Server-managed: OpenAI's <code>previous_response_id<\/code> stores it on OpenAI's servers.<\/li><li>Self-managed: for Claude and Groq, your own list holds it, which gives you full control.<\/li><\/ul>",
+          "Real products often manage history themselves, so they can save it, edit it or trim it."
+        ]
+      },
+      {
+        "title": "Roles structure a conversation.",
+        "body": [
+          "<code>user<\/code> is the human, <code>assistant<\/code> is the AI (Gemini calls it <code>model<\/code>), and <code>system<\/code> sets the bot's job and tone. Getting roles right is how you control behaviour."
+        ]
+      },
+      {
+        "title": "History costs money.",
+        "body": [
+          "Each turn resends everything, so long chats use more tokens, cost more, run slower, and can eventually hit the model's context limit. Production chatbots summarise or trim old messages."
+        ]
+      },
+      {
+        "title": "The pattern is the same everywhere, but the details differ.",
+        "body": [
+          "Each platform reads replies differently (<code>.text<\/code>, <code>choices[0]…<\/code>, <code>content[-1]<\/code>), Claude requires <code>max_tokens<\/code>, and responses can contain several blocks, such as thinking plus text. A small helper function hides these differences."
+        ]
+      },
+      {
+        "title": "Linking turns correctly matters.",
+        "body": [
+          "Your <code>response3<\/code> bug, which linked to an old turn, showed how easily context gets lost. Many chatbot failures in production are really context failures."
+        ]
+      }
+    ],
+    "takeaway": [
+      "PM takeaway",
+      "a chatbot's quality depends on the model and on what context you give it. Memory, system prompts, history limits and cost are product decisions, not just engineering ones. That's the foundation for retrieval-based assistants (RAG) and AI agents."
+    ],
+    "notebooks": [
+      {
+        "file": "Basic_Chatbots_for_all_models_using_python_Explained.ipynb",
+        "path": "guide/Basic_Chatbots_for_all_models_using_python_Explained.ipynb",
+        "kb": 24,
+        "cells": 30,
+        "code": 24,
+        "outputs": false,
+        "sections": [
+          "Step 0: install the SDKs",
+          "Gemini CHATBOT",
+          "OPENAI CHATBOT",
+          "Antropic Claud Chatbot",
+          "Groq Chat Bot"
+        ]
+      }
+    ]
   }
 ];
 
@@ -438,7 +513,7 @@ function render(){
       <button class="lesson-head" aria-expanded="false" aria-controls="lb${i}">
         <span class="num">${i + 1}</span><h3>${l.title}</h3>${chev}</button>
       <div class="lesson-body" id="lb${i}" hidden>
-        ${l.body.map(p => `<p>${p}</p>`).join("")}
+        ${l.body.map(p => p.startsWith("<ul") ? p : `<p>${p}</p>`).join("")}
         ${l.diagram ? diagram(l.diagram) : ""}
         ${l.widget ? widget(l.widget, s) : ""}
         ${(l.after || []).map(p => `<p>${p}</p>`).join("")}
@@ -447,11 +522,13 @@ function render(){
   });
   h += `</div>`;
 
-  h += `<div class="section" style="margin-top:20px"><div><span class="eyebrow">Product view</span><h2>${esc(s.pmIntro)}</h2></div>
+  if (s.pm) h += `<div class="section" style="margin-top:20px"><div><span class="eyebrow">Product view</span><h2>${esc(s.pmIntro)}</h2></div>
     <div class="pm-grid">${s.pm.map(([t, d]) => `<div class="pm"><h3>${esc(t)}</h3><p>${esc(d)}</p></div>`).join("")}</div>
     ${s.pmDiagrams ? `<div class="pm-dgs">${s.pmDiagrams.map(diagram).join("")}</div>` : ""}</div>`;
 
-  h += `<div class="next" style="margin-top:20px"><span class="eyebrow">Next step</span><p>${esc(s.next)}</p>
+  if (s.takeaway) h += `<div class="next" style="margin-top:20px"><p><b>${esc(s.takeaway[0])}:</b> ${esc(s.takeaway[1])}</p></div>`;
+
+  if (s.next) h += `<div class="next" style="margin-top:20px"><span class="eyebrow">Next step</span><p>${esc(s.next)}</p>
     <div class="fields">${s.nextFields.map(f => `<span class="tag">"${esc(f)}": …</span>`).join("")}</div></div>`;
 
   if (s.notebooks) h += notebookView(s.notebooks);
