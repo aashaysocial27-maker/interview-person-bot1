@@ -305,7 +305,7 @@ const SESSIONS = [
       prompt: "prompt: \"Explain an AI agent in 2 lines\"",
       response: "response: \"An AI agent is...\""
     },
-    notebook: {"file": "Calling_LLMs_through_APIs.ipynb", "path": "guide/Calling_LLMs_through_APIs.ipynb", "kb": 34, "cells": 25, "code": 16, "sections": ["Connect to AI models from different platforms", "0. Pre Requisite", "1. Google Gemini", "2. OpenAI (GPT)", "3. Anthropic (Claude)", "4. Groq (open-source models, very fast, free tier)", "6. One function for every platform", "7. Experiment: see temperature in action", "Common errors"]},
+    notebooks: [{"file": "Calling_LLMs_through_APIs.ipynb", "path": "guide/Calling_LLMs_through_APIs.ipynb", "kb": 34, "cells": 25, "code": 16, "sections": ["Connect to AI models from different platforms", "0. Pre Requisite", "1. Google Gemini", "2. OpenAI (GPT)", "3. Anthropic (Claude)", "4. Groq (open-source models, very fast, free tier)", "6. One function for every platform", "7. Experiment: see temperature in action", "Common errors"], "outputs": true}, {"file": "Basic_Chatbots_for_all_models_using_python_Explained.ipynb", "path": "guide/Basic_Chatbots_for_all_models_using_python_Explained.ipynb", "kb": 24, "cells": 30, "code": 24, "outputs": false, "sections": ["Step 0: install the SDKs", "Gemini CHATBOT", "OPENAI CHATBOT", "Antropic Claud Chatbot", "Groq Chat Bot"]}],
     intro: "From an AI engineer’s point of view, here’s what you actually learned today:",
     lessons: [
       { title: "An LLM is just an API call.",
@@ -454,7 +454,7 @@ function render(){
   h += `<div class="next" style="margin-top:20px"><span class="eyebrow">Next step</span><p>${esc(s.next)}</p>
     <div class="fields">${s.nextFields.map(f => `<span class="tag">"${esc(f)}": …</span>`).join("")}</div></div>`;
 
-  if (s.notebook) h += notebookView(s.notebook);
+  if (s.notebooks) h += notebookView(s.notebooks);
 
   $("#main").innerHTML = h;
   bindNotebook();
@@ -483,7 +483,7 @@ function tempProbs(T){
 
 function renderConcepts(){
   $("#lede").textContent = "Short explainers for ideas that come up across topics. Each one links back to the notebook where you used it.";
-  const nb = SESSIONS[0].notebook;
+  const nb = SESSIONS[0].notebooks;
   let h = `<div class="section"><div><span class="eyebrow">Learning Concepts</span><h2>Ideas behind the code</h2></div>
     <div class="subtabs" role="tablist">${CONCEPTS.map(c =>
       `<button class="subtab" role="tab" aria-selected="${c.id === concept}" data-c="${c.id}">${c.label}</button>`).join("")}</div>
@@ -694,15 +694,19 @@ function md(src){
   return out.join("");
 }
 
-function notebookView(nb){
+function notebookView(list){
+  return `<div class="section" style="margin-top:20px">
+    <div><span class="eyebrow">Attachments</span><h2>Reference notebook${list.length > 1 ? "s" : ""}</h2></div>
+    ${list.map(attachCard).join("")}</div>`;
+}
+
+function attachCard(nb){
   const gh = `https://github.com/${REPO}/blob/main/${nb.path}`;
   const colab = `https://colab.research.google.com/github/${REPO}/blob/main/${nb.path}`;
   const icon = `<svg viewBox="0 0 32 40" width="34" height="42" aria-hidden="true"><path d="M3 2h18l8 8v28H3z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/><path d="M21 2v8h8" fill="none" stroke="var(--accent)" stroke-width="2"/><text x="16" y="30" text-anchor="middle" font-size="8" font-family="IBM Plex Mono,monospace" fill="var(--accent)">ipynb</text></svg>`;
-  return `<div class="section" style="margin-top:20px">
-    <div><span class="eyebrow">Attachment</span><h2>Reference notebook</h2></div>
-    <div class="attach">
+  return `<div class="attach">
       <div class="attach-head">${icon}
-        <div class="attach-meta"><b>${esc(nb.file)}</b><span>Jupyter notebook · ${nb.kb} KB · ${nb.cells} cells (${nb.code} code) · includes outputs from your last run</span></div>
+        <div class="attach-meta"><b>${esc(nb.file)}</b><span>Jupyter notebook · ${nb.kb} KB · ${nb.cells} cells (${nb.code} code)${nb.outputs ? " · includes outputs from your last run" : ""}</span></div>
       </div>
       <div class="attach-actions">
         <a class="btn" href="${gh}" target="_blank" rel="noopener">Open on GitHub</a>
@@ -711,7 +715,7 @@ function notebookView(nb){
       <details class="attach-toc"><summary>What’s inside (${nb.sections.length} sections)</summary>
         <ol>${nb.sections.map(s => `<li>${esc(s)}</li>`).join("")}</ol></details>
       <p class="dg-cap">To download it, open it on GitHub and use the download button there. The links work for anyone with access to the repository.</p>
-    </div></div>`;
+    </div>`;
 }
 
 const arrow = `<div class="dg-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>`;
