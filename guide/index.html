@@ -241,6 +241,11 @@ tr:last-child td{border-bottom:none}
   .hist3 .row{grid-template-columns:1fr;gap:4px}
 }
 
+/* header link */
+.title-row{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
+.head-link{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ok);color:var(--ok);background:var(--ok-soft);border-radius:10px;padding:8px 16px;font:600 15px var(--display);text-decoration:none}
+.head-link:hover{background:var(--ok);color:var(--surface)}
+
 /* code block */
 .detail-head{display:flex;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--line)}
 .detail-head p{max-width:66ch;color:var(--muted)}
@@ -333,7 +338,7 @@ tr:last-child td{border-bottom:none}
 <div class="wrap">
   <header>
     <span class="eyebrow">AI engineering · learning log</span>
-    <h1>AI Engineering Guide</h1>
+    <div class="title-row"><h1>AI Engineering Guide</h1><a class="head-link" href="https://claude.ai/artifact/D2vhnvu7LWmwxhNhrxkiSg" target="_blank" rel="noopener">AI Narrator <span aria-hidden="true">↗</span></a></div>
     <p class="lede" id="lede"></p>
     <div class="tabs" role="tablist" id="tabs"></div>
     <div class="progress"><span><b id="pcount">0</b> of <b id="ptotal">0</b> understood</span><div class="bar"><i id="pbar"></i></div></div>
