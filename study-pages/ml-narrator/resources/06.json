@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Overfitting (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/overfitting"},
+ {"kind": "Course", "title": "Overfitting: Model complexity (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/model-complexity"},
+ {"kind": "Example", "title": "Underfitting vs. Overfitting, with charts (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html"},
+ {"kind": "Docs", "title": "Validation curves: spotting bias and variance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/learning_curve.html"}
+]

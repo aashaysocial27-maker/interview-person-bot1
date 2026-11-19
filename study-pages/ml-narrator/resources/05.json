@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Datasets: Dividing the original dataset (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets"},
+ {"kind": "Docs", "title": "Cross-validation: evaluating estimator performance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"},
+ {"kind": "Docs", "title": "Common pitfalls: data leakage (scikit-learn)", "url": "https://scikit-learn.org/stable/common_pitfalls.html"},
+ {"kind": "Course", "title": "Advanced Learning Algorithms: model evaluation (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/advanced-learning-algorithms"}
+]

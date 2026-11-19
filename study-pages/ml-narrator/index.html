@@ -476,12 +476,48 @@ const CONCEPTS = [
     { h: "How it connects", text: "In Data and Labeling, we built the table and its label column. Here we filled in the other columns, the features. Next, in Train, Validation and Test Sets, we learn how to split that table so we can check, honestly, whether the model works on answers it has never seen." },
   ]
 },
-{ n: 5, group: "Foundations", title: "Train, Validation & Test Sets", draft: true, terms: ["Train set", "Validation set", "Test set", "Cross-validation", "Data leakage"],
-  sections: [{ h: "The big idea", text: "To know if a model really works, you test it on data it has never seen. So you split your data into a training set, a validation set for tuning, and a test set for the final check. Data leakage is when test information sneaks into training, which makes results look far better than they are." }] },
-{ n: 6, group: "Foundations", title: "Overfitting & Underfitting", draft: true, terms: ["Overfitting", "Underfitting", "Bias-variance trade-off", "Generalization"],
-  sections: [{ h: "The big idea", text: "An overfit model memorises its training examples and fails on new ones, like a student who memorised last year's exam. An underfit model is too simple to catch the pattern at all. The goal is generalization, doing well on data the model has never seen." }] },
-{ n: 7, group: "Classic Models", title: "Linear & Logistic Regression", draft: true, terms: ["Linear regression", "Logistic regression", "Coefficients", "Baseline"],
-  sections: [{ h: "The big idea", text: "These are the simplest models and often the best place to start. Linear regression predicts a number, like a score out of ten. Logistic regression predicts a probability, like the chance an answer is strong. They are fast, cheap and easy to explain." }] },
+{
+  n: 5, group: "Foundations", title: "Train, Validation & Test Sets",
+  terms: ["Training set", "Validation set", "Test set", "Cross-validation", "Folds", "Data leakage"],
+  visual: { title: "An Honest Exam", note: "Split the coach's data, rotate through folds, and catch a leak that fakes a great score" },
+  sections: [
+    { h: "The big idea", text: "How do you know a model really works? You test it on answers it has never seen, just like a fair exam uses new questions, not the ones from homework. If you test on the same examples the model trained on, it can simply remember them and look perfect. So before training, we split the data into separate parts, each with its own job." },
+    { h: "1 · Three sets, three jobs", text: "The training set is where the model learns, usually about seventy percent of the data. The validation set is for comparing models and tuning settings, about fifteen percent. The test set is the final exam, the last fifteen percent, used once at the very end. For our coach, one thousand rated answers become seven hundred for training, one hundred and fifty for validation, and one hundred and fifty for testing." },
+    { h: "2 · Protect the test set", text: "The test set only works if the model has never influenced it. If the team keeps checking the test score and tweaking the model, the model slowly gets shaped to those exact answers. Google's course says test sets wear out with repeated use. The fix is discipline. Do your comparing on the validation set, look at the test set once, and refresh it with new data from time to time." },
+    { h: "3 · Cross-validation", text: "With a small dataset, one validation set can be lucky or unlucky. Cross-validation fixes that. Split the training data into, say, five equal parts called folds. Train on four folds and validate on the fifth. Then rotate, so each fold gets a turn as the validation set. Average the five scores. You get a steadier, more trustworthy number." },
+    { h: "4 · Data leakage", text: "Data leakage is when information from the test set sneaks into training. It makes a model look brilliant in testing and disappointing in real life. Common causes are the same answer copied into both sets, the same candidate's answers spread across both sets, or using future data to predict the past. The warning sign is a score that seems too good to be true. For our coach, split by candidate, not by answer, so the model is always judged on new people." },
+    { h: "Why it matters for a PM", text: "For a PM, every accuracy number needs a follow-up question. Was it measured on data the model never saw? How was the data split, by user and by time? An amazing offline result, like ninety nine percent, is more often a leak than a breakthrough. Insist on a clean test set before anyone celebrates." },
+    { h: "How it connects", text: "In Features and Feature Engineering, we finished building the table. Here we learned to split it fairly. Next, in Overfitting and Underfitting, we use the training and validation scores side by side to spot a model that memorises instead of learning." },
+  ]
+},
+{
+  n: 6, group: "Foundations", title: "Overfitting & Underfitting",
+  terms: ["Generalization", "Underfitting", "Overfitting", "Bias", "Variance", "Learning curve"],
+  visual: { title: "Memorising vs Learning", note: "Turn the complexity dial and watch a model go from too simple to memorising" },
+  sections: [
+    { h: "The big idea", text: "The goal of machine learning is not to do well on the training data. It is to do well on new data the model has never seen. That is called generalization. A model can miss it in two opposite ways. It can be too simple and miss the pattern, which is underfitting. Or it can be too complex and memorise the examples, which is overfitting." },
+    { h: "1 · Underfitting", text: "An underfit model is too simple for the problem. Imagine a coach that only looks at answer length. It cannot tell a long, rambling answer from a long, excellent one. It does badly on the training data and badly on new data. It is like a student who only skimmed the textbook. The fix is to give it richer features or a more capable model." },
+    { h: "2 · Overfitting", text: "An overfit model memorises its training examples, including their noise and coincidences. Say three strong answers in the training data happened to mention Kubernetes. An overfit coach may decide that Kubernetes means strong. It scores almost perfectly on training data, then stumbles on new answers. It is like a student who memorised last year's exam, and panics when the questions change." },
+    { h: "3 · Bias and variance", text: "Two words describe this trade off. Bias is error from being too simple, from assumptions that miss the real pattern. Variance is error from being too sensitive to the particular training examples, so a slightly different dataset gives a very different model. Simple models have high bias. Very complex models have high variance. The sweet spot balances the two." },
+    { h: "4 · How to spot and fix it", text: "The test is simple. Compare the training score with the validation score. If both are low, the model is underfitting. If training is high but validation is much lower, the model is overfitting. To fix overfitting, get more data, simplify the model, remove noisy features, or use regularization and early stopping, which we cover later. To fix underfitting, add better features or use a more capable model." },
+    { h: "Why it matters for a PM", text: "For a PM, never accept a training score on its own. A model that is ninety nine percent right on its training data may still be wrong a third of the time for real users. Always ask for the training and validation scores side by side. A big gap is a warning sign. And remember, more good data is often the most reliable cure for overfitting." },
+    { h: "How it connects", text: "In Train, Validation and Test Sets, we learned to keep separate data for checking. Here we used that data to diagnose a model. This completes the Foundations group. Next, we start Classic Models with Linear and Logistic Regression, simple models that rarely overfit and make great first baselines." },
+  ]
+},
+{
+  n: 7, group: "Classic Models", title: "Linear & Logistic Regression",
+  terms: ["Linear regression", "Weights", "Bias (intercept)", "Logistic regression", "Sigmoid", "Threshold", "Baseline"],
+  visual: { title: "The Best Straight Line", note: "Fit a line to the coach's data, squeeze it into a probability, and read what the weights mean" },
+  sections: [
+    { h: "The big idea", text: "Linear and logistic regression are the simplest models in machine learning, and often the best place to start. Both work by giving each feature a weight, then adding everything up. Linear regression uses that sum to predict a number. Logistic regression turns it into a probability, for yes or no questions. In fact, the model in our very first concept was a logistic regression." },
+    { h: "1 · Linear regression", text: "Linear regression draws the best straight line through the data. Say we want to predict a coach's score out of ten from the number of specific details in an answer. The model might learn, score equals two plus zero point eight times the number of details. The zero point eight is a weight, it says how much each detail adds. The two is the bias, or starting point. With many features, it is the same idea, a weighted sum of all of them." },
+    { h: "2 · Finding the best line", text: "How does the model find the best line? It measures the error for each training answer, the distance between the line and the real score. It squares those errors, so big misses count extra, and adds them up. Then it adjusts the weights until that total is as small as possible. That total is called the loss, and we look at it more closely in later concepts." },
+    { h: "3 · Logistic regression", text: "For yes or no questions, like is this answer strong, a straight line is not enough, because it can go below zero or above one. Logistic regression takes the same weighted sum and passes it through an S shaped curve called the sigmoid. That squeezes any number into a probability between zero and one. Then a threshold, often zero point five, turns the probability into a decision, strong or weak." },
+    { h: "4 · Strengths and limits", text: "These models are fast, cheap, and easy to explain, because you can read the weights. Plus one point two for each specific detail is something a user or a regulator can understand. That makes them excellent baselines, the first model to beat. Their limit is that they assume simple, straight line effects. They miss interactions, like length only helping when an answer is also specific. For that, we need models like decision trees." },
+    { h: "Why it matters for a PM", text: "For a PM, always ask for a simple baseline before anything fancy. If a complex model beats logistic regression by only one percent, it may not be worth the extra cost and the loss of explainability. And remember that the threshold is a product decision. Raising it means fewer answers marked strong, but more confidence in each one." },
+    { h: "How it connects", text: "In the Foundations group, we learned how data, features and testing work. This is the first Classic Model, and it is the same function we met in What Is Machine Learning. Next, in Decision Trees and Random Forests, we meet models that ask a series of yes or no questions, and can capture the curves and interactions a straight line misses." },
+  ]
+},
 { n: 8, group: "Classic Models", title: "Decision Trees & Random Forests", draft: true, terms: ["Decision tree", "Random forest", "Bagging", "Feature importance"],
   sections: [{ h: "The big idea", text: "A decision tree asks a chain of yes or no questions until it reaches an answer. One tree is easy to read but makes mistakes. A random forest trains hundreds of slightly different trees and lets them vote, which is far more accurate." }] },
 { n: 9, group: "Classic Models", title: "Gradient Boosting", draft: true, terms: ["Boosting", "XGBoost", "LightGBM", "Tabular data"],
@@ -529,7 +565,7 @@ const CONCEPTS = [
 { n: 30, group: "Real-World ML", title: "MLOps", draft: true, terms: ["ML pipelines", "Feature store", "Model registry", "CI/CD for ML"],
   sections: [{ h: "The big idea", text: "MLOps is the engineering that keeps machine learning running reliably in production. It covers data pipelines, versioning of data and models, automated retraining, safe deployment and rollback. It turns a one-off experiment into a dependable product." }] }
 ];
-const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}]};
+const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}], "5": [{"kind": "Course", "title": "Datasets: Dividing the original dataset (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets"}, {"kind": "Docs", "title": "Cross-validation: evaluating estimator performance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"}, {"kind": "Docs", "title": "Common pitfalls: data leakage (scikit-learn)", "url": "https://scikit-learn.org/stable/common_pitfalls.html"}, {"kind": "Course", "title": "Advanced Learning Algorithms: model evaluation (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/advanced-learning-algorithms"}], "6": [{"kind": "Course", "title": "Overfitting (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/overfitting"}, {"kind": "Course", "title": "Overfitting: Model complexity (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/model-complexity"}, {"kind": "Example", "title": "Underfitting vs. Overfitting, with charts (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html"}, {"kind": "Docs", "title": "Validation curves: spotting bias and variance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/learning_curve.html"}], "7": [{"kind": "Course", "title": "Linear regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"}, {"kind": "Course", "title": "Logistic regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression"}, {"kind": "Course", "title": "Calculating a probability with the sigmoid function (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/sigmoid-function"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}]};
 const ALLOWED_URLS = new Set(Object.values(RESOURCES).flat().map(r => r.url));
 function learnHtml(n) {
   const list = RESOURCES[n] || [];
@@ -1342,6 +1378,358 @@ const STEPS = [
 return { STEPS, picker: { label: "Test a feature:", step: 3, items: () => CANDIDATES.map(c => ({ label: c.label, color: c.c })), get: () => cand, set: i => { cand = i; } } };
 })();
 VMETA[4] = {"title": "Turning Answers into Numbers", "sub": "Follow one interview answer as it becomes a feature vector, see how numbers and categories are prepared, then test which features are safe to use."};
+
+VISUALS[5] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)") => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="1.5" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, rx = 6) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="1.3"/>`;
+
+function drawSplit() {
+  let s = svg(320);
+  s += lbl(20, 22, "1,000 RATED ANSWERS · SHUFFLED, THEN SPLIT");
+  const parts = [["Training", 700, "70%", B], ["Validation", 150, "15%", P], ["Test", 150, "15%", A]];
+  let x = 20;
+  parts.forEach(([t, n, p, c]) => { const w = n / 1000 * 600; s += rect(x, 34, w - 4, 52, c, .16) + `<text x="${x + (w - 4) / 2}" y="57" text-anchor="middle" font-size="13" font-weight="700" style="fill:${c}">${t}</text><text x="${x + (w - 4) / 2}" y="76" text-anchor="middle" class="mono" font-size="12">${n} · ${p}</text>`; x += w; });
+  const jobs = [["Training", "The model learns from these.", "Used over and over.", B], ["Validation", "Compare models, tune settings.", "Used often.", P], ["Test", "The final exam, once, at the end.", "Then left alone.", A]];
+  jobs.forEach(([t, a, b, c], i) => {
+    const y = 110 + i * 64;
+    s += rect(20, y, 600, 54, c, .06) + `<text x="36" y="${y + 23}" font-size="14" font-weight="700" style="fill:${c}">${t}</text><text x="160" y="${y + 23}" font-size="13">${a}</text><text x="160" y="${y + 42}" font-size="12" class="muted">${b}</text>`;
+  });
+  return s + `</svg>`;
+}
+
+function drawWear() {
+  let s = svg(300);
+  s += lbl(20, 22, "WHAT HAPPENS WHEN THE TEAM KEEPS PEEKING AT THE TEST SET");
+  const rounds = [["Try 1", 78], ["Try 2", 81], ["Try 3", 84], ["Try 5", 87], ["Try 9", 90]];
+  rounds.forEach(([t, v], i) => {
+    const x = 50 + i * 100, h = (v - 60) * 6;
+    s += `<rect x="${x}" y="${220 - h}" width="56" height="${h}" rx="4" style="fill:${G}" fill-opacity=".55"/><text x="${x + 28}" y="${214 - h}" text-anchor="middle" class="mono" font-size="12">${v}%</text><text x="${x + 28}" y="238" text-anchor="middle" font-size="12" class="muted">${t}</text>`;
+  });
+  s += `<line x1="40" y1="${220 - (79 - 60) * 6}" x2="560" y2="${220 - (79 - 60) * 6}" style="stroke:${W}" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+  s += `<text x="564" y="${224 - (79 - 60) * 6}" font-size="12" font-weight="600" style="fill:${W}">real users</text><text x="564" y="${240 - (79 - 60) * 6}" class="mono" font-size="12" style="fill:${W}">79%</text>`;
+  s += `<text x="20" y="270" font-size="13">The test score keeps rising, but only because the model was tuned to those 150 answers.</text>`;
+  s += `<text x="20" y="290" font-size="12" class="muted">Tune on validation. Look at the test set once. Numbers are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+const FOLD_SCORES = [81, 84, 79, 83, 82];
+let fold = 0;
+function drawCV() {
+  let s = svg(320);
+  s += lbl(20, 22, "5-FOLD CROSS-VALIDATION ON THE 850 NON-TEST ANSWERS");
+  for (let r = 0; r < 5; r++) {
+    const y = 36 + r * 40, on = r === fold;
+    s += `<text x="20" y="${y + 21}" font-size="12" ${on ? 'font-weight="700"' : 'class="muted"'}>Round ${r + 1}</text>`;
+    for (let c = 0; c < 5; c++) {
+      const isVal = c === r, col = isVal ? P : B;
+      s += `<rect x="${100 + c * 82}" y="${y}" width="76" height="30" rx="5" style="fill:${col};stroke:${on ? "var(--ink)" : col}" fill-opacity="${isVal ? (on ? .45 : .2) : (on ? .25 : .08)}" stroke-width="${on ? 1.6 : 1}"/>`;
+      s += `<text x="${138 + c * 82}" y="${y + 20}" text-anchor="middle" font-size="11" ${isVal ? `font-weight="700" style="fill:${P}"` : 'class="muted"'}>${isVal ? "validate" : "train"}</text>`;
+    }
+    s += `<text x="530" y="${y + 21}" class="mono" font-size="13" ${on ? 'font-weight="700"' : ""}>${FOLD_SCORES[r]}%</text>`;
+  }
+  const avg = FOLD_SCORES.reduce((a, b) => a + b, 0) / 5;
+  s += `<line x1="496" y1="238" x2="622" y2="238" style="stroke:var(--ink)"/>`;
+  s += `<text x="496" y="260" font-size="12" class="muted">average</text><text x="622" y="260" text-anchor="end" class="mono" font-size="15" font-weight="700" style="fill:${A}">${avg.toFixed(1)}%</text>`;
+  s += `<text x="20" y="292" font-size="13">Every answer gets one turn in validation. The average is steadier than any single split.</text>`;
+  s += `<text x="20" y="310" font-size="11" class="muted">Pick a round above to highlight it. Scores are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawLeak() {
+  let s = svg(340);
+  const cand = [["Priya", B], ["Tom", P], ["Ana", G]];
+  const col = (x, title, sub, assign, score, c) => {
+    let o = `<text x="${x}" y="26" font-size="14" font-weight="700" style="fill:${c}">${title}</text><text x="${x}" y="44" font-size="12" class="muted">${sub}</text>`;
+    o += `<text x="${x + 10}" y="70" class="mono muted" font-size="11">TRAIN</text><text x="${x + 160}" y="70" class="mono muted" font-size="11">TEST</text>`;
+    assign.forEach(([who, set], i) => {
+      const [name, cc] = cand[who], y = 80 + i * 30, xx = set ? x + 150 : x;
+      o += rect(xx, y, 130, 24, cc, .15, 12) + `<text x="${xx + 65}" y="${y + 16}" text-anchor="middle" font-size="12" style="fill:${cc}" font-weight="600">${name}, answer ${i % 2 + 1}</text>`;
+    });
+    o += rect(x, 270, 280, 52, c, .1) + `<text x="${x + 14}" y="292" font-size="12">Test score</text><text x="${x + 266}" y="300" text-anchor="end" class="mono" font-size="22" font-weight="700" style="fill:${c}">${score}</text><text x="${x + 14}" y="312" font-size="11" class="muted">${c === W ? "too good to be true" : "what users will see"}</text>`;
+    return o;
+  };
+  s += col(20, "✗ Split by answer", "same person on both sides", [[0, 0], [0, 1], [1, 0], [1, 1], [2, 0], [2, 1]], "96%", W);
+  s += col(340, "✓ Split by candidate", "each person on one side only", [[0, 0], [0, 0], [1, 0], [1, 0], [2, 1], [2, 1]], "81%", A);
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Split", title: "1 · Three sets, three jobs", q: "Why not test on the data we trained on?",
+    points: ["Shuffle the 1,000 rated answers, then split them.", "<b>Training</b> (70%): the model learns here.", "<b>Validation</b> (15%): compare models and tune settings.", "<b>Test</b> (15%): the final exam, used once."],
+    pm: "When a team shares an accuracy number, ask which set it came from. Only a test-set number tells you what users will experience.",
+    say: "Step one, three sets, three jobs. We shuffle the coach's one thousand rated answers and split them. Seven hundred go to the training set, where the model learns. One hundred and fifty go to the validation set, for comparing models and tuning. And the last one hundred and fifty form the test set, the final exam, used once at the very end. For a PM, always ask which set an accuracy number came from.",
+    draw: drawSplit },
+  { stage: "Protect test", title: "2 · Protect the test set", q: "What goes wrong if we keep checking the test score?",
+    points: ["Each peek-and-tweak shapes the model to those exact test answers.", "The test score climbs, but real-user performance doesn't.", "Google's course calls this the test set “wearing out”.", "Tune on validation, test once, refresh the test set with new data."],
+    pm: "Treat the test set like a sealed exam paper. If it has been used many times, ask the team to collect a fresh one before launch.",
+    say: "Step two, protect the test set. Imagine the team checks the test score after every change. Seventy eight, eighty one, eighty four, ninety percent. It looks like progress. But the model is slowly being tuned to those exact hundred and fifty answers. Real users still get about seventy nine percent. The rule is simple. Do your tuning on the validation set, and look at the test set only once.",
+    draw: drawWear },
+  { stage: "Cross-validate", title: "3 · Cross-validation", q: "How do we get a steadier score with little data?",
+    points: ["Split the non-test data into 5 equal <b>folds</b>.", "Train on 4 folds, validate on the 5th.", "Rotate until every fold has had a turn, then <b>average</b> the scores.", "Pick a round above the diagram to see it."],
+    pm: "Ask for the spread across folds, not just the average. Scores from 79 to 84 are fine; scores from 60 to 95 mean the model is unstable.",
+    say: "Step three, cross-validation. With a small dataset, one validation split can be lucky or unlucky. So we split the data into five folds. In round one, we train on four folds and validate on the fifth. Then we rotate, until every fold has had its turn. Here the five scores range from seventy nine to eighty four percent, and the average is about eighty two. That average is much more trustworthy than any single number.",
+    draw: drawCV },
+  { stage: "Leakage", title: "4 · Data leakage", q: "How can a model cheat without anyone noticing?",
+    points: ["<b>Leakage</b>: test information sneaks into training.", "Split by answer, and Priya's style shows up in both sets. The model recognises her, not the quality.", "Split by <b>candidate</b>, so the test always has new people.", "Other leaks: duplicates, and using future data to predict the past."],
+    pm: "A result that looks too good, like 96%, is more often a leak than a breakthrough. Ask how the split was done: by user, by time, with duplicates removed?",
+    say: "Step four, data leakage. On the left, we split by answer. Priya's first answer lands in training, and her second lands in the test. The model has already learned Priya's style, so it scores ninety six percent. On the right, we split by candidate, so every person in the test is new. The honest score is eighty one percent. For a PM, a number that looks too good is usually a leak, not a breakthrough.",
+    draw: drawLeak },
+];
+return { STEPS, picker: { label: "Highlight:", step: 2, items: () => FOLD_SCORES.map((_, i) => ({ label: "Round " + (i + 1), color: "var(--t4)" })), get: () => fold, set: i => { fold = i; } } };
+})();
+VMETA[5] = {"title": "An Honest Exam", "sub": "Split the interview coach's 1,000 rated answers fairly, keep the test set sealed, rotate through folds for a steadier score, and catch a leak that fakes a great result."};
+
+VISUALS[6] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="1.3"/>`;
+
+/* training points: x = how specific (0-10), y = coach score (0-10); illustrative */
+const PTS = [[0.5, 2.4], [1.2, 1.6], [1.8, 3.4], [2.5, 3.0], [3.1, 4.6], [3.8, 3.9], [4.4, 5.6], [5.0, 5.1], [5.7, 6.6], [6.3, 6.0], [6.9, 7.4], [7.6, 6.9], [8.2, 8.0], [8.8, 7.5], [9.4, 8.6]];
+const NEWP = [[2.1, 2.6], [4.8, 5.9], [7.2, 6.6], [9.0, 8.4]];
+const MODELS = [
+  { label: "Too simple", c: "var(--t2)", f: x => 5.2, train: 58, val: 56, verdict: "Underfitting", note: "Misses the trend everywhere." },
+  { label: "Just right", c: "var(--accent)", f: x => 1.8 + 0.72 * x, train: 86, val: 83, verdict: "Generalises well", note: "Follows the trend, ignores noise." },
+  { label: "Too complex", c: "var(--t3)", f: null, train: 99, val: 64, verdict: "Overfitting", note: "Bends to hit every training dot." },
+];
+let m = 2;
+const X = v => 50 + v * 30, Y = v => 290 - v * 26;
+function smoothPath(pts) {
+  let d = `M${X(pts[0][0])} ${Y(pts[0][1])}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6 * 1.6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6 * 1.6];
+    d += ` C${X(c1[0])} ${Y(c1[1])} ${X(c2[0])} ${Y(c2[1])} ${X(p2[0])} ${Y(p2[1])}`;
+  }
+  return d;
+}
+function drawDial() {
+  const md = MODELS[m];
+  let s = svg(340);
+  for (let v = 0; v <= 10; v += 2) {
+    s += `<line x1="${X(v)}" y1="${Y(0)}" x2="${X(v)}" y2="${Y(10)}" style="stroke:var(--line)"/><line x1="${X(0)}" y1="${Y(v)}" x2="${X(10)}" y2="${Y(v)}" style="stroke:var(--line)"/>`;
+    s += `<text x="${X(v)}" y="${Y(0) + 15}" text-anchor="middle" class="mono muted" font-size="10">${v}</text><text x="${X(0) - 7}" y="${Y(v) + 4}" text-anchor="end" class="mono muted" font-size="10">${v}</text>`;
+  }
+  s += `<text x="${X(5)}" y="${Y(0) + 32}" text-anchor="middle" font-size="12" class="muted">How specific the answer is →</text>`;
+  s += `<text x="16" y="${Y(5)}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 16 ${Y(5)})">Coach score →</text>`;
+  if (md.f) s += `<line x1="${X(0)}" y1="${Y(md.f(0))}" x2="${X(10)}" y2="${Y(md.f(10))}" style="stroke:${md.c}" stroke-width="2.5"/>`;
+  else s += `<path d="${smoothPath([[0, 2.6], ...PTS, [10, 9.6]])}" fill="none" style="stroke:${md.c}" stroke-width="2.5"/>`;
+  PTS.forEach(([x, y]) => { s += `<circle cx="${X(x)}" cy="${Y(y)}" r="5" style="fill:var(--ink)" fill-opacity=".75"/>`; });
+  NEWP.forEach(([x, y]) => { s += `<circle cx="${X(x)}" cy="${Y(y)}" r="6" style="fill:none;stroke:${G}" stroke-width="2.2"/>`; });
+  const bx = 400;
+  s += `<text x="${bx}" y="40" font-size="12" class="muted">● training answers   <tspan style="fill:${G}" font-weight="700">○</tspan> new answers</text>`;
+  s += rect(bx, 56, 225, 56, md.c, .12) + `<text x="${bx + 14}" y="80" font-size="15" font-weight="700" style="fill:${md.c}">${md.verdict}</text><text x="${bx + 14}" y="100" font-size="11.5">${md.note}</text>`;
+  [["Training score", md.train, "var(--ink)"], ["Validation score", md.val, md.c]].forEach(([t, v, c], i) => {
+    const y = 140 + i * 56;
+    s += `<text x="${bx}" y="${y}" font-size="12">${t}</text><rect x="${bx}" y="${y + 8}" width="225" height="20" rx="4" style="fill:var(--line)"/><rect x="${bx}" y="${y + 8}" width="${v / 100 * 225}" height="20" rx="4" style="fill:${c}" fill-opacity=".7"/><text x="${bx + 225}" y="${y}" text-anchor="end" class="mono" font-size="13" font-weight="700">${v}%</text>`;
+  });
+  const gap = md.train - md.val;
+  s += `<text x="${bx}" y="278" font-size="12.5" ${gap > 15 ? `font-weight="700" style="fill:${W}"` : 'class="muted"'}>Gap: ${gap} points${gap > 15 ? " · warning sign" : ""}</text>`;
+  s += `<text x="${bx}" y="300" font-size="11" class="muted">Pick a model above. Data and scores</text><text x="${bx}" y="315" font-size="11" class="muted">are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawCurves() {
+  let s = svg(330);
+  const X0 = 70, Y0 = 270, W0 = 500, H0 = 220;
+  s += `<line x1="${X0}" y1="${Y0}" x2="${X0 + W0}" y2="${Y0}" style="stroke:var(--ink)"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y0 - H0}" style="stroke:var(--ink)"/>`;
+  s += `<text x="${X0 + W0 / 2}" y="${Y0 + 34}" text-anchor="middle" font-size="12" class="muted">Model complexity →</text>`;
+  s += `<text x="34" y="${Y0 - H0 / 2}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 34 ${Y0 - H0 / 2})">Error (lower is better) →</text>`;
+  const tr = t => 0.85 * Math.exp(-3 * t) + 0.04, va = t => 0.62 * Math.exp(-3.2 * t) + 0.18 + 0.55 * t * t;
+  const path = f => Array.from({ length: 51 }, (_, i) => { const t = i / 50; return `${i ? "L" : "M"}${X0 + t * W0} ${Y0 - f(t) * H0 / 1.0}`; }).join(" ");
+  s += `<rect x="${X0 + .32 * W0}" y="${Y0 - H0}" width="${.2 * W0}" height="${H0}" style="fill:${A}" fill-opacity=".08"/>`;
+  s += `<text x="${X0 + .42 * W0}" y="${Y0 - H0 + 18}" text-anchor="middle" font-size="12" font-weight="700" style="fill:${A}">sweet spot</text>`;
+  s += `<path d="${path(tr)}" fill="none" style="stroke:var(--ink)" stroke-width="2.2"/><path d="${path(va)}" fill="none" style="stroke:${W}" stroke-width="2.2"/>`;
+  s += `<text x="${X0 + W0 - 4}" y="${Y0 - tr(1) * H0 - 8}" text-anchor="end" font-size="12" font-weight="600">training error</text>`;
+  s += `<text x="${X0 + W0 - 4}" y="${Y0 - va(1) * H0 + 18}" text-anchor="end" font-size="12" font-weight="600" style="fill:${W}">validation error</text>`;
+  s += `<text x="${X0 + 10}" y="${Y0 + 16}" font-size="11.5" style="fill:${B}">← underfitting</text><text x="${X0 + W0 - 4}" y="${Y0 + 16}" text-anchor="end" font-size="11.5" style="fill:${W}">overfitting →</text>`;
+  s += `<line x1="${X0 + .85 * W0}" y1="${Y0 - va(.85) * H0}" x2="${X0 + .85 * W0}" y2="${Y0 - tr(.85) * H0}" style="stroke:${W}" stroke-dasharray="4 3"/><text x="${X0 + .85 * W0 - 6}" y="${Y0 - (va(.85) + tr(.85)) / 2 * H0}" text-anchor="end" font-size="11.5" style="fill:${W}">the gap</text>`;
+  return s + `</svg>`;
+}
+
+function drawTarget() {
+  let s = svg(310);
+  const cells = [["Low bias · low variance", "the goal", 0, 0, A], ["Low bias · high variance", "overfitting", 0, 1, W], ["High bias · low variance", "underfitting", 1, 0, B], ["High bias · high variance", "worst of both", 1, 1, P]];
+  const rnd = (seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647)(11);
+  cells.forEach(([t, sub, bias, vari, c], i) => {
+    const cx = 90 + (i % 2) * 320, cy = 80 + Math.floor(i / 2) * 150;
+    [52, 36, 20].forEach((r, k) => { s += `<circle cx="${cx}" cy="${cy}" r="${r}" style="fill:${k === 2 ? A : "var(--surface)"};stroke:var(--line)" fill-opacity="${k === 2 ? .2 : 1}"/>`; });
+    const ox = bias ? 26 : 0, oy = bias ? -20 : 0, spread = vari ? 34 : 9;
+    for (let k = 0; k < 8; k++) s += `<circle cx="${cx + ox + (rnd() - .5) * spread * 2}" cy="${cy + oy + (rnd() - .5) * spread * 2}" r="3.5" style="fill:${c}"/>`;
+    s += `<text x="${cx + 70}" y="${cy - 6}" font-size="13" font-weight="700" style="fill:${c}">${sub}</text><text x="${cx + 70}" y="${cy + 14}" font-size="12" class="muted">${t}</text>`;
+  });
+  s += `<text x="20" y="300" font-size="12" class="muted">Each dot is the same model retrained on a slightly different sample. The bullseye is the right answer.</text>`;
+  return s + `</svg>`;
+}
+
+function drawFix() {
+  let s = svg(310);
+  const col = (x, head, sym, fixes, c) => {
+    let o = rect(x, 16, 295, 280, c, .06) + `<text x="${x + 16}" y="44" font-size="15" font-weight="700" style="fill:${c}">${head}</text><text x="${x + 16}" y="66" font-size="12" class="muted">${sym}</text>`;
+    fixes.forEach((f, i) => { o += `<text x="${x + 16}" y="${102 + i * 34}" font-size="13"><tspan font-weight="700" style="fill:${c}">→ </tspan>${f}</text>`; });
+    return o;
+  };
+  s += col(15, "Overfitting", "Training high, validation much lower", ["Get more good data", "Use a simpler model", "Remove noisy features", "Regularization (concept 15)", "Stop training earlier", "Augment the data"], W);
+  s += col(330, "Underfitting", "Training and validation both low", ["Add better features", "Use a more capable model", "Train for longer", "Reduce regularization"], B);
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Complexity dial", title: "1 · Too simple, just right, too complex", q: "What does memorising look like?",
+    points: ["Dots are training answers. Orange rings are new answers the model never saw.", "<b>Too simple</b>: a flat line. It misses the trend everywhere.", "<b>Just right</b>: follows the trend, ignores the noise.", "<b>Too complex</b>: bends through every training dot, and misses the new ones."],
+    pm: "A 99% training score means nothing on its own. Look at the validation score: that is closer to what users will see.",
+    say: "Step one, the complexity dial. The dots are training answers, and the orange rings are new answers the model has never seen. Start with too complex. The curve bends to pass through every training dot. Training score, ninety nine percent. But look at the new answers. It misses them, and validation drops to sixty four. Now pick too simple. A flat line that misses everything. Then just right. It follows the trend and ignores the noise.",
+    draw: drawDial },
+  { stage: "The gap", title: "2 · Watching the gap", q: "How do we see overfitting in numbers?",
+    points: ["As complexity grows, <b>training error</b> keeps falling.", "<b>Validation error</b> falls, then rises again.", "The <b>sweet spot</b> is where validation error is lowest.", "A widening gap between the two lines means overfitting."],
+    pm: "Ask the team for both curves. If they only show the training line going down, you can't tell learning from memorising.",
+    say: "Step two, watching the gap. As we make the model more complex, training error keeps going down. The model fits its own examples better and better. But validation error falls, and then starts to rise again. That turn is where memorising begins. The sweet spot is the lowest point of the validation line. And the growing gap between the two lines is the classic sign of overfitting.",
+    draw: drawCurves },
+  { stage: "Bias & variance", title: "3 · Bias and variance", q: "What are the two kinds of error?",
+    points: ["<b>Bias</b>: consistently off target, because the model is too simple.", "<b>Variance</b>: scattered, because the model reacts too much to which examples it saw.", "Underfitting is high bias. Overfitting is high variance.", "The goal is low bias and low variance."],
+    pm: "If a model's results swing a lot each time it is retrained, that's high variance, and users will notice inconsistent behaviour between releases.",
+    say: "Step three, bias and variance. Imagine retraining the same model many times on slightly different samples, and each dot is one result. High bias means the dots are consistently off target, because the model is too simple. That's underfitting. High variance means the dots are scattered, because the model reacts too much to the examples it saw. That's overfitting. We want the top left target, low bias and low variance.",
+    draw: drawTarget },
+  { stage: "Fixes", title: "4 · How to fix it", q: "What do we do about it?",
+    points: ["Overfitting: more data, simpler model, fewer noisy features, regularization, stop earlier.", "Underfitting: better features, a more capable model, train longer.", "Diagnose first, by comparing training and validation scores."],
+    pm: "More good data is often the most reliable fix for overfitting, and it's a lever a PM can pull through product design, such as asking users for feedback.",
+    say: "Step four, how to fix it. First, diagnose, by comparing training and validation scores. If the model is overfitting, get more good data, use a simpler model, remove noisy features, or use regularization and early stopping. If it is underfitting, add better features or use a more capable model. For a PM, collecting more good data is often the strongest lever of all.",
+    draw: drawFix },
+];
+return { STEPS, picker: { label: "Pick a model:", step: 0, items: () => MODELS.map(x => ({ label: x.label, color: x.c })), get: () => m, set: i => { m = i; } } };
+})();
+VMETA[6] = {"title": "Memorising vs Learning", "sub": "Turn the complexity dial on the interview coach, watch training and validation scores split apart, and learn the two kinds of error and how to fix each."};
+
+VISUALS[7] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="1.3"/>`;
+
+/* x = specific details (0-10), y = coach score (0-10); illustrative */
+const PTS = [[1, 2.4], [2, 4.1], [2, 3.2], [3, 4.6], [4, 5.5], [4, 4.6], [5, 6.4], [6, 6.5], [6, 7.4], [7, 7.3], [8, 8.9], [9, 9.1]];
+const X = v => 50 + v * 30, Y = v => 290 - v * 25;
+function axes(xl, yl) {
+  let s = "";
+  for (let v = 0; v <= 10; v += 2) {
+    s += `<line x1="${X(v)}" y1="${Y(0)}" x2="${X(v)}" y2="${Y(10)}" style="stroke:var(--line)"/><line x1="${X(0)}" y1="${Y(v)}" x2="${X(10)}" y2="${Y(v)}" style="stroke:var(--line)"/>`;
+    s += `<text x="${X(v)}" y="${Y(0) + 15}" text-anchor="middle" class="mono muted" font-size="10">${v}</text><text x="${X(0) - 7}" y="${Y(v) + 4}" text-anchor="end" class="mono muted" font-size="10">${v}</text>`;
+  }
+  return s + `<text x="${X(5)}" y="${Y(0) + 32}" text-anchor="middle" font-size="12" class="muted">${xl}</text><text x="16" y="${Y(5)}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 16 ${Y(5)})">${yl}</text>`;
+}
+const LINES = [
+  { label: "First guess", c: "var(--t3)", b: 5, w: 0.1 },
+  { label: "Better", c: "var(--warm)", b: 3, w: 0.5 },
+  { label: "Best fit", c: "var(--accent)", b: 2, w: 0.8 },
+];
+const sse = l => PTS.reduce((a, [x, y]) => a + (y - (l.b + l.w * x)) ** 2, 0);
+
+function drawLine() {
+  const l = LINES[2];
+  let s = svg(340) + axes("Specific details in the answer →", "Coach score →");
+  s += `<line x1="${X(0)}" y1="${Y(l.b)}" x2="${X(10)}" y2="${Y(l.b + l.w * 10)}" style="stroke:${A}" stroke-width="2.5"/>`;
+  PTS.forEach(([x, y]) => { s += `<circle cx="${X(x)}" cy="${Y(y)}" r="5" style="fill:var(--ink)" fill-opacity=".75"/>`; });
+  const nx = 5, ny = l.b + l.w * nx;
+  s += `<line x1="${X(nx)}" y1="${Y(0)}" x2="${X(nx)}" y2="${Y(ny)}" style="stroke:${B}" stroke-dasharray="4 3"/><line x1="${X(0)}" y1="${Y(ny)}" x2="${X(nx)}" y2="${Y(ny)}" style="stroke:${B}" stroke-dasharray="4 3"/><circle cx="${X(nx)}" cy="${Y(ny)}" r="7" style="fill:none;stroke:${B}" stroke-width="2.5"/>`;
+  const bx = 390;
+  s += lbl(bx, 40, "THE LEARNED FORMULA");
+  s += rect(bx, 50, 235, 60, A, .1) + `<text x="${bx + 117}" y="86" text-anchor="middle" class="mono" font-size="15" font-weight="600">score = 2 + 0.8 × details</text>`;
+  s += `<text x="${bx}" y="136" font-size="12.5"><tspan font-weight="700" style="fill:${A}">0.8</tspan> = weight: each detail adds 0.8</text>`;
+  s += `<text x="${bx}" y="158" font-size="12.5"><tspan font-weight="700" style="fill:${A}">2</tspan> = bias: the starting point</text>`;
+  s += rect(bx, 182, 235, 56, B, .08) + `<text x="${bx + 14}" y="204" font-size="12.5">New answer with 5 details:</text><text x="${bx + 14}" y="226" class="mono" font-size="13" font-weight="700" style="fill:${B}">2 + 0.8 × 5 = 6.0</text>`;
+  s += `<text x="${bx}" y="268" font-size="12" class="muted">Many features? Same idea:</text><text x="${bx}" y="286" class="mono" font-size="11.5">b + w₁x₁ + w₂x₂ + w₃x₃ …</text>`;
+  s += `<text x="${bx}" y="318" font-size="11" class="muted">Data and weights are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+let li = 0;
+function drawFit() {
+  const l = LINES[li];
+  let s = svg(340) + axes("Specific details →", "Coach score →");
+  PTS.forEach(([x, y]) => { const py = l.b + l.w * x; s += `<line x1="${X(x)}" y1="${Y(y)}" x2="${X(x)}" y2="${Y(py)}" style="stroke:${l.c}" stroke-width="1.6" stroke-dasharray="3 2"/>`; });
+  s += `<line x1="${X(0)}" y1="${Y(l.b)}" x2="${X(10)}" y2="${Y(l.b + l.w * 10)}" style="stroke:${l.c}" stroke-width="2.5"/>`;
+  PTS.forEach(([x, y]) => { s += `<circle cx="${X(x)}" cy="${Y(y)}" r="5" style="fill:var(--ink)" fill-opacity=".75"/>`; });
+  const bx = 390, worst = sse(LINES[0]);
+  s += lbl(bx, 40, "TOTAL SQUARED ERROR (LOSS)");
+  LINES.forEach((x, i) => {
+    const y = 56 + i * 52, v = sse(x), on = i === li;
+    s += `<text x="${bx}" y="${y + 12}" font-size="12.5" ${on ? `font-weight="700" style="fill:${x.c}"` : 'class="muted"'}>${x.label}</text><text x="${bx + 235}" y="${y + 12}" text-anchor="end" class="mono" font-size="12.5" ${on ? 'font-weight="700"' : ""}>${v.toFixed(1)}</text>`;
+    s += `<rect x="${bx}" y="${y + 18}" width="${v / worst * 235}" height="16" rx="3" style="fill:${x.c}" fill-opacity="${on ? .75 : .3}"/>`;
+  });
+  s += `<text x="${bx}" y="232" font-size="12.5">Dashed lines = errors.</text><text x="${bx}" y="252" font-size="12.5">Square them, add them up.</text><text x="${bx}" y="272" font-size="12.5">Training adjusts the line until</text><text x="${bx}" y="292" font-size="12.5">this total is as small as possible.</text>`;
+  return s + `</svg>`;
+}
+
+function drawSigmoid() {
+  let s = svg(330);
+  const X0 = 60, Y0 = 250, Wd = 340, Ht = 200, zx = z => X0 + (z + 6) / 12 * Wd, py = p => Y0 - p * Ht, sig = z => 1 / (1 + Math.exp(-z));
+  s += `<line x1="${X0}" y1="${Y0}" x2="${X0 + Wd}" y2="${Y0}" style="stroke:var(--ink)"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y0 - Ht}" style="stroke:var(--ink)"/>`;
+  [0, .5, 1].forEach(p => { s += `<text x="${X0 - 8}" y="${py(p) + 4}" text-anchor="end" class="mono muted" font-size="10">${p}</text>`; });
+  s += `<line x1="${X0}" y1="${py(.5)}" x2="${X0 + Wd}" y2="${py(.5)}" style="stroke:${G}" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${X0 + Wd + 6}" y="${py(.5) + 4}" font-size="11.5" font-weight="600" style="fill:${G}">threshold 0.5</text>`;
+  s += `<path d="${Array.from({ length: 61 }, (_, i) => { const z = -6 + i / 5; return `${i ? "L" : "M"}${zx(z)} ${py(sig(z))}`; }).join(" ")}" fill="none" style="stroke:${A}" stroke-width="2.5"/>`;
+  s += `<text x="${X0 + Wd / 2}" y="${Y0 + 22}" text-anchor="middle" font-size="12" class="muted">weighted sum of the features →</text>`;
+  s += `<text x="22" y="${Y0 - Ht / 2}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 22 ${Y0 - Ht / 2})">P(strong)</text>`;
+  const ex = [["Y", -3.1, W], ["Z", -0.2, G], ["X", 2.6, A]];
+  ex.forEach(([n, z, c]) => { s += `<circle cx="${zx(z)}" cy="${py(sig(z))}" r="7" style="fill:${c}" fill-opacity=".85"/><text x="${zx(z) + 10}" y="${py(sig(z)) - 8}" font-size="12" font-weight="700" style="fill:${c}">${n}</text>`; });
+  const bx = 500;
+  s += lbl(bx, 40, "FROM CONCEPT 1");
+  ex.forEach(([n, z, c], i) => {
+    const p = sig(z), y = 54 + i * 62;
+    s += rect(bx, y, 125, 52, c, .1) + `<text x="${bx + 12}" y="${y + 21}" font-size="13" font-weight="700" style="fill:${c}">Answer ${n}</text><text x="${bx + 12}" y="${y + 40}" class="mono" font-size="12">${p.toFixed(2)} → ${p >= .5 ? "strong" : "weak"}</text>`;
+  });
+  s += `<text x="20" y="306" font-size="12.5">The S-curve (sigmoid) squeezes any sum into a probability between 0 and 1.</text>`;
+  return s + `</svg>`;
+}
+
+function drawExplain() {
+  let s = svg(330);
+  s += lbl(20, 22, "READING THE WEIGHTS OF A LOGISTIC REGRESSION COACH");
+  const wts = [["each specific detail", 1.2, A], ["states a clear result", 0.9, A], ["clear structure", 0.6, A], ["each filler word", -0.4, W], ["over 3 minutes long", -0.7, W]];
+  const zx = 330;
+  wts.forEach(([t, v, c], i) => {
+    const y = 38 + i * 34, w = Math.abs(v) * 120;
+    s += `<text x="${zx - 160}" y="${y + 18}" text-anchor="end" font-size="12.5">${t}</text>`;
+    s += `<rect x="${v > 0 ? zx : zx - w}" y="${y + 4}" width="${w}" height="20" rx="3" style="fill:${c}" fill-opacity=".6"/>`;
+    s += `<text x="${v > 0 ? zx + w + 6 : zx - w - 6}" y="${y + 18}" text-anchor="${v > 0 ? "start" : "end"}" class="mono" font-size="12" font-weight="600">${v > 0 ? "+" : ""}${v}</text>`;
+  });
+  s += `<line x1="${zx}" y1="36" x2="${zx}" y2="210" style="stroke:var(--ink)"/>`;
+  s += rect(20, 226, 295, 92, A, .07) + `<text x="34" y="250" font-size="13" font-weight="700" style="fill:${A}">Strengths</text><text x="34" y="272" font-size="12.5">Fast, cheap, rarely overfits.</text><text x="34" y="292" font-size="12.5">Easy to explain to users and regulators.</text><text x="34" y="310" font-size="12.5">The baseline every model must beat.</text>`;
+  s += rect(330, 226, 295, 92, W, .07) + `<text x="344" y="250" font-size="13" font-weight="700" style="fill:${W}">Limits</text><text x="344" y="272" font-size="12.5">Assumes straight-line effects.</text><text x="344" y="292" font-size="12.5">Misses interactions, like length helping</text><text x="344" y="310" font-size="12.5">only when an answer is also specific.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "The line", title: "1 · Linear regression", q: "How do we predict a number?",
+    points: ["Draw the best straight line through the training answers.", "The model learns: <b>score = 2 + 0.8 × details</b>.", "<b>0.8</b> is a <b>weight</b>: how much each detail adds. <b>2</b> is the <b>bias</b>: the starting point.", "With many features, it's a weighted sum of all of them."],
+    pm: "A weight is something you can say out loud: “each specific detail adds 0.8 points.” That makes these models easy to explain in a product.",
+    say: "Step one, linear regression. We want to predict a coach's score out of ten from the number of specific details in an answer. The model draws the best straight line through the training answers. It learns a formula. Score equals two, plus zero point eight times the number of details. Zero point eight is the weight, how much each detail adds. Two is the bias, the starting point. So an answer with five details gets a predicted score of six.",
+    draw: drawLine },
+  { stage: "Best fit", title: "2 · Finding the best line", q: "How does the model know which line is best?",
+    points: ["Each dashed line is an <b>error</b>: the gap between the line and a real score.", "Square each error so big misses count extra, then add them up. That's the <b>loss</b>.", "Training adjusts the weight and bias until the loss is as small as possible.", "Pick a line above to compare."],
+    pm: "“Training” sounds mysterious, but here it is just a search for the line with the smallest total error. Every model in this course does a version of this.",
+    say: "Step two, finding the best line. Start with the first guess. The dashed lines show the errors, the gaps between the line and the real scores. We square each error, so big misses count extra, and add them up. That total is the loss. Now try better, and then best fit. The loss shrinks each time. Training is simply the search for the line with the smallest loss.",
+    draw: drawFit },
+  { stage: "Probability", title: "3 · Logistic regression", q: "How do we answer yes or no questions?",
+    points: ["Same weighted sum, then squeezed through an S-curve, the <b>sigmoid</b>.", "The output is a <b>probability</b> between 0 and 1.", "A <b>threshold</b> turns it into a decision: 0.5 or above means strong.", "Answers X, Y and Z are the same ones from concept 1."],
+    pm: "The threshold is a product decision. Raise it to 0.8 and fewer answers are called strong, but you can trust each “strong” more.",
+    say: "Step three, logistic regression. For a yes or no question, like is this answer strong, we take the same weighted sum, and pass it through an S shaped curve called the sigmoid. Any number goes in, and a probability between zero and one comes out. Then a threshold, here zero point five, turns it into a decision. Answer X lands high, at about zero point nine three, so it's strong. Answer Y lands low, so it's weak. And answer Z sits just under the line.",
+    draw: drawSigmoid },
+  { stage: "Explain", title: "4 · Strengths and limits", q: "When should we use these models?",
+    points: ["Each weight shows which way a feature pushes, and how hard.", "Fast, cheap, rarely overfits, and easy to explain.", "The perfect <b>baseline</b>: the first model to beat.", "Limit: assumes straight-line effects and misses interactions."],
+    pm: "Always ask for a simple baseline first. If a complex model wins by only one point, the extra cost and lost explainability may not be worth it.",
+    say: "Step four, strengths and limits. Here are the weights of a logistic regression coach. Each specific detail pushes the answer towards strong. Each filler word pushes it towards weak. You can read the whole model in one glance. That's why these models make perfect baselines. They are fast, cheap, and easy to explain. Their limit is that they assume simple straight line effects, so they miss interactions. That's where decision trees come in next.",
+    draw: drawExplain },
+];
+return { STEPS, picker: { label: "Try a line:", step: 1, items: () => LINES.map(l => ({ label: l.label, color: l.c })), get: () => li, set: i => { li = i; } } };
+})();
+VMETA[7] = {"title": "The Best Straight Line", "sub": "Fit a straight line to the interview coach's data, see how training shrinks the error, squeeze the result into a probability, and read what each weight means."};
 
 
 const view = { mode: "lesson", n: 0, s: 0 };

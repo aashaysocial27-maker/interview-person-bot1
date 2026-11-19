@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Linear regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"},
+ {"kind": "Course", "title": "Logistic regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression"},
+ {"kind": "Course", "title": "Calculating a probability with the sigmoid function (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/sigmoid-function"},
+ {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}
+]

@@ -23,8 +23,8 @@ Publish `index.html` to the live page URL (capabilities: db, dictation, download
 | Batch | Concepts | Status |
 |---|---|---|
 | 0 | 1 What Is Machine Learning | Done, approved for rollout |
-| 1 | 2 Types of Learning, 3 Data & Labeling, 4 Features & Feature Engineering | Published, waiting for review |
-| 2 | 5–7 | Not started |
+| 1 | 2 Types of Learning, 3 Data & Labeling, 4 Features & Feature Engineering | Done |
+| 2 | 5 Train/Validation/Test Sets, 6 Overfitting & Underfitting, 7 Linear & Logistic Regression | Published, waiting for review |
 | 3 | 8–10 | Not started |
 | 4 | 11–13 | Not started |
 | 5 | 14–16 | Not started |
