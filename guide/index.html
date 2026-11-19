@@ -241,6 +241,10 @@ tr:last-child td{border-bottom:none}
   .hist3 .row{grid-template-columns:1fr;gap:4px}
 }
 
+/* code block */
+.code-block{min-width:0}
+.code-block pre{white-space:pre;font-size:12.5px}
+
 /* plain list inside lessons */
 .plain-list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:66ch}
 
@@ -746,7 +750,8 @@ async function uploadFiles(id, files){
    ============================================================ */
 const CONCEPTS = [
   { id: "temperature", label: "Temperature" },
-  { id: "sdk", label: "SDK" }
+  { id: "sdk", label: "SDK" },
+  { id: "pydantic", label: "Pydantic" }
 ];
 let concept = store.get("fieldnotes-concept", "temperature");
 
@@ -763,13 +768,19 @@ function renderConcepts(){
   let h = `<div class="section"><div><span class="eyebrow">Learning Concepts</span><h2>Ideas behind the code</h2></div>
     <div class="subtabs" role="tablist">${CONCEPTS.map(c =>
       `<button class="subtab" role="tab" aria-selected="${c.id === concept}" data-c="${c.id}">${c.label}</button>`).join("")}</div>
-    <div class="concept-body">${concept === "sdk" ? sdkView() : temperatureView()}</div></div>`;
+    <div class="concept-body">${concept === "sdk" ? sdkView() : concept === "pydantic" ? pydanticView() : temperatureView()}</div></div>`;
   if (nb) h += notebookView(nb);
   $("#main").innerHTML = h;
   document.querySelectorAll("[data-c]").forEach(b => b.onclick = () => {
     concept = b.dataset.c; store.set("fieldnotes-concept", concept); stopMolecules(); renderConcepts(); });
   bindNotebook();
   if (concept === "temperature") bindTemperature();
+  document.querySelectorAll(".code-copy").forEach(b => b.onclick = async () => {
+    const pre = b.closest(".code-block").querySelector("pre");
+    try { await navigator.clipboard.writeText(pre.textContent); b.textContent = "Copied"; }
+    catch(e){ const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Selected, press Ctrl+C"; }
+    setTimeout(() => b.textContent = "Copy", 1800);
+  });
 }
 
 function temperatureView(){
@@ -904,6 +915,46 @@ function startMolecules(){
     if (!still) molRaf = requestAnimationFrame(frame);
   };
   frame();
+}
+
+const PYDANTIC_CODE = "# pip install pydantic   (already installed in Colab)\nfrom typing import Optional\nfrom pydantic import BaseModel, Field, ValidationError\n\n# 1. Describe the shape you expect, once\nclass SupplierClause(BaseModel):\n    party: str\n    payment_terms_days: int = Field(description=\"Days the buyer has to pay\")\n    penalty: Optional[str] = None          # optional: may be missing\n\n# 2. Pretend this JSON text came back from Gemini, GPT or Claude\nllm_output = '{\"party\": \"Acme Ltd\", \"payment_terms_days\": \"30\", \"penalty\": \"2% per week late\"}'\n\n# 3. Validate it: turns text into a checked Python object\nclause = SupplierClause.model_validate_json(llm_output)\nprint(clause.party)                        # Acme Ltd\nprint(clause.payment_terms_days + 15)      # 45  (\"30\" was converted to the number 30)\n\n# 4. Bad output fails loudly instead of slipping through\ntry:\n    SupplierClause.model_validate_json('{\"party\": \"Acme Ltd\"}')\nexcept ValidationError as e:\n    print(e)                               # 1 validation error ... payment_terms_days  Field required";
+
+function pydanticView(){
+  return `
+  <div class="prose">
+    <h3>Pydantic in short</h3>
+    <p><b>Pydantic</b> is a Python library that checks data against a shape you define. You write a class that says which fields you expect and their types; Pydantic checks incoming data, converts what it safely can (like <code>"30"</code> to <code>30</code>), and raises a clear error for anything that doesn't fit.</p>
+    <p class="fig-cap">ELI5: a form with labelled boxes. Pydantic only lets the data through if every box is filled in correctly.</p>
+  </div>
+  ${diagram({ label: "Where Pydantic sits in an AI feature", cols: [
+    [{t:"LLM reply", s:"JSON as plain text", k:"accent"}],
+    [{t:"Pydantic model", s:"checks fields and types · converts values"}],
+    [{t:"Python object", s:"clause.party, clause.payment_terms_days", k:"ok"}, {t:"ValidationError", s:"names the bad or missing field", k:"ghost"}] ] })}
+
+  <div class="card">
+    <h3>Why it's used</h3>
+    <dl class="kv">
+      <dt>LLM output is just text</dt><dd>A model can drop a field, add one, or return a number as text. Pydantic catches that before your code uses it.</dd>
+      <dt>Structured output</dt><dd>One class describes the JSON you want back. Gemini and OpenAI's SDKs can take that class directly as the answer format.</dd>
+      <dt>Clear errors</dt><dd>When data is wrong, the error names the field, so you know whether to retry the call or fix the prompt.</dd>
+      <dt>Widely used</dt><dd>FastAPI, the OpenAI and Anthropic SDKs, LangChain and most agent frameworks use it under the hood.</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h3>Example: check a supplier clause returned by an LLM</h3>
+    <p class="fig-cap">This is the "party, payment terms, penalties" JSON from your Topic 1 next step. Paste it into a Colab cell; it needs no API key.</p>
+    <div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre>${esc(PYDANTIC_CODE)}</pre></div>
+  </div>
+
+  <div class="card">
+    <h3>Remember</h3>
+    <div class="prose"><ul>
+      <li><b>Define once, check every time.</b> The class is your contract for what the model must return.</li>
+      <li><b>Never trust raw LLM JSON.</b> Validate it before it reaches a database, a report or another system.</li>
+      <li><b>For a PM:</b> the Pydantic class is the spec for an extraction feature. Its fields are your requirements, and validation failures are a quality metric you can track.</li>
+    </ul></div>
+  </div>`;
 }
 
 function sdkView(){
