@@ -1,0 +1,27 @@
+[
+ {
+  "kind": "Course",
+  "title": "What is Machine Learning? (Google ML Crash Course)",
+  "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"
+ },
+ {
+  "kind": "Course",
+  "title": "Machine Learning Crash Course (Google, free)",
+  "url": "https://developers.google.com/machine-learning/crash-course"
+ },
+ {
+  "kind": "Guide",
+  "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)",
+  "url": "https://developers.google.com/machine-learning/problem-framing"
+ },
+ {
+  "kind": "Guide",
+  "title": "Rules of Machine Learning (Google), Rule #1: launch without ML",
+  "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"
+ },
+ {
+  "kind": "Course",
+  "title": "Machine Learning Specialization (Andrew Ng, Coursera)",
+  "url": "https://www.coursera.org/specializations/machine-learning-introduction"
+ }
+]

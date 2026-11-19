@@ -1,0 +1,2 @@
+{ n: 16, group: "How Models Learn", title: "Hyperparameter Tuning", draft: true, terms: ["Hyperparameters", "Grid search", "Random search", "Bayesian optimization"],
+  sections: [{ h: "The big idea", text: "Parameters are learned during training, but hyperparameters are settings you choose before training starts, such as the learning rate or the number of trees. Tuning means trying many combinations and keeping the one that scores best on the validation set." }] }

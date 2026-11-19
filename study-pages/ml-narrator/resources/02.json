@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"},
+ {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"},
+ {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"},
+ {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}
+]

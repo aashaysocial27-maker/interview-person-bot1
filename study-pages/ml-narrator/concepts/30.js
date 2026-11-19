@@ -1,0 +1,2 @@
+{ n: 30, group: "Real-World ML", title: "MLOps", draft: true, terms: ["ML pipelines", "Feature store", "Model registry", "CI/CD for ML"],
+  sections: [{ h: "The big idea", text: "MLOps is the engineering that keeps machine learning running reliably in production. It covers data pipelines, versioning of data and models, automated retraining, safe deployment and rollback. It turns a one-off experiment into a dependable product." }] }

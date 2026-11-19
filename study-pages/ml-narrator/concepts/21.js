@@ -1,0 +1,2 @@
+{ n: 21, group: "Deep Learning", title: "Sequence Models (RNN, LSTM)", draft: true, terms: ["RNN", "LSTM", "Sequences", "Vanishing gradient"],
+  sections: [{ h: "The big idea", text: "Some data comes in order, like words in a sentence or sensor readings over time. Recurrent networks read one step at a time and carry a memory forward. They struggled with long sequences, which is the problem transformers later solved." }] }

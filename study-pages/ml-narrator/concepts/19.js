@@ -1,0 +1,2 @@
+{ n: 19, group: "Deep Learning", title: "Neural Networks & Backpropagation", draft: true, terms: ["Neurons", "Layers", "Activation", "Backpropagation"],
+  sections: [{ h: "The big idea", text: "A neural network is layers of simple units, loosely inspired by the brain. Each layer turns its input into a slightly more useful version. Backpropagation is how the network learns, by sending the error backwards and adjusting every connection a little." }] }

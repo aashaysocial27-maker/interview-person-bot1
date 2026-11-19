@@ -1,0 +1,2 @@
+{ n: 27, group: "Real-World ML", title: "Bias & Fairness", draft: true, terms: ["Bias", "Fairness metrics", "Protected groups", "Audits"],
+  sections: [{ h: "The big idea", text: "Models learn from past data, including past unfairness. A hiring model trained on biased decisions will repeat them. Fairness work means measuring results for different groups, finding gaps, and fixing the data or the model before users are harmed." }] }

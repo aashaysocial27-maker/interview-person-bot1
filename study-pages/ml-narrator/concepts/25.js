@@ -1,0 +1,2 @@
+{ n: 25, group: "Real-World ML", title: "Time-Series Forecasting", draft: true, terms: ["Trend", "Seasonality", "Forecast horizon", "Backtesting"],
+  sections: [{ h: "The big idea", text: "Forecasting predicts future values from past ones, such as next week's demand or when a machine will need maintenance. Time series have trends and seasons, and you must never let the model peek at the future while training." }] }

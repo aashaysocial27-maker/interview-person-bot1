@@ -1,0 +1,2 @@
+{ n: 18, group: "How Models Learn", title: "Evaluation Metrics", draft: true, terms: ["Accuracy", "Precision", "Recall", "F1", "ROC AUC", "Confusion matrix"],
+  sections: [{ h: "The big idea", text: "Accuracy alone can fool you. Precision asks, when the model says yes, how often is it right? Recall asks, of all the real yes cases, how many did it find? Picking the right metric is a product decision about which mistake costs more." }] }

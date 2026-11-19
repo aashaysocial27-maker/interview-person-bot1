@@ -1,0 +1,2 @@
+{ n: 7, group: "Classic Models", title: "Linear & Logistic Regression", draft: true, terms: ["Linear regression", "Logistic regression", "Coefficients", "Baseline"],
+  sections: [{ h: "The big idea", text: "These are the simplest models and often the best place to start. Linear regression predicts a number, like a score out of ten. Logistic regression predicts a probability, like the chance an answer is strong. They are fast, cheap and easy to explain." }] }

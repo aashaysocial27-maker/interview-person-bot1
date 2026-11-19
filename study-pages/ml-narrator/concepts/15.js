@@ -1,0 +1,2 @@
+{ n: 15, group: "How Models Learn", title: "Regularization", draft: true, terms: ["L1 and L2", "Dropout", "Early stopping", "Data augmentation"],
+  sections: [{ h: "The big idea", text: "Regularization is a set of tricks that stop a model from overfitting. It gently penalises complexity, randomly switches parts off during training, or stops training at the right moment. The aim is a model that works on new data, not just the training set." }] }

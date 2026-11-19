@@ -1,0 +1,2 @@
+{ n: 28, group: "Real-World ML", title: "A/B Testing ML Features", draft: true, terms: ["A/B test", "Online metrics", "Offline metrics", "Statistical significance"],
+  sections: [{ h: "The big idea", text: "A model that scores well offline can still fail with real users. A/B testing shows the new model to some users and the old one to others, then compares real outcomes. It is the final proof that a model improves the product." }] }

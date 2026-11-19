@@ -1,0 +1,2 @@
+{ n: 14, group: "How Models Learn", title: "Gradient Descent & Optimizers", draft: true, terms: ["Gradient", "Learning rate", "SGD", "Adam"],
+  sections: [{ h: "The big idea", text: "Gradient descent is how a model improves. Picture walking downhill in fog, always taking a small step in the steepest downward direction. The learning rate sets the step size. Optimizers like Adam are smarter ways of taking those steps." }] }

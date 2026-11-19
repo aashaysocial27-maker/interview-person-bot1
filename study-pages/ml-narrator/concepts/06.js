@@ -1,0 +1,2 @@
+{ n: 6, group: "Foundations", title: "Overfitting & Underfitting", draft: true, terms: ["Overfitting", "Underfitting", "Bias-variance trade-off", "Generalization"],
+  sections: [{ h: "The big idea", text: "An overfit model memorises its training examples and fails on new ones, like a student who memorised last year's exam. An underfit model is too simple to catch the pattern at all. The goal is generalization, doing well on data the model has never seen." }] }

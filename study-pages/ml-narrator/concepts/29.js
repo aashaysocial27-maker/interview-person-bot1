@@ -1,0 +1,2 @@
+{ n: 29, group: "Real-World ML", title: "Data Drift & Monitoring", draft: true, terms: ["Data drift", "Concept drift", "Monitoring", "Retraining"],
+  sections: [{ h: "The big idea", text: "The world changes after launch, and a model trained on old data slowly gets worse. Data drift means the inputs have changed. Concept drift means the right answers have changed. Monitoring catches both, so you know when to retrain." }] }

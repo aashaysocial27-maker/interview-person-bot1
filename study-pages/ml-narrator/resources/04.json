@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"},
+ {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"},
+ {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"},
+ {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}
+]

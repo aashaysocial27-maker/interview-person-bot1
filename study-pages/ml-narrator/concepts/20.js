@@ -1,0 +1,2 @@
+{ n: 20, group: "Deep Learning", title: "Convolutional Networks (Vision)", draft: true, terms: ["CNN", "Convolution", "Filters", "Image classification"],
+  sections: [{ h: "The big idea", text: "Convolutional networks are built for images. Small filters slide across a picture and detect edges, then shapes, then whole objects. They power photo search, medical scans and quality checks on factory lines." }] }

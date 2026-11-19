@@ -1,0 +1,2 @@
+{ n: 26, group: "Real-World ML", title: "Explainability", draft: true, terms: ["Interpretability", "Feature importance", "SHAP", "Model cards"],
+  sections: [{ h: "The big idea", text: "Explainability answers the question, why did the model say that? Tools like SHAP show how much each feature pushed a prediction up or down. It builds user trust, helps debugging, and is often required by law in areas like lending and hiring." }] }

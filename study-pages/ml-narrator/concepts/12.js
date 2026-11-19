@@ -1,0 +1,2 @@
+{ n: 12, group: "Classic Models", title: "Dimensionality Reduction", draft: true, terms: ["PCA", "t-SNE", "UMAP", "Curse of dimensionality"],
+  sections: [{ h: "The big idea", text: "Real data can have hundreds of features. Dimensionality reduction squeezes them into a few that keep most of the information. This makes models faster, and lets you plot complex data on a simple two dimensional chart." }] }

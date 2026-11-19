@@ -1,0 +1,2 @@
+{ n: 13, group: "How Models Learn", title: "Loss Functions", draft: true, terms: ["Loss", "Mean squared error", "Cross-entropy", "Objective"],
+  sections: [{ h: "The big idea", text: "A loss function is a single number that measures how wrong the model is. Training is simply the search for parameters that make this number as small as possible. Choosing the loss means choosing what the model cares about." }] }

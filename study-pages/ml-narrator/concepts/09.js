@@ -1,0 +1,2 @@
+{ n: 9, group: "Classic Models", title: "Gradient Boosting", draft: true, terms: ["Boosting", "XGBoost", "LightGBM", "Tabular data"],
+  sections: [{ h: "The big idea", text: "Gradient boosting builds trees one after another, and each new tree fixes the mistakes of the ones before it. Tools like XGBoost and LightGBM are often the most accurate choice for table data, such as user records or transactions." }] }

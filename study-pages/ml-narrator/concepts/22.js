@@ -1,0 +1,2 @@
+{ n: 22, group: "Deep Learning", title: "Transfer Learning & Embeddings", draft: true, terms: ["Pretrained models", "Transfer learning", "Embeddings", "Fine-tuning"],
+  sections: [{ h: "The big idea", text: "Training from scratch is expensive. Transfer learning starts from a model that already learned general skills on huge data, then adapts it to your task with far fewer examples. Embeddings are the meaning-rich numbers these models produce." }] }

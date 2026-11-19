@@ -1,0 +1,2022 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ML Concepts Narrator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single study column; a sticky "now playing" deck at the bottom, concept cards above it */
+:root {
+  --bg: #F2F4F6;
+  --surface: #FFFFFF;
+  --ink: #17202B;
+  --muted: #5B6672;
+  --line: #DCE1E6;
+  --accent: #0E7C72;
+  --accent-soft: #DDF1EE;
+  --hl: #FFF1C2;
+  --faint: #A9B2BC; --t1: #6B7686; --t2: #1F7FC0; --t3: #C2410C; --t4: #7C5BC4; --warm: #B7791F; --money: #B7791F;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161C; --surface: #19212A; --ink: #E6EBF0; --muted: #96A2AE;
+    --line: #2A3540; --accent: #3CC2B3; --accent-soft: #163A37; --hl: #4A3F17; --faint: #4D5966; --t1: #9AA5B3; --t2: #5AB0EA; --t3: #F2804A; --t4: #A98BEB; --warm: #E0A93E; --money: #E0A93E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161C; --surface: #19212A; --ink: #E6EBF0; --muted: #96A2AE;
+  --line: #2A3540; --accent: #3CC2B3; --accent-soft: #163A37; --hl: #4A3F17; --faint: #4D5966; --t1: #9AA5B3; --t2: #5AB0EA; --t3: #F2804A; --t4: #A98BEB; --warm: #E0A93E; --money: #E0A93E;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body);
+  font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 140px;
+}
+.wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+header { display: flex; flex-direction: column; gap: 6px; }
+.title-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px; }
+.head-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 2px solid var(--accent); border-radius: 10px; background: var(--accent-soft); color: var(--accent); font: 600 15px var(--font-display); text-decoration: none; }
+.head-link:hover { background: var(--accent); color: var(--surface); }
+.head-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font-family: var(--font-display); font-size: clamp(26px, 5vw, 36px); line-height: 1.1; margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); margin: 0; max-width: 62ch; }
+
+.settings { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: end; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field label { font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+select, input[type=range] { font: inherit; color: var(--ink); }
+select { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; max-width: 280px; }
+input[type=range] { accent-color: var(--accent); width: 140px; }
+.toggle label { display: flex; align-items: center; gap: 8px; font-family: var(--font-body); font-size: 14px; letter-spacing: 0; text-transform: none; color: var(--ink); cursor: pointer; }
+.toggle input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+.toggle small { font-size: 12px; color: var(--muted); }
+.voice-tip { flex-basis: 100%; margin: 0; font-size: 13px; color: var(--muted); }
+.sec h4 { border-radius: 3px; transition: background .15s; }
+.sec h4.now { background: var(--hl); }
+.rate-val { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.section-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 6px 0 -8px; }
+.list { display: flex; flex-direction: column; gap: 12px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.tabs-bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 10px; margin-block: -10px; }
+.tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.tab { flex: 0 0 auto; width: 176px; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow: hidden; }
+.tab.active { border-color: var(--accent); }
+.tab.playing { border-color: var(--accent); box-shadow: inset 0 -3px 0 var(--accent); }
+.tab-go { flex: 1; display: flex; gap: 6px; align-items: baseline; padding: 8px 10px 6px; border: 0; background: none; color: var(--ink); font: 600 14px var(--font-display); text-align: left; cursor: pointer; line-height: 1.25; }
+.tab-go:hover { color: var(--accent); }
+.tab-n { font: 500 11px var(--font-mono); color: var(--muted); }
+.tab-vis, .tab-soon { padding: 5px 10px 7px; font-size: 12px; border-top: 1px solid var(--line); }
+.tab-vis { color: var(--accent); text-decoration: none; background: var(--accent-soft); font-weight: 500; }
+.tab-vis:hover { text-decoration: underline; }
+.tab-soon { color: var(--muted); }
+.to-top { align-self: flex-start; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 500 13px var(--font-body); cursor: pointer; }
+.to-top:hover { border-color: var(--accent); color: var(--accent); }
+.to-top:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tab-go:focus-visible, .tab-vis:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.card { scroll-margin-top: 110px; }
+.end-space { height: 60vh; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; transition: border-color .2s; }
+.card.playing { border-color: var(--accent); }
+.card-head { width: 100%; display: grid; grid-template-columns: 44px 1fr auto; gap: 14px; align-items: center; padding: 14px 16px; background: none; border: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; }
+.card-head:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.num { font-family: var(--font-mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.title { font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.25; }
+.group { font-size: 13px; color: var(--muted); }
+.play-btn { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+.card.playing .play-btn { background: var(--accent); color: var(--surface); }
+.play-btn svg { width: 16px; height: 16px; fill: currentColor; }
+.card-body { padding: 0 16px 16px 74px; display: flex; flex-direction: column; gap: 12px; }
+.script { margin: 0; color: var(--ink); max-width: 65ch; }
+.script span { border-radius: 3px; transition: background .15s; }
+.script span.now { background: var(--hl); }
+.secs { display: flex; flex-direction: column; gap: 14px; }
+.sec.connect { padding: 10px 12px; border-radius: 8px; background: var(--bg); border: 1px dashed var(--accent); }
+.sec h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 4px; }
+.visual-link { display: grid; grid-template-columns: 52px 1fr auto; gap: 14px; align-items: center; padding: 12px 14px; border: 1px solid var(--accent); border-radius: 10px; background: var(--accent-soft); color: var(--ink); text-decoration: none; }
+.visual-link:hover { background: var(--surface); }
+.visual-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.visual-link svg { width: 52px; height: 36px; }
+.visual-link b { font-family: var(--font-display); font-size: 16px; display: block; }
+.visual-link small { color: var(--muted); font-size: 13px; }
+.visual-link .go { font-size: 20px; color: var(--accent); }
+.draft-note { margin: 0; font-size: 13px; color: var(--muted); padding: 8px 12px; border: 1px dashed var(--line); border-radius: 8px; }
+.terms { display: flex; flex-wrap: wrap; gap: 6px; }
+.term { font-family: var(--font-mono); font-size: 12px; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); }
+
+.player { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 1px solid var(--line);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: 12px; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+.player-in { max-width: 760px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+.now-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.now-title { font-family: var(--font-display); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.ctrl { display: flex; gap: 8px; }
+.ctrl button { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.ctrl button:disabled { opacity: .4; cursor: default; }
+.ctrl button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ctrl svg { width: 16px; height: 16px; fill: currentColor; }
+.note { font-size: 13px; color: var(--muted); }
+.warn { padding: 12px 14px; border-radius: 8px; background: var(--hl); color: var(--ink); font-size: 14px; }
+@media (max-width: 520px) {
+  .card-head { grid-template-columns: 1fr auto; }
+  .num { display: none; }
+  .card-body { padding-left: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+
+/* ---------- Visual view (the 20 diagram walkthroughs, in-page) ---------- */
+.in-visual .lesson-only { display: none !important; }
+#visualView { display: flex; flex-direction: column; gap: 18px; padding-top: 6px; }
+#visualView .v-back { align-self: flex-start; font: 500 14px var(--font-body); color: var(--accent); text-decoration: none; padding: 6px 12px; border: 1px solid var(--accent); border-radius: 999px; background: var(--accent-soft); }
+#visualView .v-back:hover { background: var(--surface); }
+#visualView .v-head { display: flex; flex-direction: column; gap: 6px; }
+#visualView .v-head h1 { margin: 0; }
+#visualView .pipeline { display: grid; grid-template-columns: repeat(var(--cols, 4), 1fr); gap: 6px; }
+#visualView .stage { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--muted); font: inherit; text-align: left; cursor: pointer; min-width: 0; }
+#visualView .stage b { font-family: var(--font-display); font-size: 15px; color: var(--ink); font-weight: 600; }
+#visualView .stage span { font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+#visualView .stage.done { border-color: var(--accent-soft); }
+#visualView .stage.active { border-color: var(--accent); background: var(--accent-soft); }
+#visualView .stage.active span { color: var(--accent); }
+#visualView button:focus-visible, #visualView a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#visualView .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+#visualView .panel-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; flex-wrap: wrap; }
+#visualView h2 { font-family: var(--font-display); font-size: 24px; margin: 0; line-height: 1.2; }
+#visualView .q { color: var(--muted); margin: 2px 0 0; }
+#visualView .voice-box { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+#visualView .voice-name { font-size: 12px; color: var(--muted); text-align: right; line-height: 1.35; }
+#visualView .voice-name b { color: var(--ink); font-weight: 600; }
+#visualView .listen { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--accent); background: none; color: var(--accent); font: 500 14px var(--font-body); cursor: pointer; }
+#visualView .listen.on { background: var(--accent); color: var(--surface); }
+#visualView .listen svg { width: 14px; height: 14px; fill: currentColor; }
+#visualView .diagram { overflow-x: auto; border-radius: 8px; background: var(--bg); padding: 12px; }
+#visualView .diagram svg { display: block; width: 100%; min-width: 480px; height: auto; }
+#visualView svg text { font-family: var(--font-body); fill: var(--ink); }
+#visualView svg .mono { font-family: var(--font-mono); }
+#visualView svg .muted { fill: var(--muted); }
+#visualView .picker { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); }
+#visualView .picker button { font: 500 14px var(--font-mono); padding: 5px 12px; border-radius: 6px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+#visualView .picker button.sel { border-color: currentColor; }
+#visualView .explain { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+#visualView .explain > div { min-width: 0; }
+#visualView .explain h3 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; font-weight: 500; }
+#visualView .explain p, #visualView .explain ul { margin: 0; }
+#visualView .explain ul { padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+#visualView .pm { border-left: 3px solid var(--accent); padding-left: 12px; }
+#visualView .v-nav { display: flex; justify-content: space-between; gap: 12px; }
+#visualView .v-nav button { font: 500 14px var(--font-body); padding: 10px 18px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+#visualView .v-nav button.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+#visualView .v-nav button:disabled { opacity: .4; cursor: default; }
+#visualView .hint { font-size: 13px; color: var(--muted); text-align: center; margin: 0; }
+#visualView .fade-in { animation: vfade .45s ease both; }
+@keyframes vfade { from { opacity: .25; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (max-width: 600px) { #visualView .pipeline { grid-template-columns: repeat(2, 1fr); } #visualView .explain { grid-template-columns: 1fr; } #visualView .panel { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { #visualView .fade-in { animation: none; } }
+
+/* ---------- Learn more + search links ---------- */
+.learn { border-top: 1px dashed var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.learn h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0; }
+.learn ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.learn li { display: flex; gap: 8px; align-items: baseline; font-size: 14px; }
+.learn .kind { flex-shrink: 0; font: 500 10.5px var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; }
+.learn a { color: var(--accent); text-decoration: none; }
+.learn a:hover { text-decoration: underline; }
+.learn .learn-note { font-size: 12px; color: var(--muted); margin: 0; }
+.msg.bot a, .note-a a, .thoughts a { color: var(--accent); text-decoration: underline; }
+.search-links { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.search-btn { display: inline-flex; align-items: center; gap: 6px; font: 500 13px var(--font-body); padding: 6px 12px; border-radius: 999px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--ink) !important; text-decoration: none !important; }
+.search-btn:hover { background: var(--surface); }
+/* ---------- AI tutor chat ---------- */
+[hidden] { display: none !important; }
+:root { --chat-w: max(380px, 50vw); }
+.chat-fab { position: fixed; z-index: 25; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  display: inline-flex; align-items: center; gap: 8px; padding: 0 18px 0 14px; height: 52px; border-radius: 26px; border: 0;
+  background: var(--accent); color: var(--surface); font: 600 14px var(--font-body); cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+.chat-fab svg { width: 22px; height: 22px; fill: currentColor; }
+.chat-fab:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.chat-panel { position: fixed; z-index: 30; top: 0; right: 0; bottom: 0; width: var(--chat-w); display: flex; flex-direction: column;
+  background: var(--surface); border-left: 1px solid var(--line); box-shadow: -8px 0 24px rgba(0,0,0,.08);
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px); }
+body.chat-full .chat-panel { width: 100vw; }
+body.chat-open { padding-right: calc(var(--chat-w) + 16px); }
+body.chat-open .player { right: var(--chat-w); }
+body.chat-open .chat-fab { display: none; }
+.chat-panel .chat-head { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.chat-title { display: flex; flex-direction: column; min-width: 0; }
+.chat-title b { font-family: var(--font-display); font-size: 17px; }
+.chat-ctx { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.icon-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.icon-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+.icon-btn:focus-visible, .chip:focus-visible, .seg button:focus-visible, .send-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chat-msgs { flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 14px; }
+.msg { max-width: 92%; font-size: 14.5px; line-height: 1.55; }
+.msg.user { align-self: flex-end; background: var(--accent); color: var(--surface); padding: 9px 13px; border-radius: 14px 14px 4px 14px; white-space: pre-wrap; }
+.msg.bot { align-self: flex-start; background: var(--bg); padding: 10px 14px; border-radius: 14px 14px 14px 4px; }
+.msg.bot p { margin: 0 0 8px; } .msg.bot p:last-child { margin-bottom: 0; }
+.msg.bot ul, .msg.bot ol { margin: 4px 0 8px; padding-left: 20px; }
+.msg.bot code { font-family: var(--font-mono); font-size: 12.5px; background: var(--surface); padding: 1px 4px; border-radius: 4px; }
+.msg.bot h5 { font-family: var(--font-display); font-size: 14.5px; margin: 6px 0 4px; }
+.msg .thinking { color: var(--muted); font-style: italic; }
+.msg-tools { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.msg-tools button { font: 500 12px var(--font-body); color: var(--accent); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+.msg.err { align-self: stretch; max-width: none; background: var(--hl); padding: 10px 14px; border-radius: 10px; font-size: 13.5px; }
+.chat-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 14px 10px; }
+.chip { font: 500 13px var(--font-body); padding: 7px 12px; border-radius: 999px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--ink); cursor: pointer; text-align: left; }
+.chat-form { border-top: 1px solid var(--line); padding: 10px 14px 6px; display: flex; flex-direction: column; gap: 8px; }
+.chat-partial { font-size: 12.5px; color: var(--muted); font-style: italic; }
+.chat-form textarea { width: 100%; resize: none; font: 14.5px/1.45 var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 64px; max-height: 160px; }
+.chat-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.chat-bar { display: flex; align-items: center; gap: 8px; }
+.chat-bar .grow { flex: 1; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.seg button { font: 500 12.5px var(--font-body); padding: 6px 11px; border: 0; background: none; color: var(--muted); cursor: pointer; }
+.seg button.on { background: var(--accent-soft); color: var(--accent); }
+.mic-btn.listening { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+.send-btn { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 8px; border: 0; background: var(--accent); color: var(--surface); font: 600 13.5px var(--font-body); cursor: pointer; }
+.send-btn svg { width: 15px; height: 15px; fill: currentColor; }
+.send-btn:disabled { opacity: .5; cursor: default; }
+.chat-note { margin: 0; padding: 0 14px 10px; font-size: 11.5px; color: var(--muted); }
+@media (max-width: 860px) {
+  :root { --chat-w: 100vw; }
+  body.chat-open { padding-right: max(16px, env(safe-area-inset-right, 0px)); overflow: hidden; }
+  body.chat-open .player { right: 0; }
+  #chatExpand { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { .chat-panel:not([hidden]) { animation: chatIn .2s ease-out; } }
+@keyframes chatIn { from { transform: translateX(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+/* ---------- My notes ---------- */
+.chat-tabs { display: flex; gap: 4px; padding: 8px 14px 0; border-bottom: 1px solid var(--line); }
+.chat-tabs button { font: 600 13.5px var(--font-body); padding: 8px 12px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--muted); cursor: pointer; }
+.chat-tabs button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.chat-tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.count-badge { display: inline-block; min-width: 18px; padding: 0 6px; margin-left: 4px; border-radius: 9px; background: var(--accent-soft); color: var(--accent); font-size: 11px; line-height: 18px; text-align: center; }
+.notes-view { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.notes-top { padding: 12px 14px 8px; }
+.notes-top input { width: 100%; font: 14px var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+.notes-top input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+.notes-list { flex: 1; overflow-y: auto; padding: 4px 14px 14px; display: flex; flex-direction: column; gap: 14px; }
+.notes-group h4 { font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin: 6px 0 8px; }
+.ncard { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--surface); display: flex; flex-direction: column; gap: 6px; }
+.ncard + .ncard { margin-top: 8px; }
+.note-q { font-weight: 600; font-size: 14px; }
+.note-meta { font-size: 11.5px; color: var(--muted); }
+.note-a { font-size: 13.5px; line-height: 1.5; color: var(--ink); }
+.note-a.clamp { max-height: 4.5em; overflow: hidden; -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); }
+.note-a p { margin: 0 0 6px; } .note-a ul, .note-a ol { margin: 2px 0 6px; padding-left: 18px; }
+.note-tools { display: flex; gap: 6px; flex-wrap: wrap; }
+.note-tools button { font: 500 12px var(--font-body); color: var(--accent); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+.note-tools button.danger { color: var(--t3, #C2410C); }
+.notes-empty { color: var(--muted); font-size: 13.5px; padding: 18px 4px; text-align: center; }
+.notes-foot { border-top: 1px solid var(--line); padding: 10px 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.notes-foot .where { flex: 1; min-width: 160px; font-size: 11.5px; color: var(--muted); }
+.notes-foot button { font: 600 12.5px var(--font-body); padding: 7px 12px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent); cursor: pointer; }
+.msg-tools button.saved { color: var(--muted); cursor: default; }
+.chat-toast { position: absolute; left: 50%; bottom: 120px; transform: translateX(-50%); background: var(--ink); color: var(--surface); font-size: 13px; padding: 8px 14px; border-radius: 999px; z-index: 2; pointer-events: none; }
+.notes-top { display: flex; gap: 8px; }
+.notes-top input { flex: 1; min-width: 0; }
+.new-note-btn { flex-shrink: 0; font: 600 13px var(--font-body); padding: 0 12px; border-radius: 8px; border: 0; background: var(--accent); color: var(--surface); cursor: pointer; }
+.ncard.mine { border-color: var(--accent); }
+.mine-badge { align-self: flex-start; font-size: 11px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 999px; }
+.thoughts { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 8px 10px; border-radius: 0 8px 8px 0; font-size: 13.5px; }
+.thoughts b { display: block; font-size: 11.5px; color: var(--accent); margin-bottom: 2px; }
+.thoughts p { margin: 0 0 4px; }
+.note-editor { display: flex; flex-direction: column; gap: 8px; }
+.note-editor label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.note-editor input, .note-editor select, .note-editor textarea { font: 14px/1.45 var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+.note-editor textarea { resize: vertical; min-height: 90px; }
+.note-editor input:focus, .note-editor select:focus, .note-editor textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
+.ed-actions { display: flex; gap: 8px; }
+.ed-save { font: 600 13px var(--font-body); padding: 7px 14px; border-radius: 8px; border: 0; background: var(--accent); color: var(--surface); cursor: pointer; }
+.ed-cancel { font: 500 13px var(--font-body); padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line); background: none; color: var(--ink); cursor: pointer; }
+</style>
+
+<div class="wrap">
+  <header class="lesson-only">
+    <span class="eyebrow">30 concepts · basic to advanced</span>
+    <div class="title-row"><h1 style="flex-basis:100%">ML Concepts Narrator</h1><a class="head-link" href="https://claude.ai/artifact/D2vhnvu7LWmwxhNhrxkiSg" target="_blank" rel="noopener">AI Concepts Narrator <span aria-hidden="true">↗</span></a><a class="head-link" href="https://claude.ai/artifact/X37xiEqYAFbeYRRU8PRdhx" target="_blank" rel="noopener">AI Engineering Guide <span aria-hidden="true">↗</span></a></div>
+    <p class="sub">Tap a concept to hear it explained. The sentence being read is highlighted so you can follow along. Use the bar at the bottom to pause, skip, or play all.</p>
+  </header>
+
+  <div id="warn" class="warn lesson-only" hidden>This browser has no built-in voice. Try Chrome, Edge or Safari.</div>
+
+  <div class="settings lesson-only">
+    <div class="field">
+      <label for="voice">Voice</label>
+      <select id="voice"><option>Loading voices…</option></select>
+    </div>
+    <div class="field">
+      <label for="rate">Speed <span class="rate-val" id="rateVal">1.0×</span></label>
+      <input type="range" id="rate" min="0.7" max="1.5" step="0.1" value="1">
+    </div>
+    <div class="field toggle">
+      <label for="teacher"><input type="checkbox" id="teacher" checked> Teacher style</label>
+      <small>Spoken cues, pauses and a livelier tone</small>
+    </div>
+    <p class="voice-tip" id="ttsNote" hidden>Claude voice was turned off for this page, so the narration switched back to your device's voices. You can turn it on again in this page's Permissions menu.</p>
+    <p class="voice-tip" id="voiceTip" hidden>For the most human-sounding voice, open this page in <b>Microsoft Edge</b> and pick a voice marked “Natural”, or in <b>Safari</b> pick a “Premium” or “Enhanced” voice. Voices marked ★ are the best ones on your device.</p>
+  </div>
+
+  <nav class="tabs-bar" aria-label="Jump to a concept"><div class="tabs" id="tabs"></div></nav>
+
+
+  <section id="visualView" hidden aria-live="polite">
+    <a class="v-back" id="vBack" href="#c1">← Back to the lesson</a>
+    <div class="v-head">
+      <span class="eyebrow" id="vEyebrow"></span>
+      <h1 id="vTitle"></h1>
+      <p class="sub" id="vSub"></p>
+    </div>
+    <nav class="pipeline" id="vPipe" aria-label="Steps"></nav>
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2 id="vStepTitle"></h2><p class="q" id="vQ"></p></div>
+        <div class="voice-box"><span class="voice-name">Voice: <b id="vVoiceName">device default</b><br><span id="vVoiceMeta"></span></span>
+          <button class="listen" id="vListen"><svg viewBox="0 0 24 24" id="vListenIcon"><path d="M7 4v16l13-8z"/></svg><span id="vListenLabel">Listen</span></button></div>
+      </div>
+      <div class="picker" id="vPicker" hidden></div>
+      <div class="diagram"><div id="vDiagram"></div></div>
+      <div class="explain">
+        <div><h3>What's happening</h3><ul id="vPoints"></ul></div>
+        <div class="pm"><h3>Why it matters for a PM</h3><p id="vPm"></p></div>
+      </div>
+    </section>
+    <div class="v-nav"><button id="vPrev">← Previous</button><button id="vNext" class="primary">Next →</button></div>
+    <div id="vLearn"></div>
+    <p class="hint">Tip: use the ← → arrow keys to move between steps. Your voice settings from the lesson page apply here too.</p>
+  </section>
+  <p class="section-label lesson-only">Concepts</p>
+  <div class="list lesson-only" id="list"></div>
+  <p class="note lesson-only">Concepts marked “Preview” get their full lesson, diagrams and links in a later batch.</p>
+  <div class="end-space lesson-only" aria-hidden="true"></div>
+</div>
+
+<div class="player lesson-only">
+  <div class="player-in">
+    <div class="now-info">
+      <span class="now-title" id="nowTitle">Nothing playing</span>
+      <div class="bar"><i id="barFill"></i></div>
+    </div>
+    <div class="ctrl">
+      <button id="prevBtn" aria-label="Previous concept"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+      <button id="toggleBtn" aria-label="Play all"><svg viewBox="0 0 24 24" id="toggleIcon"><path d="M7 4v16l13-8z"/></svg></button>
+      <button id="nextBtn" aria-label="Next concept"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+
+<button class="chat-fab" id="chatFab" hidden aria-label="Ask the AI tutor" aria-expanded="false" aria-controls="chatPanel">
+  <svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm4 7a1.3 1.3 0 1 0 0-2.6A1.3 1.3 0 0 0 8 11zm4 0a1.3 1.3 0 1 0 0-2.6 1.3 1.3 0 0 0 0 2.6zm4 0a1.3 1.3 0 1 0 0-2.6 1.3 1.3 0 0 0 0 2.6z"/></svg>
+  <span>Ask AI</span>
+</button>
+<aside class="chat-panel" id="chatPanel" hidden aria-label="AI tutor">
+  <header class="chat-head">
+    <div class="chat-title"><b>AI tutor</b><span class="chat-ctx" id="chatCtx">Ask about any concept</span></div>
+    <div class="chat-actions">
+      <button class="icon-btn" id="chatSaveAll" title="Save this chat to My notes" aria-label="Save this chat to My notes"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg></button>
+      <button class="icon-btn" id="chatNew" title="New chat" aria-label="Start a new chat"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+      <button class="icon-btn" id="chatExpand" title="Full width" aria-label="Expand to full width"><svg viewBox="0 0 24 24" id="expandIcon"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <button class="icon-btn" id="chatClose" title="Minimize" aria-label="Minimize the AI tutor"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+    </div>
+  </header>
+  <div class="chat-tabs" role="tablist" aria-label="Tutor views">
+    <button type="button" role="tab" id="tabChat" aria-selected="true" aria-controls="chatMsgs">Chat</button>
+    <button type="button" role="tab" id="tabNotes" aria-selected="false" aria-controls="notesView">My notes<span class="count-badge" id="notesCount">0</span></button>
+  </div>
+  <div class="notes-view" id="notesView" hidden>
+    <div class="notes-top"><label for="notesSearch" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Search your notes</label><input id="notesSearch" type="search" placeholder="Search your notes"><button type="button" class="new-note-btn" id="notesNew">✏️ New note</button></div>
+    <div class="notes-list" id="notesList"></div>
+    <div class="notes-foot"><span class="where" id="notesWhere">Saved in this browser only</span><button type="button" id="notesCopyAll">Copy all</button><button type="button" id="notesExport">⬇ Export</button></div>
+  </div>
+  <div class="chat-msgs" id="chatMsgs" aria-live="polite"></div>
+  <div class="chat-chips" id="chatChips"></div>
+  <form class="chat-form" id="chatForm">
+    <div class="chat-partial" id="chatPartial" hidden></div>
+    <label for="chatInput" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Your question</label>
+    <textarea id="chatInput" rows="2" placeholder="Ask anything about this concept… (Enter to send)"></textarea>
+    <div class="chat-bar">
+      <div class="seg" role="group" aria-label="Answer style">
+        <button type="button" data-tier="quick" class="on" aria-pressed="true" title="Fast, short answers">⚡ Quick</button>
+        <button type="button" data-tier="default" aria-pressed="false" title="Slower, more thorough answers">🧠 Deep</button>
+      </div>
+      <span class="grow"></span>
+      <button type="button" class="icon-btn mic-btn" id="chatMic" hidden title="Ask by voice" aria-label="Ask by voice"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+      <button type="submit" class="send-btn" id="chatSend"><svg viewBox="0 0 24 24" id="sendIcon"><path d="M3 20l18-8L3 4v6l12 2-12 2z"/></svg><span id="sendLabel">Send</span></button>
+    </div>
+  </form>
+  <p class="chat-note">Uses your Claude account. Answers can be wrong, so check anything important.</p>
+</aside>
+<script>
+const CONCEPTS = [
+{
+  n: 1, group: "Foundations", title: "What Is Machine Learning",
+  terms: ["Model", "Training", "Inference", "Parameters", "Prediction"],
+  visual: { title: "From Rules to Learning", note: "Watch the interview coach learn from examples, in 5 steps with diagrams" },
+  sections: [
+    { h: "The big idea", text: "Normal software follows rules that a person writes. Machine learning flips that around. Instead of writing the rules, you show the computer many examples with the right answers, and it works out the rules by itself. The result is called a model. Everything else in this course builds on that one idea." },
+    { h: "1 · Rules versus learning", text: "Imagine our interview coach has to judge whether a candidate's answer is strong. You could write rules. For example, if the answer mentions a number, call it strong. But real answers are messy. A strong answer can have no numbers, and a weak one can be full of them. Every new rule breaks something else. With machine learning, you skip the rules. You collect a thousand answers that real coaches have already rated, and let the computer find the pattern." },
+    { h: "2 · The model is a function", text: "A model is a function. Something goes in, and a prediction comes out. What goes in is called the features. For an interview answer, features might be how specific it is, whether it follows a clear structure, and how long it is. What comes out is the prediction, such as strong, with eighty five percent confidence. Inside the model are numbers called parameters. They decide how much each feature counts." },
+    { h: "3 · Training and inference", text: "A model's life has two phases. The first is training. The model looks at the rated examples, makes guesses, checks them against the real answers, and adjusts its parameters to make fewer mistakes. This is slow and happens once, or every so often. The second phase is inference. The trained model makes predictions on new answers it has never seen. This is fast and cheap, and it happens every time a user asks." },
+    { h: "4 · When to use machine learning", text: "Machine learning is not always the right tool. Use it when the pattern is too complex for simple rules, when you have plenty of good examples, when some mistakes are acceptable, and when the pattern keeps changing. Avoid it when a simple rule already works, when you have no data, or when every single mistake is unacceptable. A good first question is, can I solve this with a rule? If yes, start there." },
+    { h: "Why it matters for a PM", text: "For a PM, three things matter. First, a model is never perfect, so always ask what happens when it is wrong, and design for that. Second, the examples are the real product spec. If the coaches who rated the answers were inconsistent, the model will be too. Third, a model learns from the past. When users or the world change, the model has to be retrained, so plan for that from day one." },
+    { h: "How it connects", text: "This is the base for the whole course. Every later concept is about one part of this picture, such as the data, the model, the training, or how to ship it safely. The large language models in your AI Concepts Narrator are machine learning too, just at a huge scale. Next, in Types of Learning, we look at the different ways a model can learn, with answers, without answers, or by trial and error." },
+  ]
+},
+{
+  n: 2, group: "Foundations", title: "Types of Learning",
+  terms: ["Supervised", "Classification", "Regression", "Unsupervised", "Reinforcement", "Self-supervised"],
+  visual: { title: "Four Ways a Model Learns", note: "See each type of learning with the interview coach, then pick the right one" },
+  sections: [
+    { h: "The big idea", text: "In the last concept, our model learned from answers that coaches had already rated. That is only one way to learn. Models can also learn with no answers at all, by trial and error, or by making up their own practice questions. Which one you use depends mostly on one thing, the data you have." },
+    { h: "1 · Supervised learning", text: "Supervised learning means learning from examples that come with the right answer, called a label. It is like a student studying with an answer key. It does two main jobs. Classification picks a category, such as strong or weak. Regression predicts a number, such as a score of seven point five out of ten. Most machine learning in real products is supervised." },
+    { h: "2 · Unsupervised learning", text: "Unsupervised learning has no labels. The model looks for structure on its own, usually by grouping similar things together. This is called clustering. Imagine giving the coach ten thousand unrated answers. It might discover groups like rambling answers, answers with no result, and answers that are far too short. Nobody told it those groups existed. It is great for exploring data you do not understand yet." },
+    { h: "3 · Reinforcement learning", text: "Reinforcement learning learns by trial and error. An agent takes an action, sees what happens, and gets a reward or a penalty. Over many tries, it learns a strategy that earns the most reward. Our coach could use it to choose which practice question to ask next, with a reward when the candidate's answers improve. It is powerful, but it needs lots of tries and a carefully designed reward." },
+    { h: "4 · Self-supervised learning", text: "Self-supervised learning creates its own labels from raw data. Hide a word in a sentence, and the hidden word becomes the answer to predict. Because no human has to label anything, it can learn from huge amounts of text, images or audio. This is exactly how large language models are trained. They are then refined with supervised learning and reinforcement learning." },
+    { h: "Why it matters for a PM", text: "For a PM, the first question is, what data do we have? If you have labeled examples, supervised learning is usually the fastest path. If you have none, labels cost time and money, so plan a budget for them, or start with unsupervised learning to explore. Reinforcement learning fits when the product makes a series of decisions and you can measure the outcome." },
+    { h: "How it connects", text: "In What Is Machine Learning, our coach learned from rated answers. Now you know that was supervised learning. Self-supervised learning links this course to the large language models in your AI Concepts Narrator. Next, in Data and Labeling, we look closely at the fuel for supervised learning, the data and its labels, and why their quality matters so much." },
+  ]
+},
+{
+  n: 3, group: "Foundations", title: "Data & Labeling",
+  terms: ["Dataset", "Example", "Label", "Direct vs proxy label", "Rater agreement", "Labeling guide"],
+  visual: { title: "Garbage In, Garbage Out", note: "Build the coach's dataset, see where labels come from, and watch a labeling guide fix disagreement" },
+  sections: [
+    { h: "The big idea", text: "A model can only be as good as the data it learns from. If the examples are wrong, messy or one-sided, the model will be too. People call this garbage in, garbage out. Google's course notes that teams often spend most of a project's time preparing data, not building models. So let's look at what good data and good labels really mean." },
+    { h: "1 · What a dataset looks like", text: "A dataset is a table. Each row is one example, such as one interview answer. Each column describes it, such as the role, the length, or how specific it is. One special column holds the label, the right answer the model should learn, like strong or weak. For our coach, a first dataset might be one thousand rated answers." },
+    { h: "2 · Where labels come from", text: "Labels come from three main places. People can rate examples by hand, like coaches rating answers. Labels can come from user actions, like whether a candidate saved an answer as a favourite. Or they can come from existing records. Watch out for proxy labels. A direct label measures exactly what you want. A proxy only comes close. Whether the candidate got the job is a proxy for a strong answer, because many other things affect hiring." },
+    { h: "3 · Label quality", text: "Here is a surprise. Experts often disagree. Give the same answer to three coaches, and you may get three different ratings. If the labels disagree, the model learns that confusion. The fix is a labeling guide, with clear definitions and real examples of strong and weak answers. Then check agreement, by having several people rate the same examples. Andrew Ng's data-centric idea says consistent labels often help more than a fancier model." },
+    { h: "4 · Common data problems", text: "Four problems show up again and again. Missing values, where some fields are empty. Duplicates, where the same example appears many times. Old data, which no longer matches today's users. And skewed coverage, where some groups barely appear. If almost every answer came from software engineers, the coach will judge sales candidates badly." },
+    { h: "Why it matters for a PM", text: "For a PM, data is a product decision, not just an engineering task. Budget for labeling, in both time and money. Own the labeling guide, because it is really the product spec. And check coverage. Ask, does our data include every kind of user we plan to serve? If not, the model will quietly fail for the people it never saw." },
+    { h: "How it connects", text: "In Types of Learning, we saw that supervised learning needs labels. Here we learned how to get good ones. Next, in Features and Feature Engineering, we look at the other columns in the table, the inputs, and how to turn raw data like an answer's text into numbers a model can use." },
+  ]
+},
+{
+  n: 4, group: "Foundations", title: "Features & Feature Engineering",
+  terms: ["Feature", "Feature vector", "Scaling", "Binning", "One-hot encoding", "Leakage"],
+  visual: { title: "Turning Answers into Numbers", note: "Watch a raw answer become features, then test which features are good or bad" },
+  sections: [
+    { h: "The big idea", text: "A model cannot read an interview answer the way you do. It only sees numbers. Features are the measurements we choose to describe each example, like how long the answer is or whether it mentions a result. Feature engineering means turning raw data into useful features. Good features often matter more than a fancy model." },
+    { h: "1 · From raw data to features", text: "Take one raw answer, a few sentences of text. We can measure it in many ways. How many seconds it lasts. How many specific details it has, like numbers or names. Whether it states a clear result. Whether it follows a structure, like situation, task, action, result. How many filler words, like um, it uses. Put these numbers in a row, and you have a feature vector, the list the model actually sees." },
+    { h: "2 · Preparing numbers", text: "Raw numbers come in very different ranges. Length might run from thirty to three hundred seconds, while has a result is just zero or one. Without care, the big numbers can drown out the small ones. Scaling squeezes each feature into a similar range, like zero to one. Binning groups a number into buckets, like short, medium and long, which helps when the exact value matters less than the range." },
+    { h: "3 · Preparing categories", text: "Some features are categories, like the candidate's role, engineer, sales or product manager. You might be tempted to code them as one, two and three. That's a trap. It tells the model that sales is somehow between engineer and product manager. Instead, use one hot encoding. Each category gets its own yes or no column, so no false order sneaks in." },
+    { h: "4 · Good and bad features", text: "A good feature passes four checks. It is related to what you want to predict. It is available at the moment you make the prediction. It is reliable and measured the same way every time. And it is fair to use. Whether the candidate got the job fails the second check, because you don't know it yet. Using it anyway is called leakage, and it makes a model look brilliant in testing and useless in real life. A candidate's accent fails the fairness check." },
+    { h: "Why it matters for a PM", text: "For a PM, features are where domain knowledge enters the model. You and your experts often know which signals matter, like a clear result at the end of an answer. Bring those ideas to the team. Then ask two questions about every feature. Will we have this when the user is waiting for a prediction? And would we be comfortable explaining to a user that we used it?" },
+    { h: "How it connects", text: "In Data and Labeling, we built the table and its label column. Here we filled in the other columns, the features. Next, in Train, Validation and Test Sets, we learn how to split that table so we can check, honestly, whether the model works on answers it has never seen." },
+  ]
+},
+{ n: 5, group: "Foundations", title: "Train, Validation & Test Sets", draft: true, terms: ["Train set", "Validation set", "Test set", "Cross-validation", "Data leakage"],
+  sections: [{ h: "The big idea", text: "To know if a model really works, you test it on data it has never seen. So you split your data into a training set, a validation set for tuning, and a test set for the final check. Data leakage is when test information sneaks into training, which makes results look far better than they are." }] },
+{ n: 6, group: "Foundations", title: "Overfitting & Underfitting", draft: true, terms: ["Overfitting", "Underfitting", "Bias-variance trade-off", "Generalization"],
+  sections: [{ h: "The big idea", text: "An overfit model memorises its training examples and fails on new ones, like a student who memorised last year's exam. An underfit model is too simple to catch the pattern at all. The goal is generalization, doing well on data the model has never seen." }] },
+{ n: 7, group: "Classic Models", title: "Linear & Logistic Regression", draft: true, terms: ["Linear regression", "Logistic regression", "Coefficients", "Baseline"],
+  sections: [{ h: "The big idea", text: "These are the simplest models and often the best place to start. Linear regression predicts a number, like a score out of ten. Logistic regression predicts a probability, like the chance an answer is strong. They are fast, cheap and easy to explain." }] },
+{ n: 8, group: "Classic Models", title: "Decision Trees & Random Forests", draft: true, terms: ["Decision tree", "Random forest", "Bagging", "Feature importance"],
+  sections: [{ h: "The big idea", text: "A decision tree asks a chain of yes or no questions until it reaches an answer. One tree is easy to read but makes mistakes. A random forest trains hundreds of slightly different trees and lets them vote, which is far more accurate." }] },
+{ n: 9, group: "Classic Models", title: "Gradient Boosting", draft: true, terms: ["Boosting", "XGBoost", "LightGBM", "Tabular data"],
+  sections: [{ h: "The big idea", text: "Gradient boosting builds trees one after another, and each new tree fixes the mistakes of the ones before it. Tools like XGBoost and LightGBM are often the most accurate choice for table data, such as user records or transactions." }] },
+{ n: 10, group: "Classic Models", title: "KNN, SVM & Naive Bayes", draft: true, terms: ["K-nearest neighbors", "Support vector machine", "Naive Bayes", "Distance"],
+  sections: [{ h: "The big idea", text: "Three classic models with simple ideas. K-nearest neighbors copies the answer of the most similar past examples. A support vector machine draws the widest possible boundary between classes. Naive Bayes counts how often words appear with each answer, which made it the classic spam filter." }] },
+{ n: 11, group: "Classic Models", title: "Clustering & Anomaly Detection", draft: true, terms: ["K-means", "Clusters", "Anomaly detection", "Outliers"],
+  sections: [{ h: "The big idea", text: "Clustering groups similar items together without any labels, such as grouping candidates by the kind of mistakes they make. Anomaly detection finds the odd ones out, like fraud or a machine about to fail. Both are unsupervised learning." }] },
+{ n: 12, group: "Classic Models", title: "Dimensionality Reduction", draft: true, terms: ["PCA", "t-SNE", "UMAP", "Curse of dimensionality"],
+  sections: [{ h: "The big idea", text: "Real data can have hundreds of features. Dimensionality reduction squeezes them into a few that keep most of the information. This makes models faster, and lets you plot complex data on a simple two dimensional chart." }] },
+{ n: 13, group: "How Models Learn", title: "Loss Functions", draft: true, terms: ["Loss", "Mean squared error", "Cross-entropy", "Objective"],
+  sections: [{ h: "The big idea", text: "A loss function is a single number that measures how wrong the model is. Training is simply the search for parameters that make this number as small as possible. Choosing the loss means choosing what the model cares about." }] },
+{ n: 14, group: "How Models Learn", title: "Gradient Descent & Optimizers", draft: true, terms: ["Gradient", "Learning rate", "SGD", "Adam"],
+  sections: [{ h: "The big idea", text: "Gradient descent is how a model improves. Picture walking downhill in fog, always taking a small step in the steepest downward direction. The learning rate sets the step size. Optimizers like Adam are smarter ways of taking those steps." }] },
+{ n: 15, group: "How Models Learn", title: "Regularization", draft: true, terms: ["L1 and L2", "Dropout", "Early stopping", "Data augmentation"],
+  sections: [{ h: "The big idea", text: "Regularization is a set of tricks that stop a model from overfitting. It gently penalises complexity, randomly switches parts off during training, or stops training at the right moment. The aim is a model that works on new data, not just the training set." }] },
+{ n: 16, group: "How Models Learn", title: "Hyperparameter Tuning", draft: true, terms: ["Hyperparameters", "Grid search", "Random search", "Bayesian optimization"],
+  sections: [{ h: "The big idea", text: "Parameters are learned during training, but hyperparameters are settings you choose before training starts, such as the learning rate or the number of trees. Tuning means trying many combinations and keeping the one that scores best on the validation set." }] },
+{ n: 17, group: "How Models Learn", title: "Class Imbalance", draft: true, terms: ["Imbalanced data", "Oversampling", "SMOTE", "Class weights"],
+  sections: [{ h: "The big idea", text: "Sometimes the thing you care about is rare, like fraud in one transaction out of a thousand. A lazy model can just say never, and still be right most of the time. Class imbalance techniques make the model pay attention to the rare cases." }] },
+{ n: 18, group: "How Models Learn", title: "Evaluation Metrics", draft: true, terms: ["Accuracy", "Precision", "Recall", "F1", "ROC AUC", "Confusion matrix"],
+  sections: [{ h: "The big idea", text: "Accuracy alone can fool you. Precision asks, when the model says yes, how often is it right? Recall asks, of all the real yes cases, how many did it find? Picking the right metric is a product decision about which mistake costs more." }] },
+{ n: 19, group: "Deep Learning", title: "Neural Networks & Backpropagation", draft: true, terms: ["Neurons", "Layers", "Activation", "Backpropagation"],
+  sections: [{ h: "The big idea", text: "A neural network is layers of simple units, loosely inspired by the brain. Each layer turns its input into a slightly more useful version. Backpropagation is how the network learns, by sending the error backwards and adjusting every connection a little." }] },
+{ n: 20, group: "Deep Learning", title: "Convolutional Networks (Vision)", draft: true, terms: ["CNN", "Convolution", "Filters", "Image classification"],
+  sections: [{ h: "The big idea", text: "Convolutional networks are built for images. Small filters slide across a picture and detect edges, then shapes, then whole objects. They power photo search, medical scans and quality checks on factory lines." }] },
+{ n: 21, group: "Deep Learning", title: "Sequence Models (RNN, LSTM)", draft: true, terms: ["RNN", "LSTM", "Sequences", "Vanishing gradient"],
+  sections: [{ h: "The big idea", text: "Some data comes in order, like words in a sentence or sensor readings over time. Recurrent networks read one step at a time and carry a memory forward. They struggled with long sequences, which is the problem transformers later solved." }] },
+{ n: 22, group: "Deep Learning", title: "Transfer Learning & Embeddings", draft: true, terms: ["Pretrained models", "Transfer learning", "Embeddings", "Fine-tuning"],
+  sections: [{ h: "The big idea", text: "Training from scratch is expensive. Transfer learning starts from a model that already learned general skills on huge data, then adapts it to your task with far fewer examples. Embeddings are the meaning-rich numbers these models produce." }] },
+{ n: 23, group: "Deep Learning", title: "Reinforcement Learning", draft: true, terms: ["Agent", "Environment", "Reward", "Policy", "Exploration"],
+  sections: [{ h: "The big idea", text: "In reinforcement learning, an agent tries actions, gets rewards or penalties, and slowly learns a strategy that earns the most reward. It taught computers to beat world champions at Go, and it is used to align large language models." }] },
+{ n: 24, group: "Deep Learning", title: "Recommender Systems", draft: true, terms: ["Collaborative filtering", "Content-based", "Cold start", "Ranking"],
+  sections: [{ h: "The big idea", text: "Recommenders decide what to show each user, from videos to products to practice questions. They learn from what similar users liked, and from the content itself. New users and new items with no history, called the cold start problem, need special care." }] },
+{ n: 25, group: "Real-World ML", title: "Time-Series Forecasting", draft: true, terms: ["Trend", "Seasonality", "Forecast horizon", "Backtesting"],
+  sections: [{ h: "The big idea", text: "Forecasting predicts future values from past ones, such as next week's demand or when a machine will need maintenance. Time series have trends and seasons, and you must never let the model peek at the future while training." }] },
+{ n: 26, group: "Real-World ML", title: "Explainability", draft: true, terms: ["Interpretability", "Feature importance", "SHAP", "Model cards"],
+  sections: [{ h: "The big idea", text: "Explainability answers the question, why did the model say that? Tools like SHAP show how much each feature pushed a prediction up or down. It builds user trust, helps debugging, and is often required by law in areas like lending and hiring." }] },
+{ n: 27, group: "Real-World ML", title: "Bias & Fairness", draft: true, terms: ["Bias", "Fairness metrics", "Protected groups", "Audits"],
+  sections: [{ h: "The big idea", text: "Models learn from past data, including past unfairness. A hiring model trained on biased decisions will repeat them. Fairness work means measuring results for different groups, finding gaps, and fixing the data or the model before users are harmed." }] },
+{ n: 28, group: "Real-World ML", title: "A/B Testing ML Features", draft: true, terms: ["A/B test", "Online metrics", "Offline metrics", "Statistical significance"],
+  sections: [{ h: "The big idea", text: "A model that scores well offline can still fail with real users. A/B testing shows the new model to some users and the old one to others, then compares real outcomes. It is the final proof that a model improves the product." }] },
+{ n: 29, group: "Real-World ML", title: "Data Drift & Monitoring", draft: true, terms: ["Data drift", "Concept drift", "Monitoring", "Retraining"],
+  sections: [{ h: "The big idea", text: "The world changes after launch, and a model trained on old data slowly gets worse. Data drift means the inputs have changed. Concept drift means the right answers have changed. Monitoring catches both, so you know when to retrain." }] },
+{ n: 30, group: "Real-World ML", title: "MLOps", draft: true, terms: ["ML pipelines", "Feature store", "Model registry", "CI/CD for ML"],
+  sections: [{ h: "The big idea", text: "MLOps is the engineering that keeps machine learning running reliably in production. It covers data pipelines, versioning of data and models, automated retraining, safe deployment and rollback. It turns a one-off experiment into a dependable product." }] }
+];
+const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}]};
+const ALLOWED_URLS = new Set(Object.values(RESOURCES).flat().map(r => r.url));
+function learnHtml(n) {
+  const list = RESOURCES[n] || [];
+  if (!list.length) return "";
+  return `<div class="learn"><h4>📚 Learn more</h4><ul>${list.map(r => `<li><span class="kind">${r.kind}</span><a href="${r.url}" target="_blank" rel="noopener">${r.title} ↗</a></li>`).join("")}</ul><p class="learn-note">Checked links from official sources. They open in a new tab.</p></div>`;
+}
+function searchUrl(q) { return "https://www.google.com/search?q=" + encodeURIComponent(q); }
+const synth = window.speechSynthesis;
+const $ = id => document.getElementById(id);
+const PLAY = '<path d="M7 4v16l13-8z"/>', PAUSE = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+let voices = [], current = -1, sentenceIdx = 0, playing = false, paused = false, playAll = false, token = 0;
+
+function splitSentences(t) { return t.match(/[^.!?]+[.!?]+/g).map(s => s.trim()); }
+CONCEPTS.forEach(c => {
+  if (!c.sections) c.sections = [{ h: null, text: c.script }];
+  c.sentences = [];
+  c.sections.forEach(sec => { sec.from = c.sentences.length; c.sentences.push(...splitSentences(sec.text)); sec.to = c.sentences.length; });
+});
+const VISUAL_ICON = `<svg viewBox="0 0 52 36" aria-hidden="true"><rect x="1" y="24" width="10" height="10" rx="2" style="fill:var(--t1,#6B7686)" fill-opacity=".5"/><rect x="14" y="24" width="10" height="10" rx="2" style="fill:var(--accent)" fill-opacity=".5"/><rect x="27" y="24" width="10" height="10" rx="2" style="fill:#C2410C" fill-opacity=".6"/><rect x="40" y="24" width="10" height="10" rx="2" style="fill:var(--accent)" fill-opacity=".3"/><path d="M32 22 C32 10, 19 10, 19 22" fill="none" style="stroke:#C2410C" stroke-width="2.5"/><path d="M32 22 C32 6, 6 6, 6 22" fill="none" style="stroke:#C2410C" stroke-width="1" stroke-opacity=".5"/></svg>`;
+
+function render() {
+  $("list").innerHTML = CONCEPTS.map((c, i) => `
+    <article class="card" id="card${i}">
+      <button class="card-head" data-i="${i}" aria-label="Play ${c.title}">
+        <span class="num">${String(c.n).padStart(2, "0")}</span>
+        <span><div class="title">${c.title}</div><div class="group">${c.group}</div></span>
+        <span class="play-btn"><svg viewBox="0 0 24 24">${PLAY}</svg></span>
+      </button>
+      <div class="card-body">
+        <div class="secs">${c.sections.map((sec, si) => `<div class="sec${sec.h === "How it connects" ? " connect" : ""}">${sec.h ? `<h4 id="h${i}_${si}">${sec.h}</h4>` : ""}<p class="script">${c.sentences.slice(sec.from, sec.to).map((s, k) => `<span id="s${i}_${sec.from + k}">${s}</span>`).join(" ")}</p></div>`).join("")}</div>
+        <div class="terms">${c.terms.map(t => `<span class="term">${t}</span>`).join("")}</div>
+        ${c.draft ? `<p class="draft-note">Preview. The full lesson, diagrams and links are coming in a later batch.</p>` : ""}
+        ${learnHtml(c.n)}
+        ${c.visual ? `<a class="visual-link" href="#v${c.n}">${VISUAL_ICON}<span><b>See it visually: ${c.visual.title}</b><small>${c.visual.note}</small></span><span class="go" aria-hidden="true">→</span></a>` : ""}
+        <button class="to-top" data-i="${i}">↑ Back to all topics</button>
+      </div>
+    </article>`).join("");
+  document.querySelectorAll(".to-top").forEach(b => b.onclick = () => backToTopics(+b.dataset.i));
+  document.querySelectorAll(".card-head").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.i;
+    if (i === current && playing) { togglePause(); return; }
+    playAll = false; start(i);
+  }));
+}
+
+/* ---- voice: rank voices so the most human-sounding ones come first ---- */
+function voiceScore(v) {
+  let s = 0;
+  if (/natural|neural|online/i.test(v.name)) s += 6;      // Edge / Windows neural voices
+  if (/premium|enhanced|siri/i.test(v.name)) s += 5;      // Apple high-quality voices
+  if (/google/i.test(v.name)) s += 3;                     // Chrome voices
+  if (/ava|samantha|aria|jenny|guy|libby|sonia|ryan|emma|andrew|brian|daniel/i.test(v.name)) s += 2;
+  if (/en-(US|GB|IN|AU)/i.test(v.lang)) s += 1;
+  if (/compact|espeak|zira|david|fred|albert|bad news|bells|boing|bubbles|cellos|jester|organ|trinoids|whisper|zarvox/i.test(v.name)) s -= 6;
+  return s;
+}
+function loadVoices() {
+  voices = synth ? synth.getVoices().filter(v => v.lang.startsWith("en")) : [];
+  if (!voices.length && synth) voices = synth.getVoices();
+  if (!voices.length && !tts) return;
+  voices.sort((a, b) => voiceScore(b) - voiceScore(a));
+  let saved = null; try { saved = localStorage.getItem("voice2"); } catch (e) {}
+  const pref = voices.findIndex(v => v.name === saved);
+  $("voice").innerHTML = (tts ? `<option value="claude">✨ Claude voice (natural)</option>` : "") + voices.map((v, i) => `<option value="${i}">${voiceScore(v) >= 5 ? "★ " : ""}${v.name} (${v.lang})</option>`).join("");
+  $("voice").value = tts && (!saved || saved === "claude" || pref < 0) ? "claude" : pref >= 0 ? pref : 0;
+  $("voiceTip").hidden = !voices.length || voiceScore(voices[0]) >= 5 || usingClaude();
+  refreshLinks();
+}
+
+/* ---- teacher style: spoken cues, pauses and varied pitch/pace ---- */
+function teacherOn() { return $("teacher").checked; }
+function leadFor(sec, numberedIdx, numberedTotal) {
+  if (!sec.h) return null;
+  const name = sec.h.replace(/^\d+\s*·\s*/, "");
+  if (sec.h === "The big idea") return "Let's start with the big picture.";
+  if (sec.h === "Why it matters for a PM") return "Okay. Now, here's why this matters to you as a PM.";
+  if (sec.h === "How it connects") return "Before we move on, let's connect the dots.";
+  if (numberedIdx === 0) return `First, let's look at ${name}.`;
+  if (numberedIdx === numberedTotal - 1) return `And finally, ${name}.`;
+  return numberedIdx % 2 ? `Next up, ${name}.` : `Now, let's talk about ${name}.`;
+}
+const EMPHASIS = /^(for a pm|the key|the catch|the idea|the lesson|remember|that is why|that's why|first,|second,|third,|so |this is)/i;
+function jitter(n) { return (Math.random() * 2 - 1) * n; }
+function buildItems(i) {
+  const c = CONCEPTS[i], teach = teacherOn(), items = [];
+  if (teach) items.push({ text: `Concept ${c.n}. ${c.title}.`, hl: null, pitch: 1.02, rate: .95, pause: 650 });
+  const numbered = c.sections.filter(s => /^\d/.test(s.h || ""));
+  let nIdx = 0;
+  c.sections.forEach((sec, si) => {
+    if (teach) {
+      const lead = leadFor(sec, /^\d/.test(sec.h || "") ? nIdx : -1, numbered.length);
+      if (/^\d/.test(sec.h || "")) nIdx++;
+      if (lead) items.push({ text: lead, hl: `h${i}_${si}`, pitch: 1.06, rate: .97, pause: 380 });
+    }
+    for (let j = sec.from; j < sec.to; j++) {
+      const t = c.sentences[j], last = j === sec.to - 1;
+      if (!teach) { items.push({ text: t, hl: `s${i}_${j}`, pitch: 1, rate: 1, pause: 0 }); continue; }
+      let pitch = 1 + jitter(.05), rate = 1 + jitter(.04), pause = 230 + (t.match(/,/g) || []).length * 40;
+      if (t.endsWith("?")) { pitch = 1.13; pause = 650; }
+      else if (EMPHASIS.test(t)) { pitch = .95; rate = .9; pause = 480; }
+      if (last) pause = 800;
+      items.push({ text: t, hl: `s${i}_${j}`, pitch, rate, pause });
+    }
+  });
+  return items;
+}
+let items = [];
+
+/* Claude voice (tts capability), used when chosen in the Voice menu */
+let tts = null;
+function usingClaude() { return !!tts && $("voice").value === "claude"; }
+function selectedVoice() { const v = $("voice").value; return v === "claude" ? null : voices[+v]; }
+function highlightItem(k) {
+  const it = items[k]; if (!it) return;
+  document.querySelectorAll(".script span.now, .sec h4.now").forEach(e => e.classList.remove("now"));
+  if (it.hl && $(it.hl)) $(it.hl).classList.add("now");
+  $("barFill").style.width = (k / items.length * 100) + "%";
+}
+function speakClaude(myToken) {
+  const from = sentenceIdx, lines = items.slice(from, from + 100).map((it, k) => ({ text: it.text, id: String(from + k) }));
+  highlightItem(from);
+  tts.speak(lines, { rate: +$("rate").value }).then(() => {
+    if (myToken !== token) return;
+    sentenceIdx = items.length;
+    if (playAll && current < CONCEPTS.length - 1) start(current + 1, true); else stopAll();
+  }).catch(e => {
+    if (myToken !== token) return;
+    if (e && (e.code === "not_granted" || e.code === "unavailable")) {
+      tts = null; loadVoices();
+      $("ttsNote").hidden = false;
+    }
+    if (!(e && e.code === "stopped" && (e.reason === "replaced" || e.reason === "stopped"))) { playing = false; paused = false; updateUI(); }
+  });
+}
+
+function speakNext(myToken) {
+  if (myToken !== token) return;
+  if (usingClaude()) { speakClaude(myToken); return; }
+  if (sentenceIdx >= items.length) {
+    if (playAll && current < CONCEPTS.length - 1) { start(current + 1, true); }
+    else stopAll();
+    return;
+  }
+  const it = items[sentenceIdx];
+  document.querySelectorAll(".script span.now, .sec h4.now").forEach(e => e.classList.remove("now"));
+  if (it.hl && $(it.hl)) $(it.hl).classList.add("now");
+  $("barFill").style.width = (sentenceIdx / items.length * 100) + "%";
+  const u = new SpeechSynthesisUtterance(it.text);
+  const v = selectedVoice(); if (v) u.voice = v;
+  u.rate = Math.min(2, Math.max(.5, +$("rate").value * it.rate));
+  u.pitch = it.pitch;
+  u.onend = () => {
+    if (myToken !== token) return;
+    sentenceIdx++;
+    setTimeout(() => speakNext(myToken), it.pause);
+  };
+  u.onerror = () => {};
+  synth.speak(u);
+}
+
+function start(i, keepAll) {
+  if (!synth && !usingClaude()) return;
+  if (!keepAll) playAll = playAll && false;
+  token++; synth && synth.cancel();
+  current = i; sentenceIdx = 0; playing = true; paused = false;
+  items = buildItems(i);
+  updateUI();
+  $(`card${i}`).scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "nearest" });
+  const t = token; setTimeout(() => speakNext(t), 60);
+}
+
+function togglePause() {
+  if (!playing) { playAll = true; start(current < 0 ? 0 : current, true); return; }
+  if (usingClaude()) {
+    paused = !paused;
+    (paused ? tts.pause() : tts.resume()).catch(() => {});
+    updateUI(); return;
+  }
+  if (paused) { paused = false; token++; synth.cancel(); const t = token; setTimeout(() => speakNext(t), 60); }
+  else { paused = true; token++; synth.cancel(); }
+  updateUI();
+}
+
+function stopAll() {
+  token++; synth && synth.cancel(); if (tts && tts.active()) tts.stop().catch(() => {}); playing = false; paused = false;
+  document.querySelectorAll(".script span.now").forEach(e => e.classList.remove("now"));
+  $("barFill").style.width = current >= 0 ? "100%" : "0";
+  updateUI();
+}
+
+function updateUI() {
+  CONCEPTS.forEach((c, i) => {
+    const card = $(`card${i}`), on = i === current && playing && !paused;
+    card.classList.toggle("playing", i === current && playing);
+    card.querySelector(".play-btn svg").innerHTML = on ? PAUSE : PLAY;
+    card.querySelector(".card-head").setAttribute("aria-label", (on ? "Pause " : "Play ") + c.title);
+    const tab = $(`tab${i}`); if (tab) tab.classList.toggle("playing", i === current && playing);
+  });
+  const active = playing && !paused;
+  $("toggleIcon").innerHTML = active ? PAUSE : PLAY;
+  $("toggleBtn").setAttribute("aria-label", active ? "Pause" : (playing ? "Resume" : "Play all"));
+  $("nowTitle").textContent = current >= 0
+    ? `${String(CONCEPTS[current].n).padStart(2, "0")} · ${CONCEPTS[current].title}${paused ? " (paused)" : (!playing ? " (finished)" : "")}`
+    : "Nothing playing · press play to hear all";
+  $("prevBtn").disabled = current <= 0;
+  $("nextBtn").disabled = current >= CONCEPTS.length - 1;
+}
+
+$("toggleBtn").onclick = togglePause;
+$("prevBtn").onclick = () => { if (current > 0) start(current - 1, true); };
+$("nextBtn").onclick = () => start(Math.min(current + 1, CONCEPTS.length - 1), true);
+
+/* =========================================================
+   Visual view: the diagram walkthroughs, inside this page.
+   "#v7" opens concept 7's diagrams; "#c7" returns to its lesson.
+   ========================================================= */
+const VISUALS = {};
+const VMETA = {};
+VISUALS[1] = (() => {
+const STRONG = "var(--accent)", WEAK = "var(--t3)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svgOpen = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)", dash = false) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="1.5" ${dash ? 'stroke-dasharray="5 4"' : ""} marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, anchor = "start") => `<text x="${x}" y="${y}" text-anchor="${anchor}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const box = (x, y, w, h, t, sub, col = "var(--line)", fo = 0) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? col : "var(--surface)"};stroke:${col}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="1.5"/>`
+  + `<text x="${x + w / 2}" y="${y + (sub ? h / 2 - 3 : h / 2 + 5)}" text-anchor="middle" font-size="13" font-weight="600">${t}</text>`
+  + (sub ? `<text x="${x + w / 2}" y="${y + h / 2 + 14}" text-anchor="middle" font-size="11" class="muted">${sub}</text>` : "");
+const mark = (x, y, ok) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="15" font-weight="700" style="fill:${ok ? STRONG : WEAK}">${ok ? "✓" : "✗"}</text>`;
+
+/* rated examples (illustrative): specific and structured are 0–10 scores */
+const TRAIN = [
+  { k: "A", s: 8, t: 9, y: 1 }, { k: "B", s: 2, t: 3, y: 0 }, { k: "C", s: 7, t: 4, y: 1 }, { k: "D", s: 3, t: 8, y: 0 }, { k: "E", s: 9, t: 6, y: 1 },
+  { k: "", s: 6, t: 8, y: 1 }, { k: "", s: 8, t: 3, y: 1 }, { k: "", s: 4, t: 2, y: 0 }, { k: "", s: 1, t: 6, y: 0 }, { k: "", s: 5, t: 4, y: 0 },
+];
+const W_S = 0.6, W_T = 0.4, CUT = 5.5;
+const score = (s, t) => W_S * s + W_T * t;
+const pStrong = (s, t) => 1 / (1 + Math.exp(-1.5 * (score(s, t) - CUT)));
+const NEW = [
+  { label: "Answer X", s: 8, t: 7, c: "var(--t2)", text: "“I cut onboarding time 30% by rewriting the checklist with new hires.”" },
+  { label: "Answer Y", s: 3, t: 4, c: "var(--t4)", text: "“I'm a hard worker and I always give 110%.”" },
+  { label: "Answer Z", s: 5, t: 6, c: "var(--warm)", text: "“I led a redesign. It went well and the team liked it.”" },
+];
+let pick = 0;
+
+function drawRules() {
+  let s = svgOpen(330);
+  s += box(20, 20, 210, 58, "IF answer has a number", "→ call it strong", "var(--t1)", .12);
+  s += lbl(20, 14, "RULE A PERSON WROTE");
+  s += arrow(232, 49, 288, 49);
+  s += box(290, 26, 110, 46, "Program", "");
+  s += arrow(402, 49, 458, 49);
+  s += box(460, 26, 160, 46, "strong / weak", "");
+  const rows = [
+    ["“I cut onboarding time 30%…”", "strong", "strong", true],
+    ["“I noticed new hires were lost, so I…”", "weak", "strong", false],
+    ["“I worked on 3 projects in 2022.”", "strong", "weak", false],
+  ];
+  s += lbl(20, 118, "TEST IT ON REAL ANSWERS");
+  s += lbl(390, 118, "RULE SAYS", "middle") + lbl(480, 118, "COACH SAYS", "middle") + lbl(570, 118, "RIGHT?", "middle");
+  rows.forEach((r, i) => {
+    const y = 130 + i * 52;
+    s += `<rect x="20" y="${y}" width="600" height="44" rx="6" style="fill:var(--surface);stroke:var(--line)"/>`;
+    s += `<text x="34" y="${y + 27}" font-size="13">${r[0]}</text>`;
+    s += `<text x="390" y="${y + 27}" text-anchor="middle" class="mono" font-size="13" style="fill:${r[1] === "strong" ? STRONG : WEAK}">${r[1]}</text>`;
+    s += `<text x="480" y="${y + 27}" text-anchor="middle" class="mono" font-size="13" style="fill:${r[2] === "strong" ? STRONG : WEAK}">${r[2]}</text>`;
+    s += mark(570, y + 28, r[3]);
+  });
+  s += `<text x="20" y="312" font-size="12" class="muted">Each new rule fixes one case and breaks another. Real answers are too varied for hand-written rules.</text>`;
+  return s + `</svg>`;
+}
+
+function drawExamples() {
+  let s = svgOpen(330);
+  s += lbl(20, 22, "RATED EXAMPLES · WHAT THE MODEL LEARNS FROM");
+  const cols = [[34, "ANSWER", "start"], [150, "SPECIFIC", "middle"], [240, "STRUCTURED", "middle"], [335, "COACH SAID", "middle"]];
+  s += `<rect x="20" y="34" width="370" height="30" rx="6" style="fill:var(--bg);stroke:var(--line)"/>`;
+  cols.forEach(([x, t, a]) => { s += `<text x="${x}" y="54" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`; });
+  TRAIN.slice(0, 5).forEach((r, i) => {
+    const y = 66 + i * 36;
+    s += `<rect x="20" y="${y}" width="370" height="32" rx="6" style="fill:var(--surface);stroke:var(--line)"/>`;
+    s += `<text x="34" y="${y + 21}" class="mono" font-size="13">Answer ${r.k}</text>`;
+    s += `<text x="150" y="${y + 21}" text-anchor="middle" class="mono" font-size="13">${r.s}</text>`;
+    s += `<text x="240" y="${y + 21}" text-anchor="middle" class="mono" font-size="13">${r.t}</text>`;
+    s += `<text x="335" y="${y + 21}" text-anchor="middle" class="mono" font-size="13" font-weight="600" style="fill:${r.y ? STRONG : WEAK}">${r.y ? "strong" : "weak"}</text>`;
+  });
+  s += `<text x="205" y="268" text-anchor="middle" font-size="12" class="muted">… about 1,000 answers rated by real coaches</text>`;
+  s += `<text x="150" y="292" text-anchor="middle" font-size="11" style="fill:var(--t2)">features (inputs)</text>`;
+  s += `<path d="M110 280 H 285" style="stroke:var(--t2)" stroke-width="1.5" fill="none"/>`;
+  s += `<text x="335" y="292" text-anchor="middle" font-size="11" style="fill:var(--accent)">label (right answer)</text>`;
+  s += arrow(398, 160, 452, 160);
+  s += `<text x="425" y="150" text-anchor="middle" class="mono muted" font-size="11">train</text>`;
+  s += box(456, 116, 164, 88, "Model", "finds the pattern", STRONG, .12);
+  s += `<text x="538" y="232" text-anchor="middle" font-size="12" class="muted">No rules written by hand.</text>`;
+  s += `<text x="538" y="250" text-anchor="middle" font-size="12" class="muted">The examples are the spec.</text>`;
+  return s + `</svg>`;
+}
+
+function drawModel() {
+  const X = v => 60 + v * 26, Y = v => 300 - v * 26;
+  let s = svgOpen(372);
+  // axes + grid
+  for (let v = 0; v <= 10; v += 2) {
+    s += `<line x1="${X(v)}" y1="${Y(0)}" x2="${X(v)}" y2="${Y(10)}" style="stroke:var(--line)" stroke-width="1"/>`;
+    s += `<line x1="${X(0)}" y1="${Y(v)}" x2="${X(10)}" y2="${Y(v)}" style="stroke:var(--line)" stroke-width="1"/>`;
+    s += `<text x="${X(v)}" y="${Y(0) + 16}" text-anchor="middle" class="mono muted" font-size="10">${v}</text>`;
+    s += `<text x="${X(0) - 8}" y="${Y(v) + 4}" text-anchor="end" class="mono muted" font-size="10">${v}</text>`;
+  }
+  s += `<text x="${X(5)}" y="${Y(0) + 34}" text-anchor="middle" font-size="12" class="muted">How specific →</text>`;
+  s += `<text x="18" y="${Y(5)}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 18 ${Y(5)})">How structured →</text>`;
+  // learned boundary: 0.6·s + 0.4·t = 5.5  → from (2.5,10) to (9.17,0)
+  s += `<line x1="${X(2.5)}" y1="${Y(10)}" x2="${X(CUT / W_S)}" y2="${Y(0)}" style="stroke:var(--ink)" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+  s += `<text x="${X(7.6)}" y="${Y(9.3)}" font-size="11" font-weight="600" style="fill:${STRONG}">strong side</text>`;
+  s += `<text x="${X(0.4)}" y="${Y(0.6)}" font-size="11" font-weight="600" style="fill:${WEAK}">weak side</text>`;
+  TRAIN.forEach(p => {
+    s += p.y ? `<circle cx="${X(p.s)}" cy="${Y(p.t)}" r="6" style="fill:${STRONG}" fill-opacity=".85"/>`
+             : `<rect x="${X(p.s) - 5}" y="${Y(p.t) - 5}" width="10" height="10" style="fill:${WEAK}" fill-opacity=".85"/>`;
+  });
+  const n = NEW[pick], p = pStrong(n.s, n.t), isStrong = p >= .5, conf = Math.round((isStrong ? p : 1 - p) * 100);
+  s += `<circle cx="${X(n.s)}" cy="${Y(n.t)}" r="11" style="fill:none;stroke:${n.c}" stroke-width="2.5"/>`;
+  s += `<text x="${X(n.s) + 14}" y="${Y(n.t) - 10}" font-size="12" font-weight="700" style="fill:${n.c}">${n.label}</text>`;
+  s += `<text x="20" y="364" font-size="12"><tspan font-weight="700" style="fill:${n.c}">${n.label}:</tspan> ${n.text}</text>`;
+  // the function, on the right
+  const fx = 370;
+  s += lbl(fx, 30, "THE MODEL IS A FUNCTION");
+  s += box(fx, 42, 250, 54, `specific ${n.s} · structured ${n.t}`, "features go in", n.c, .1);
+  s += arrow(fx + 125, 98, fx + 125, 118);
+  s += `<rect x="${fx}" y="120" width="250" height="70" rx="8" style="fill:var(--surface);stroke:var(--ink)" stroke-width="1.5"/>`;
+  s += `<text x="${fx + 125}" y="146" text-anchor="middle" class="mono" font-size="12">0.6 × specific</text>`;
+  s += `<text x="${fx + 125}" y="164" text-anchor="middle" class="mono" font-size="12">+ 0.4 × structured</text>`;
+  s += `<text x="${fx + 125}" y="182" text-anchor="middle" font-size="11" class="muted">0.6 and 0.4 are learned parameters</text>`;
+  s += arrow(fx + 125, 192, fx + 125, 212);
+  s += box(fx, 214, 250, 54, `${isStrong ? "Strong" : "Weak"} · ${conf}% sure`, conf < 65 ? "a close call, so show it with care" : "prediction comes out", isStrong ? STRONG : WEAK, .14);
+  s += `<text x="${fx}" y="300" font-size="11" class="muted">● strong   ■ weak  (training examples)</text>`;
+  s += `<text x="${fx}" y="318" font-size="11" class="muted">Dashed line: the boundary training found.</text>`;
+  s += `<text x="${fx}" y="336" font-size="11" class="muted">Scores and weights are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawPhases() {
+  let s = svgOpen(340);
+  s += `<rect x="10" y="10" width="620" height="140" rx="10" style="fill:var(--t1)" fill-opacity=".07"/>`;
+  s += lbl(24, 32, "TRAINING · SLOW · ONCE IN A WHILE");
+  s += box(24, 50, 150, 64, "1,000 rated", "answers", "var(--t1)");
+  s += arrow(176, 82, 226, 82);
+  s += box(230, 50, 190, 64, "guess → check → adjust", "repeat thousands of times", "var(--t1)");
+  s += `<path d="M300 116 q 25 26 50 0" fill="none" style="stroke:var(--muted)" stroke-width="1.3" marker-end="url(#ah)"/>`;
+  s += arrow(422, 82, 472, 82);
+  s += box(476, 50, 140, 64, "Trained model", "parameters fixed", STRONG, .14);
+  s += `<rect x="10" y="180" width="620" height="140" rx="10" style="fill:var(--accent)" fill-opacity=".07"/>`;
+  s += lbl(24, 202, "INFERENCE · FAST · EVERY TIME A USER ASKS");
+  s += box(24, 222, 190, 64, "New answer", "never seen before", "var(--t2)");
+  s += arrow(216, 254, 266, 254);
+  s += box(270, 222, 150, 64, "Trained model", "same one", STRONG, .14);
+  s += arrow(422, 254, 472, 254);
+  s += box(476, 222, 140, 64, "Strong · 92%", "in milliseconds", STRONG);
+  s += arrow(546, 116, 346, 218, "var(--accent)", true);
+  s += `<text x="470" y="168" font-size="11" style="fill:var(--accent)">ship it</text>`;
+  s += `<text x="24" y="310" font-size="11" class="muted">When users or the world change, go back to training with fresh examples (retraining).</text>`;
+  return s + `</svg>`;
+}
+
+function drawWhen() {
+  let s = svgOpen(330);
+  const col = (x, head, c, items, ok) => {
+    let o = `<rect x="${x}" y="16" width="295" height="214" rx="10" style="fill:${c};stroke:${c}" fill-opacity=".07" stroke-width="1.5"/>`;
+    o += `<text x="${x + 16}" y="44" font-size="15" font-weight="700" style="fill:${c}">${head}</text>`;
+    items.forEach((t, i) => { o += `<text x="${x + 18}" y="${78 + i * 36}" font-size="15" font-weight="700" style="fill:${c}">${ok ? "✓" : "→"}</text><text x="${x + 40}" y="${78 + i * 36}" font-size="13">${t}</text>`; });
+    return o;
+  };
+  s += col(15, "Use machine learning when…", STRONG, ["the pattern is too messy for rules", "you have lots of good examples", "some mistakes are acceptable", "the pattern keeps changing"], true);
+  s += col(330, "Use a simple rule when…", "var(--t1)", ["a clear rule already works", "you have little or no data", "every mistake is unacceptable", "you must explain every decision"], false);
+  s += lbl(15, 258, "INTERVIEW COACH");
+  s += `<rect x="15" y="268" width="610" height="50" rx="8" style="fill:var(--surface);stroke:var(--line)"/>`;
+  s += `<text x="30" y="290" font-size="13"><tspan font-weight="600" style="fill:${STRONG}">ML:</tspan> judging if an answer is strong.</text>`;
+  s += `<text x="30" y="309" font-size="13"><tspan font-weight="600" style="fill:var(--t1)">Rule:</tspan> warning when an answer runs over 2 minutes.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  {
+    stage: "Rules", title: "1 · Rules break", q: "Why not just write the rules by hand?",
+    points: [
+      "Normal software follows <b>rules a person writes</b>.",
+      "Try one for the interview coach: <b>if the answer has a number, it's strong</b>.",
+      "It gets the first answer right, but a strong answer with no numbers fails, and a vague one with numbers passes.",
+      "Every fix adds another rule, and the rules start to fight each other.",
+    ],
+    pm: "When a team keeps adding special-case rules and quality still won't improve, that's a sign the problem may be a good fit for machine learning.",
+    say: "Step one. Why not just write the rules? Normal software follows rules that a person writes. Let's try one for our interview coach. If the answer has a number, call it strong. It works for the first answer. But a strong answer with no numbers gets marked weak. And a vague answer with numbers gets marked strong. Every new rule fixes one case and breaks another. For a PM, a pile of special-case rules that still doesn't work is a sign that machine learning might fit.",
+    draw: drawRules,
+  },
+  {
+    stage: "Examples", title: "2 · Learn from examples", q: "What does the computer learn from instead?",
+    points: [
+      "Collect answers that real coaches have already rated <b>strong</b> or <b>weak</b>.",
+      "Describe each answer with a few <b>features</b>, such as how specific and how structured it is.",
+      "The rating is the <b>label</b>, the right answer the model should learn to give.",
+      "Training finds the pattern that links features to labels. Nobody writes the rules.",
+    ],
+    pm: "The examples are the real product spec. If coaches rated answers inconsistently, the model learns that inconsistency. Spend time on the examples, not just the model.",
+    say: "Step two. Learning from examples. Instead of writing rules, we collect answers that real coaches have already rated, strong or weak. Each answer is described by a few features, like how specific it is and how well structured it is. The coach's rating is the label, the right answer. Training looks at all these examples and finds the pattern by itself. For a PM, remember this. The examples are the real product spec. If the ratings are messy, the model will be messy too.",
+    draw: drawExamples,
+  },
+  {
+    stage: "Model", title: "3 · The model is a function", q: "What exactly did the computer learn?",
+    points: [
+      "Each training answer is a dot. Strong answers sit top right, weak ones bottom left.",
+      "Training found a <b>boundary line</b> that separates them as well as possible.",
+      "Inside the model are <b>parameters</b>, here 0.6 and 0.4, saying how much each feature counts.",
+      "Pick a new answer above the diagram. The model places it and gives a prediction with a confidence.",
+    ],
+    pm: "Every prediction comes with a confidence. Decide what the product does with low-confidence cases: show them softly, ask a human, or say nothing.",
+    say: "Step three. The model is a function. Each training answer is a dot on this chart. Strong answers sit toward the top right, and weak ones toward the bottom left. Training found the dashed line that best separates them. The model's parameters, here zero point six and zero point four, say how much each feature counts. Now pick a new answer. The model places it on the chart and predicts strong or weak, with a confidence. For a PM, decide early what the product should do when the model is unsure.",
+    draw: drawModel,
+  },
+  {
+    stage: "Train vs use", title: "4 · Training and inference", q: "When does the learning happen?",
+    points: [
+      "<b>Training</b>: the model guesses, checks against the labels and adjusts, thousands of times. Slow, done once in a while.",
+      "<b>Inference</b>: the trained model predicts on a brand-new answer. Fast and cheap, done on every request.",
+      "The model does not learn while users use it. It only changes when you retrain it.",
+    ],
+    pm: "Training is a project cost; inference is a running cost per user. And since the model only knows the past, plan when and how you'll retrain it.",
+    say: "Step four. Training and inference. A model's life has two phases. In training, the model guesses, checks its guess against the label, and adjusts, thousands of times. That is slow, and you do it once in a while. In inference, the trained model makes a prediction on a new answer it has never seen. That is fast and cheap, and it happens every time a user asks. Here's the key point. The model does not learn while people use it. It only improves when you retrain it.",
+    draw: drawPhases,
+  },
+  {
+    stage: "When to use", title: "5 · When to use ML", q: "Is machine learning the right tool for this problem?",
+    points: [
+      "Use ML when the pattern is messy, you have good examples, some errors are fine, and the pattern changes.",
+      "Use a rule when a simple rule works, data is thin, or every decision must be exact and explainable.",
+      "Many products use both: ML for judgment calls, rules for hard limits.",
+    ],
+    pm: "Google's first rule of ML: don't be afraid to launch without it. Start with a simple rule, collect data, then bring in ML when the rule hits its limits.",
+    say: "Step five. When should you use machine learning? Use it when the pattern is too messy for rules, when you have plenty of good examples, when some mistakes are acceptable, and when the pattern keeps changing. Use a simple rule when it already works, when you have little data, or when every decision must be exact. Most products mix both. Our coach uses machine learning to judge answer quality, and a simple rule to warn when an answer runs too long. Remember, it's fine to launch with a rule first, and add machine learning later.",
+    draw: drawWhen,
+  },
+];
+
+return { STEPS, picker: { label: "Pick a new answer:", step: 2, items: () => NEW.map(n => ({ label: n.label, color: n.c })), get: () => pick, set: i => { pick = i; } } };
+})();
+VMETA[1] = {"title": "From Rules to Learning", "sub": "Follow the interview coach as it stops relying on hand-written rules and learns from rated answers instead, in five steps."};
+
+VISUALS[2] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)") => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="1.5" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const txt = (x, y, t, o = "") => `<text x="${x}" y="${y}" font-size="13" ${o}>${t}</text>`;
+const box = (x, y, w, h, t, sub, col = "var(--line)", fo = 0) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? col : "var(--surface)"};stroke:${col}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="1.5"/>`
+  + `<text x="${x + w / 2}" y="${y + (sub ? h / 2 - 3 : h / 2 + 5)}" text-anchor="middle" font-size="13" font-weight="600">${t}</text>`
+  + (sub ? `<text x="${x + w / 2}" y="${y + h / 2 + 14}" text-anchor="middle" font-size="11" class="muted">${sub}</text>` : "");
+
+function drawSupervised() {
+  let s = svg(310);
+  s += lbl(20, 22, "EXAMPLES WITH ANSWERS (LABELS)");
+  [["“I cut onboarding time 30%…”", "strong", A], ["“I'm a hard worker.”", "weak", W], ["“I led the launch and…”", "strong", A]].forEach(([q, l, c], i) => {
+    const y = 34 + i * 40;
+    s += `<rect x="20" y="${y}" width="250" height="32" rx="6" style="fill:var(--surface);stroke:var(--line)"/>` + txt(32, y + 21, q);
+    s += `<rect x="278" y="${y}" width="70" height="32" rx="6" style="fill:${c};stroke:${c}" fill-opacity=".12"/><text x="313" y="${y + 21}" text-anchor="middle" class="mono" font-size="12" style="fill:${c}">${l}</text>`;
+  });
+  s += arrow(356, 90, 400, 90) + box(404, 62, 100, 56, "Model", "learns the link", A, .12);
+  s += lbl(20, 182, "TWO KINDS OF OUTPUT");
+  s += box(20, 194, 290, 92, "", "", B, .07) + `<text x="36" y="220" font-size="14" font-weight="700" style="fill:${B}">Classification</text>` + txt(36, 244, "Picks a category.") + txt(36, 266, "Strong or weak? Spam or not?", 'class="muted"');
+  s += box(330, 194, 290, 92, "", "", P, .07) + `<text x="346" y="220" font-size="14" font-weight="700" style="fill:${P}">Regression</text>` + txt(346, 244, "Predicts a number.") + txt(346, 266, "Score 7.5 / 10? Hours to hire?", 'class="muted"');
+  s += arrow(454, 120, 165, 190) + arrow(454, 120, 475, 190);
+  return s + `</svg>`;
+}
+
+function drawUnsupervised() {
+  let s = svg(320);
+  const pts = [[0, [60, 80], 12], [1, [210, 210], 12], [2, [120, 230], 10]];
+  const rnd = (seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647)(7);
+  const C = [B, P, G], NAMES = ["Rambling", "No result", "Too short"];
+  s += lbl(20, 22, "10,000 UNRATED ANSWERS · NO LABELS");
+  s += lbl(350, 22, "WHAT CLUSTERING FINDS");
+  const centers = [[90, 100], [230, 140], [120, 240]];
+  centers.forEach(([cx, cy], g) => {
+    for (let k = 0; k < 14; k++) { const x = cx + (rnd() - .5) * 90, y = cy + (rnd() - .5) * 70; s += `<circle cx="${x}" cy="${y}" r="4" style="fill:var(--muted)" fill-opacity=".6"/>`; }
+  });
+  s += `<rect x="20" y="36" width="300" height="270" rx="8" style="fill:none;stroke:var(--line)"/>`;
+  s += arrow(326, 170, 346, 170);
+  centers.forEach(([cx, cy], g) => {
+    const ox = 350 + cx * .8, oy = 40 + (cy - 40) * .85;
+    s += `<ellipse cx="${ox}" cy="${oy}" rx="44" ry="34" style="fill:${C[g]};stroke:${C[g]}" fill-opacity=".12" stroke-width="1.5"/>`;
+    s += `<text x="${ox}" y="${oy + 4}" text-anchor="middle" font-size="12" font-weight="700" style="fill:${C[g]}">${NAMES[g]}</text>`;
+  });
+  s += `<text x="350" y="296" font-size="12" class="muted">Groups nobody named in advance.</text>`;
+  return s + `</svg>`;
+}
+
+function drawRL() {
+  let s = svg(310);
+  s += box(40, 110, 160, 70, "Agent", "the coach", A, .12);
+  s += box(440, 110, 160, 70, "Environment", "the candidate", B, .1);
+  s += `<path d="M200 128 C 300 60, 340 60, 440 128" fill="none" style="stroke:var(--muted)" stroke-width="1.5" marker-end="url(#ah)"/>`;
+  s += `<text x="320" y="70" text-anchor="middle" font-size="13" font-weight="600">Action</text><text x="320" y="88" text-anchor="middle" font-size="11" class="muted">ask a harder “tell me about a failure” question</text>`;
+  s += `<path d="M440 165 C 340 235, 300 235, 200 165" fill="none" style="stroke:var(--accent)" stroke-width="1.5" marker-end="url(#ah)"/>`;
+  s += `<text x="320" y="214" text-anchor="middle" font-size="13" font-weight="600" style="fill:${A}">Reward  +1</text><text x="320" y="232" text-anchor="middle" font-size="11" class="muted">the candidate's next answer got better</text>`;
+  s += `<rect x="40" y="258" width="560" height="38" rx="8" style="fill:var(--surface);stroke:var(--line)"/>`;
+  s += `<text x="320" y="282" text-anchor="middle" font-size="12">Repeat thousands of times → a <tspan font-weight="700">policy</tspan>: which action to take in each situation</text>`;
+  return s + `</svg>`;
+}
+
+function drawSelf() {
+  let s = svg(300);
+  s += lbl(20, 22, "RAW TEXT · NO HUMAN LABELS NEEDED");
+  const words = ["I", "cut", "onboarding", "time", "by", "30%"];
+  let x = 20;
+  words.forEach((w, i) => {
+    const wd = w.length * 9 + 22, hide = i === 2;
+    s += `<rect x="${x}" y="36" width="${wd}" height="34" rx="6" style="fill:${hide ? "var(--warm)" : "var(--surface)"};stroke:${hide ? "var(--warm)" : "var(--line)"}" fill-opacity="${hide ? .15 : 1}" ${hide ? 'stroke-dasharray="4 3"' : ""}/>`;
+    s += `<text x="${x + wd / 2}" y="58" text-anchor="middle" class="mono" font-size="13" style="fill:${hide ? "var(--warm)" : "var(--ink)"}">${hide ? "?" : w}</text>`;
+    x += wd + 8;
+  });
+  s += `<text x="20" y="96" font-size="12" class="muted">Hide one word. The hidden word becomes the answer to predict.</text>`;
+  s += arrow(200, 108, 200, 140) + box(110, 144, 180, 52, "Model guesses", "“onboarding” ✓", A, .12);
+  s += box(370, 144, 250, 52, "Free labels, endless data", "the whole internet becomes practice", B, .08);
+  s += lbl(20, 232, "THIS IS HOW LLMS START");
+  s += `<rect x="20" y="242" width="600" height="44" rx="8" style="fill:var(--surface);stroke:var(--line)"/>`;
+  s += `<text x="320" y="269" text-anchor="middle" font-size="12">Self-supervised pretraining  →  supervised fine-tuning  →  reinforcement learning</text>`;
+  return s + `</svg>`;
+}
+
+function drawChoose() {
+  let s = svg(330);
+  const q = (x, y, t) => `<rect x="${x}" y="${y}" width="250" height="40" rx="20" style="fill:var(--bg);stroke:var(--ink)" stroke-width="1.2"/><text x="${x + 125}" y="${y + 25}" text-anchor="middle" font-size="13" font-weight="600">${t}</text>`;
+  const ans = (x, y, t, sub, c) => box(x, y, 200, 48, t, sub, c, .14);
+  s += q(20, 20, "Do you have labeled examples?") + `<text x="280" y="45" font-size="12" font-weight="600" style="fill:${A}">yes →</text>` + ans(330, 16, "Supervised", "predict a label or number", A);
+  s += arrow(145, 62, 145, 92) + `<text x="152" y="82" font-size="11" class="muted">no</text>`;
+  s += q(20, 94, "Learning from actions and results?") + `<text x="280" y="119" font-size="12" font-weight="600" style="fill:${A}">yes →</text>` + ans(330, 90, "Reinforcement", "trial, error, reward", P);
+  s += arrow(145, 136, 145, 166) + `<text x="152" y="156" font-size="11" class="muted">no</text>`;
+  s += q(20, 168, "Huge amounts of raw text or images?") + `<text x="280" y="193" font-size="12" font-weight="600" style="fill:${A}">yes →</text>` + ans(330, 164, "Self-supervised", "or reuse a pretrained model", B);
+  s += arrow(145, 210, 145, 240) + `<text x="152" y="230" font-size="11" class="muted">no</text>`;
+  s += q(20, 242, "Want to explore and find groups?") + `<text x="280" y="267" font-size="12" font-weight="600" style="fill:${A}">yes →</text>` + ans(330, 238, "Unsupervised", "then label what you find", G);
+  s += `<text x="20" y="314" font-size="12" class="muted">A simplified guide. Real products often combine several types.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Supervised", title: "1 · Supervised learning", q: "What if every example comes with the right answer?",
+    points: ["Each example has a <b>label</b>, the right answer, like an answer key.", "<b>Classification</b> picks a category: strong or weak.", "<b>Regression</b> predicts a number: a score of 7.5 out of 10.", "Most machine learning in real products is supervised."],
+    pm: "Supervised learning is usually the fastest path to a working feature, but only if you have labels. No labels means a labeling budget.",
+    say: "Step one, supervised learning. Every example comes with the right answer, called a label. It's like studying with an answer key. There are two kinds of output. Classification picks a category, like strong or weak. Regression predicts a number, like a score of seven point five out of ten. Most machine learning in real products works this way.",
+    draw: drawSupervised },
+  { stage: "Unsupervised", title: "2 · Unsupervised learning", q: "What can a model learn with no answers at all?",
+    points: ["No labels. The model looks for <b>structure</b> on its own.", "<b>Clustering</b> groups similar items together.", "From 10,000 unrated answers, it might find rambling answers, answers with no result, and answers that are too short.", "Nobody named those groups in advance."],
+    pm: "Use it to explore data you don't understand yet. The groups it finds often become the categories you later label, or new product features, such as targeted tips.",
+    say: "Step two, unsupervised learning. Here there are no labels at all. The model looks for structure on its own, usually by grouping similar things. That's called clustering. Give it ten thousand unrated answers, and it might find three groups. Rambling answers, answers with no result, and answers that are far too short. Nobody told it those groups existed. For a PM, it's a great way to explore data before you spend money on labels.",
+    draw: drawUnsupervised },
+  { stage: "Reinforcement", title: "3 · Reinforcement learning", q: "Can a model learn by trial and error?",
+    points: ["An <b>agent</b> takes an <b>action</b> in an <b>environment</b>.", "It gets a <b>reward</b> or a penalty, depending on what happens.", "Over thousands of tries, it learns a <b>policy</b>: the best action in each situation.", "The coach could learn which practice question to ask next."],
+    pm: "The reward is the real spec. Reward the wrong thing, like session length, and the model learns to keep people busy instead of helping them improve.",
+    say: "Step three, reinforcement learning. This is learning by trial and error. An agent, here our coach, takes an action, like asking a harder question. The environment, the candidate, responds. If the next answer improves, the coach gets a reward. Over thousands of tries, it learns a policy, the best action for each situation. For a PM, be careful what you reward. The model will chase exactly that.",
+    draw: drawRL },
+  { stage: "Self-supervised", title: "4 · Self-supervised learning", q: "How do models learn from data nobody labeled?",
+    points: ["Hide part of the data, and that hidden part becomes the label.", "No human labeling, so it can use huge amounts of text, images or audio.", "This is how large language models are pretrained.", "They are then refined with supervised and reinforcement learning."],
+    pm: "You rarely train these yourself. Instead you reuse a pretrained model, which is why small teams can now build features that once needed huge labeled datasets.",
+    say: "Step four, self-supervised learning. Here the data labels itself. Hide one word in a sentence, and the hidden word becomes the answer to predict. No human has to label anything, so the model can learn from enormous amounts of text. This is exactly how large language models start. Then they're refined with supervised learning and reinforcement learning, which you met in your AI course.",
+    draw: drawSelf },
+  { stage: "Which one?", title: "5 · Choosing the type", q: "Which type fits my problem?",
+    points: ["Start with the data you have, not the method you like.", "Labels → supervised. Actions and outcomes → reinforcement.", "Huge raw data → self-supervised, or reuse a pretrained model.", "Want to explore → unsupervised, then label what you find."],
+    pm: "In a kickoff, ask “what data do we have, and does it have answers?” The answer usually picks the learning type for you.",
+    say: "Step five, choosing the type. Start with the data you have, not the method that sounds exciting. If you have labeled examples, use supervised learning. If the product makes decisions and you can measure the results, consider reinforcement learning. If you have huge amounts of raw data, use self-supervised learning, or simply reuse a pretrained model. And if you just want to explore, start with unsupervised learning, then label what you find.",
+    draw: drawChoose },
+];
+return { STEPS };
+})();
+VMETA[2] = {"title": "Four Ways a Model Learns", "sub": "Supervised, unsupervised, reinforcement and self-supervised learning, each shown with the interview coach. Then a simple guide to pick the right one."};
+
+VISUALS[3] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)") => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="1.5" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const txt = (x, y, t, o = "") => `<text x="${x}" y="${y}" font-size="13" ${o}>${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, extra = "") => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="1.3" ${extra}/>`;
+
+function drawTable() {
+  let s = svg(320);
+  const cols = [[20, 110, "ANSWER"], [130, 100, "ROLE"], [230, 90, "LENGTH"], [320, 100, "SPECIFIC"], [420, 110, "LABEL"]];
+  const rows = [["#001", "Engineer", "95 s", "8", "strong"], ["#002", "Sales", "40 s", "2", "weak"], ["#003", "PM", "150 s", "7", "strong"], ["#004", "Engineer", "70 s", "3", "weak"]];
+  s += rect(20, 40, 510, 30, "var(--line)") ;
+  s += `<rect x="420" y="40" width="110" height="${30 + rows.length * 34 + 4}" rx="6" style="fill:${A};stroke:${A}" fill-opacity=".08" stroke-width="1.5"/>`;
+  cols.forEach(([x, w, t]) => { s += lbl(x + 12, 60, t); });
+  rows.forEach((r, i) => {
+    const y = 74 + i * 34;
+    s += `<line x1="20" y1="${y + 30}" x2="530" y2="${y + 30}" style="stroke:var(--line)"/>`;
+    r.forEach((v, k) => { const isL = k === 4; s += `<text x="${cols[k][0] + 12}" y="${y + 21}" class="mono" font-size="13" ${isL ? `font-weight="600" style="fill:${v === "strong" ? A : W}"` : ""}>${v}</text>`; });
+  });
+  s += `<path d="M20 22 H 420" style="stroke:${B}" stroke-width="1.5"/>` + `<text x="20" y="16" font-size="12" style="fill:${B}">features: what describes each answer</text>`;
+  s += `<text x="420" y="16" font-size="12" font-weight="600" style="fill:${A}">label: the right answer</text>`;
+  s += `<path d="M540 74 v 136" style="stroke:var(--muted)" stroke-width="1.3"/><text x="550" y="140" font-size="12" class="muted">one row =</text><text x="550" y="156" font-size="12" class="muted">one example</text>`;
+  s += `<text x="20" y="250" font-size="13">The coach's first dataset: about <tspan font-weight="700">1,000 rows</tspan>, one per rated answer.</text>`;
+  s += `<text x="20" y="274" font-size="12" class="muted">Values here are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawSources() {
+  let s = svg(330);
+  const src = [["Human raters", "coaches rate each answer", "direct", A], ["User actions", "candidate saved it as a favourite", "proxy", G], ["Existing records", "candidate got the job", "proxy", G]];
+  s += lbl(20, 22, "WHERE LABELS COME FROM");
+  src.forEach(([t, ex, kind, c], i) => {
+    const y = 34 + i * 70;
+    s += rect(20, y, 360, 58) + `<text x="36" y="${y + 24}" font-size="14" font-weight="600">${t}</text><text x="36" y="${y + 44}" font-size="12" class="muted">e.g. ${ex}</text>`;
+    s += arrow(384, y + 29, 424, y + 29);
+    s += rect(428, y + 9, 110, 40, c, .14) + `<text x="483" y="${y + 34}" text-anchor="middle" class="mono" font-size="13" font-weight="600" style="fill:${c}">${kind}</text>`;
+  });
+  s += rect(20, 252, 600, 66, "var(--line)");
+  s += `<text x="36" y="276" font-size="13"><tspan font-weight="700" style="fill:${A}">Direct label:</tspan> measures exactly what you want to predict.</text>`;
+  s += `<text x="36" y="300" font-size="13"><tspan font-weight="700" style="fill:${G}">Proxy label:</tspan> only comes close. Hiring depends on much more than one answer.</text>`;
+  return s + `</svg>`;
+}
+
+/* agreement demo: 3 coaches rate 5 answers; illustrative */
+const RATINGS = {
+  noGuide: [["S", "S", "W"], ["W", "S", "W"], ["S", "S", "S"], ["W", "W", "S"], ["S", "W", "W"]],
+  guide:   [["S", "S", "S"], ["W", "W", "W"], ["S", "S", "S"], ["W", "W", "S"], ["W", "W", "W"]],
+};
+const MODES = [{ key: "noGuide", label: "No labeling guide", c: "var(--t3)" }, { key: "guide", label: "With a labeling guide", c: "var(--accent)" }];
+let mode = 0;
+function drawAgree() {
+  const m = MODES[mode], R = RATINGS[m.key];
+  let s = svg(320);
+  s += lbl(20, 22, "3 COACHES RATE THE SAME 5 ANSWERS");
+  ["Coach 1", "Coach 2", "Coach 3"].forEach((c, k) => { s += `<text x="${170 + k * 90}" y="50" text-anchor="middle" font-size="12" class="muted">${c}</text>`; });
+  s += `<text x="470" y="50" text-anchor="middle" font-size="12" class="muted">All agree?</text>`;
+  let agree = 0;
+  R.forEach((r, i) => {
+    const y = 60 + i * 40, all = r.every(v => v === r[0]); if (all) agree++;
+    s += `<text x="20" y="${y + 22}" class="mono" font-size="13">Answer ${i + 1}</text>`;
+    r.forEach((v, k) => { const c = v === "S" ? A : W; s += rect(140 + k * 90, y + 2, 60, 28, c, .14) + `<text x="${170 + k * 90}" y="${y + 21}" text-anchor="middle" class="mono" font-size="12" style="fill:${c}">${v === "S" ? "strong" : "weak"}</text>`; });
+    s += `<text x="470" y="${y + 23}" text-anchor="middle" font-size="16" font-weight="700" style="fill:${all ? A : W}">${all ? "✓" : "✗"}</text>`;
+  });
+  const pct = Math.round(agree / R.length * 100);
+  s += `<rect x="530" y="70" width="90" height="180" rx="8" style="fill:${m.c};stroke:${m.c}" fill-opacity=".1" stroke-width="1.5"/>`;
+  s += `<text x="575" y="150" text-anchor="middle" font-size="28" font-weight="700" style="fill:${m.c}">${pct}%</text><text x="575" y="172" text-anchor="middle" font-size="11" class="muted">full agreement</text>`;
+  s += `<text x="20" y="290" font-size="13">${mode ? "Clear definitions and example answers: the coaches now mostly agree." : "Each coach uses their own idea of “strong”. The model learns the confusion."}</text>`;
+  s += `<text x="20" y="310" font-size="11" class="muted">Ratings are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawProblems() {
+  let s = svg(330);
+  const probs = [["Missing values", "empty “role” field on 12% of rows", B], ["Duplicates", "the same answer pasted 40 times", P], ["Old data", "2019 answers, before remote interviews", G]];
+  probs.forEach(([t, ex, c], i) => {
+    const y = 16 + i * 54;
+    s += rect(20, y, 290, 46, c, .08) + `<text x="34" y="${y + 20}" font-size="13" font-weight="700" style="fill:${c}">${t}</text><text x="34" y="${y + 37}" font-size="11.5" class="muted">${ex}</text>`;
+  });
+  s += lbl(340, 26, "SKEWED COVERAGE: ANSWERS BY ROLE");
+  const bars = [["Engineer", 780], ["PM", 160], ["Sales", 45], ["Design", 15]];
+  bars.forEach(([r, v], i) => {
+    const y = 40 + i * 34, w = v / 780 * 190;
+    s += `<text x="340" y="${y + 18}" font-size="12">${r}</text>`;
+    s += `<rect x="410" y="${y + 4}" width="${w}" height="20" rx="3" style="fill:${i ? W : A}" fill-opacity="${i ? .55 : .7}"/>`;
+    s += `<text x="${416 + w}" y="${y + 18}" class="mono muted" font-size="11">${v}</text>`;
+  });
+  s += `<text x="340" y="190" font-size="12" class="muted">The coach barely saw sales or design answers,</text><text x="340" y="206" font-size="12" class="muted">so it will judge those candidates poorly.</text>`;
+  s += rect(20, 240, 600, 70, "var(--accent)", .07);
+  s += `<text x="36" y="266" font-size="13" font-weight="700" style="fill:${A}">Before training, check:</text>`;
+  s += `<text x="36" y="290" font-size="13">missing values · duplicates · how old the data is · who is covered and who is missing</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Dataset", title: "1 · What a dataset looks like", q: "What does the coach actually learn from?",
+    points: ["A dataset is a <b>table</b>. Each row is one <b>example</b>: one interview answer.", "Columns describe the example. These are the <b>features</b>.", "One column is the <b>label</b>, the right answer to learn.", "A first coach dataset: about 1,000 rated answers."],
+    pm: "When someone says “we have data”, ask to see ten rows. You'll learn more from that than from any slide.",
+    say: "Step one, what a dataset looks like. A dataset is just a table. Each row is one example, here one interview answer. The columns describe it, like the role, the length, and how specific it is. Those are the features. One special column holds the label, the right answer the model should learn. For a PM, a simple habit helps. When someone says we have data, ask to see ten rows.",
+    draw: drawTable },
+  { stage: "Label sources", title: "2 · Where labels come from", q: "Who decides the right answer?",
+    points: ["<b>Human raters</b>: coaches rate each answer. Usually a direct label.", "<b>User actions</b>: what users save, click or skip.", "<b>Existing records</b>: outcomes already in a database.", "A <b>proxy</b> label only approximates what you want, like “got the job”."],
+    pm: "Proxy labels are cheap and plentiful, but they can teach the wrong lesson. Always ask: does this label measure what we actually want?",
+    say: "Step two, where labels come from. Some labels come from human raters, like coaches rating each answer. Others come from user actions, like saving an answer as a favourite. And some come from existing records, like whether the candidate got the job. Be careful here. Getting the job is only a proxy for a strong answer, because hiring depends on many other things. A direct label measures exactly what you want.",
+    draw: drawSources },
+  { stage: "Agreement", title: "3 · Do the raters agree?", q: "What if the experts disagree with each other?",
+    points: ["Three coaches rate the same five answers.", "Without a guide, each uses their own idea of “strong”.", "Switch to <b>With a labeling guide</b> above the diagram and watch agreement rise.", "A guide has clear definitions and real example answers."],
+    pm: "The labeling guide is effectively your product spec. Write it, test it on a small batch, measure agreement, then scale up.",
+    say: "Step three, do the raters agree? Here, three coaches rate the same five answers. Without a guide, they often disagree, because each has their own idea of a strong answer. The model will learn that confusion. Now switch to the version with a labeling guide. With clear definitions and real example answers, the coaches mostly agree. For a PM, the labeling guide is really your product spec.",
+    draw: drawAgree },
+  { stage: "Problems", title: "4 · Common data problems", q: "What usually goes wrong with data?",
+    points: ["<b>Missing values</b>: empty fields.", "<b>Duplicates</b>: the same example many times.", "<b>Old data</b>: no longer matches today's users.", "<b>Skewed coverage</b>: some groups barely appear, so the model fails for them."],
+    pm: "Ask “who is missing from this data?” before launch. A model quietly fails for the users it never saw, and they're often the ones you're trying to grow.",
+    say: "Step four, common data problems. Look for missing values, where fields are empty. Duplicates, where the same answer appears many times. Old data, that no longer matches today's users. And skewed coverage. In this example, almost every answer came from engineers, and very few from sales or design. So the coach will judge those candidates badly. Always ask, who is missing from this data?",
+    draw: drawProblems },
+];
+return { STEPS, picker: { label: "Show:", step: 2, items: () => MODES.map(m => ({ label: m.label, color: m.c })), get: () => mode, set: i => { mode = i; } } };
+})();
+VMETA[3] = {"title": "Garbage In, Garbage Out", "sub": "How the interview coach's dataset is built: rows and labels, where labels come from, why raters disagree, and the data problems to check before training."};
+
+VISUALS[4] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)") => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="1.5" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="1.3"/>`;
+
+function drawRaw() {
+  let s = svg(340);
+  s += lbl(20, 22, "RAW ANSWER");
+  s += rect(20, 32, 600, 64);
+  s += `<text x="34" y="56" font-size="13">“Um, so new hires kept getting lost. I rewrote the onboarding checklist with</text>`;
+  s += `<text x="34" y="78" font-size="13">them, and onboarding time dropped by 30% in two months.”</text>`;
+  s += arrow(320, 100, 320, 126);
+  s += lbl(20, 142, "FEATURES WE MEASURE");
+  const f = [["length", "48 s", B], ["specific details", "3", A], ["states a result", "yes → 1", A], ["clear structure", "yes → 1", P], ["filler words", "1", G]];
+  f.forEach(([k, v, c], i) => {
+    const x = 20 + i * 121;
+    s += rect(x, 152, 113, 64, c, .1) + `<text x="${x + 56}" y="176" text-anchor="middle" font-size="11.5" class="muted">${k}</text><text x="${x + 56}" y="202" text-anchor="middle" class="mono" font-size="15" font-weight="600" style="fill:${c}">${v}</text>`;
+  });
+  s += arrow(320, 222, 320, 248);
+  s += lbl(20, 264, "FEATURE VECTOR · WHAT THE MODEL SEES");
+  s += rect(20, 274, 600, 44, "var(--ink)");
+  s += `<text x="320" y="302" text-anchor="middle" class="mono" font-size="16" font-weight="600">[ 48, 3, 1, 1, 1 ]</text>`;
+  return s + `</svg>`;
+}
+
+function drawNumbers() {
+  let s = svg(330);
+  s += lbl(20, 22, "BEFORE SCALING · VERY DIFFERENT RANGES");
+  const raw = [["length (s)", 48, 300, B], ["specific details", 3, 10, A], ["states a result", 1, 1, P]];
+  raw.forEach(([k, v, max], i) => {
+    const y = 34 + i * 30, w = v / 300 * 420;
+    s += `<text x="20" y="${y + 16}" font-size="12">${k}</text><rect x="150" y="${y + 3}" width="${Math.max(w, 2)}" height="18" rx="3" style="fill:${raw[i][3]}" fill-opacity=".6"/><text x="${156 + Math.max(w, 2)}" y="${y + 16}" class="mono" font-size="11">${v}</text>`;
+  });
+  s += `<text x="20" y="140" font-size="12" class="muted">Length dominates just because its numbers are bigger.</text>`;
+  s += lbl(20, 172, "AFTER SCALING TO 0–1");
+  const sc = [["length", 48 / 300], ["specific details", 3 / 10], ["states a result", 1]];
+  sc.forEach(([k, v], i) => {
+    const y = 182 + i * 30, w = v * 300;
+    s += `<text x="20" y="${y + 16}" font-size="12">${k}</text><rect x="150" y="${y + 3}" width="${w}" height="18" rx="3" style="fill:${raw[i][3]}" fill-opacity=".6"/><text x="${156 + w}" y="${y + 16}" class="mono" font-size="11">${v.toFixed(2)}</text>`;
+  });
+  s += lbl(500, 172, "OR BIN IT");
+  [["short", "< 45 s", 0], ["medium", "45–120 s", 1], ["long", "> 120 s", 0]].forEach(([b, r, on], i) => {
+    const y = 182 + i * 30;
+    s += rect(500, y, 120, 24, on ? A : "var(--line)", on ? .15 : 0) + `<text x="510" y="${y + 16}" font-size="12" ${on ? `font-weight="700" style="fill:${A}"` : ""}>${b}</text><text x="612" y="${y + 16}" text-anchor="end" class="mono" font-size="10.5">${r}</text>`;
+  });
+  s += `<text x="20" y="300" font-size="11" class="muted">Ranges and cut-offs are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawCategories() {
+  let s = svg(320);
+  s += lbl(20, 22, "THE TRAP: CODING CATEGORIES AS NUMBERS");
+  [["Engineer", "1"], ["Sales", "2"], ["Product manager", "3"]].forEach(([r, n], i) => {
+    s += `<text x="20" y="${56 + i * 26}" font-size="13">${r}</text><text x="170" y="${56 + i * 26}" class="mono" font-size="13" style="fill:${W}">→ ${n}</text>`;
+  });
+  s += rect(230, 36, 390, 72, W, .08) + `<text x="246" y="64" font-size="13" style="fill:${W}" font-weight="600">✗ Implies Sales sits “between” the other two,</text><text x="246" y="86" font-size="13" style="fill:${W}" font-weight="600">and PM is “three times” an engineer.</text>`;
+  s += lbl(20, 148, "THE FIX: ONE-HOT ENCODING");
+  const heads = ["is_engineer", "is_sales", "is_pm"];
+  heads.forEach((h, k) => { s += `<text x="${250 + k * 120}" y="176" text-anchor="middle" class="mono" font-size="11.5" style="fill:${B}">${h}</text>`; });
+  [["Engineer", [1, 0, 0]], ["Sales", [0, 1, 0]], ["Product manager", [0, 0, 1]]].forEach(([r, v], i) => {
+    const y = 186 + i * 36;
+    s += `<text x="20" y="${y + 21}" font-size="13">${r}</text>`;
+    v.forEach((b, k) => { s += rect(220 + k * 120, y, 60, 28, b ? A : "var(--line)", b ? .15 : 0) + `<text x="${250 + k * 120}" y="${y + 19}" text-anchor="middle" class="mono" font-size="13" ${b ? `font-weight="700" style="fill:${A}"` : ""}>${b}</text>`; });
+  });
+  s += `<text x="220" y="310" font-size="13" font-weight="600" style="fill:${A}">✓ Exactly one 1 per row, so no false order.</text>`;
+  return s + `</svg>`;
+}
+
+/* feature checker */
+const CANDIDATES = [
+  { label: "Specific details", c: "var(--accent)", checks: [1, 1, 1, 1], verdict: "Good feature", note: "Linked to answer quality, known right away, measured the same way, and fair." },
+  { label: "Got the job", c: "var(--t3)", checks: [1, 0, 1, 1], verdict: "Leakage: don't use", note: "We only learn this weeks later. In testing it looks brilliant; in real use it doesn't exist yet." },
+  { label: "Speaking accent", c: "var(--t4)", checks: [0, 1, 0, 0], verdict: "Unfair: don't use", note: "Says nothing about answer quality and would penalise people for who they are." },
+  { label: "Answer length", c: "var(--t2)", checks: [1, 1, 1, 1], verdict: "Good, with care", note: "Useful, but only weakly linked. Bin it, so the model doesn't just reward long answers." },
+];
+const CHECKS = ["Related to what we predict?", "Available at prediction time?", "Reliable, measured the same way?", "Fair to use?"];
+let cand = 1;
+function drawCheck() {
+  const c = CANDIDATES[cand];
+  let s = svg(310);
+  s += lbl(20, 22, "FOUR CHECKS FOR EVERY FEATURE");
+  s += rect(20, 32, 600, 40, c.c, .1) + `<text x="36" y="58" font-size="14" font-weight="700" style="fill:${c.c}">Candidate feature: ${c.label}</text>`;
+  CHECKS.forEach((q, i) => {
+    const y = 84 + i * 40, ok = c.checks[i];
+    s += rect(20, y, 600, 32) + `<text x="36" y="${y + 21}" font-size="13">${q}</text>`;
+    s += `<text x="590" y="${y + 22}" text-anchor="end" font-size="16" font-weight="700" style="fill:${ok ? A : W}">${ok ? "✓" : "✗"}</text>`;
+  });
+  const good = c.checks.every(Boolean);
+  s += rect(20, 248, 600, 52, good ? A : W, .12) + `<text x="36" y="270" font-size="13.5" font-weight="700" style="fill:${good ? A : W}">${c.verdict}</text><text x="36" y="290" font-size="12">${c.note}</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Raw → features", title: "1 · From raw data to features", q: "How does an answer become numbers?",
+    points: ["A model only sees <b>numbers</b>, never the raw text.", "We measure the answer: length, specific details, a clear result, structure, filler words.", "Those numbers in a row form the <b>feature vector</b>.", "Choosing and building these is <b>feature engineering</b>."],
+    pm: "Feature ideas come from domain knowledge. A good coach knows “states a clear result” matters, so a PM who brings that insight can improve the model more than a new algorithm.",
+    say: "Step one, from raw data to features. The model can't read this answer the way you do. It only sees numbers. So we measure the answer. Its length. How many specific details it has. Whether it states a clear result. Whether it has a clear structure. And how many filler words it uses. Put those numbers in a row, and you get the feature vector. That list is all the model ever sees.",
+    draw: drawRaw },
+  { stage: "Numbers", title: "2 · Preparing numbers", q: "Why can't we just use the raw numbers?",
+    points: ["Features come in very different ranges, like 30–300 seconds versus 0 or 1.", "Big numbers can drown out small ones.", "<b>Scaling</b> puts every feature into a similar range, like 0 to 1.", "<b>Binning</b> groups a number into buckets: short, medium, long."],
+    pm: "You won't do the scaling yourself, but if a model seems to care only about one feature, like length, ask whether the features were scaled.",
+    say: "Step two, preparing numbers. Our features come in very different ranges. Length runs up to hundreds of seconds, while states a result is just zero or one. Without care, length drowns out everything else, simply because its numbers are bigger. Scaling fixes this by putting every feature into a similar range, like zero to one. Binning is another option. It groups a number into buckets, like short, medium and long.",
+    draw: drawNumbers },
+  { stage: "Categories", title: "3 · Preparing categories", q: "How do we feed in things like job roles?",
+    points: ["Coding roles as 1, 2, 3 invents a false order.", "<b>One-hot encoding</b> gives each category its own yes or no column.", "Exactly one column is 1 for each example.", "The model can now treat each role on its own."],
+    pm: "Watch for ID-like numbers, such as postal codes or role codes, being used as plain numbers. It's a common and quiet source of bad predictions.",
+    say: "Step three, preparing categories. Some features are categories, like the candidate's role. It's tempting to code them as one, two and three. But that tells the model sales sits between engineer and product manager, which makes no sense. One hot encoding fixes this. Each role gets its own yes or no column, so no false order sneaks in.",
+    draw: drawCategories },
+  { stage: "Good or bad?", title: "4 · Good and bad features", q: "How do I know if a feature should be used?",
+    points: ["Is it <b>related</b> to what we predict?", "Is it <b>available</b> when we make the prediction? If not, it's <b>leakage</b>.", "Is it <b>reliable</b>, measured the same way every time?", "Is it <b>fair</b> to use? Pick a candidate above the diagram to test it."],
+    pm: "Ask two questions about every feature: “Will we have this when the user is waiting?” and “Would we be comfortable telling the user we used it?”",
+    say: "Step four, good and bad features. Every feature should pass four checks. Is it related to what we predict? Is it available at the moment of prediction? Is it reliable? And is it fair? Try got the job. It fails the second check. We only learn it weeks later, so using it is leakage. The model looks brilliant in testing and useless in real life. Now try speaking accent. It fails on fairness. It says nothing about answer quality.",
+    draw: drawCheck },
+];
+return { STEPS, picker: { label: "Test a feature:", step: 3, items: () => CANDIDATES.map(c => ({ label: c.label, color: c.c })), get: () => cand, set: i => { cand = i; } } };
+})();
+VMETA[4] = {"title": "Turning Answers into Numbers", "sub": "Follow one interview answer as it becomes a feature vector, see how numbers and categories are prepared, then test which features are safe to use."};
+
+
+const view = { mode: "lesson", n: 0, s: 0 };
+let vTok = 0, vSpeaking = false;
+const VPLAY = '<path d="M7 4v16l13-8z"/>', VSTOP = '<path d="M6 6h12v12H6z"/>';
+function V() { return VISUALS[view.n]; }
+function pad2(n) { return String(n).padStart(2, "0"); }
+function navTo(hash) { if (location.hash === hash) route(); else location.hash = hash; }
+function showVisualVoice() {
+  const claudeV = usingClaude(), v = selectedVoice();
+  $("vVoiceName").textContent = claudeV ? "Claude voice" : v ? v.name.replace(/\s*\(.*\)$/, "").replace(/ - English.*$/, "") : "device default";
+  $("vVoiceMeta").textContent = `${(+$("rate").value).toFixed(1)}× · ${claudeV ? "natural" : teacherOn() ? "teacher style" : "plain"}`;
+  $("vListen").hidden = !claudeV && !synth;
+}
+function setVListen(on) {
+  vSpeaking = on;
+  $("vListen").classList.toggle("on", on);
+  $("vListenIcon").innerHTML = on ? VSTOP : VPLAY;
+  $("vListenLabel").textContent = on ? "Stop" : "Listen";
+}
+function stopVisualSpeech() {
+  if (!vSpeaking) return;
+  vTok++; if (synth) synth.cancel(); if (tts && tts.active()) tts.stop().catch(() => {});
+  setVListen(false);
+}
+function speakVisual() {
+  if (vSpeaking) { stopVisualSpeech(); return; }
+  if (playing) stopAll();
+  const my = ++vTok; setVListen(true);
+  const parts = V().STEPS[view.s].say.match(/[^.!?]+[.!?]+/g).map(p => p.trim());
+  const base = +$("rate").value;
+  if (usingClaude()) {
+    tts.speak(parts.map(t => ({ text: t })), { rate: base }).catch(() => {}).finally(() => { if (my === vTok) setVListen(false); });
+    return;
+  }
+  if (!synth) { setVListen(false); return; }
+  synth.cancel();
+  const voice = selectedVoice(), teach = teacherOn(); let k = 0;
+  const next = () => {
+    if (my !== vTok) return;
+    if (k >= parts.length) { setVListen(false); return; }
+    const t = parts[k++], u = new SpeechSynthesisUtterance(t);
+    if (voice) u.voice = voice;
+    let pitch = 1, rate = 1, pause = 0;
+    if (teach) {
+      const q = t.endsWith("?"), emph = EMPHASIS.test(t) || /^(here's the catch|now watch|your gut)/i.test(t);
+      pitch = q ? 1.13 : emph ? .95 : 1 + jitter(.05);
+      rate = emph ? .9 : 1 + jitter(.04);
+      pause = q ? 650 : emph ? 480 : 240 + (t.match(/,/g) || []).length * 40;
+    }
+    u.pitch = pitch; u.rate = Math.min(2, Math.max(.5, base * rate));
+    u.onend = () => setTimeout(next, pause);
+    synth.speak(u);
+  };
+  setTimeout(next, 60);
+}
+$("vListen").onclick = speakVisual;
+function renderVisual() {
+  const v = V(), st = v.STEPS[view.s], c = CONCEPTS.find(x => x.n === view.n), meta = VMETA[view.n];
+  $("vBack").href = "#c" + view.n;
+  $("vBack").textContent = `← Back to the lesson: ${c.title}`;
+  $("vEyebrow").textContent = `Concept ${pad2(view.n)} · ${c.title}`;
+  $("vTitle").textContent = meta.title;
+  $("vSub").innerHTML = meta.sub;
+  const pipe = $("vPipe");
+  pipe.style.setProperty("--cols", v.STEPS.length);
+  pipe.innerHTML = v.STEPS.map((x, i) => `<button class="stage ${i === view.s ? "active" : i < view.s ? "done" : ""}" data-i="${i}" aria-current="${i === view.s ? "step" : "false"}"><span>Step ${i + 1}${i < view.s ? " ✓" : ""}</span><b>${x.stage}</b></button>`).join("");
+  pipe.querySelectorAll(".stage").forEach(b => b.onclick = () => goStep(+b.dataset.i));
+  $("vStepTitle").textContent = st.title;
+  $("vQ").textContent = st.q;
+  $("vPoints").innerHTML = st.points.map(x => `<li>${x}</li>`).join("");
+  $("vPm").textContent = st.pm;
+  renderVPicker();
+  $("vDiagram").innerHTML = st.draw();
+  const svg = $("vDiagram").firstElementChild; if (svg) svg.classList.add("fade-in");
+  $("vLearn").innerHTML = learnHtml(view.n);
+  $("vPrev").disabled = view.s === 0;
+  $("vNext").textContent = view.s === v.STEPS.length - 1 ? "Start over ↺" : "Next →";
+  showVisualVoice();
+  if (!$("chatPanel").hidden) { updateChatContext(); if (!chat.turns.length) renderChips(); }
+}
+function renderVPicker() {
+  const pk = V().picker, el = $("vPicker");
+  el.hidden = !pk || pk.step !== view.s;
+  if (el.hidden) return;
+  el.innerHTML = `<span>${pk.label || "Pick a word:"}</span>` + pk.items().map((it, i) => `<button class="${i === pk.get() ? "sel" : ""}" style="color:${it.color}" data-i="${i}" aria-pressed="${i === pk.get()}">${it.label}</button>`).join("");
+  el.querySelectorAll("button").forEach(b => b.onclick = () => { pk.set(+b.dataset.i); renderVPicker(); $("vDiagram").innerHTML = V().STEPS[view.s].draw(); if (!$("chatPanel").hidden) updateChatContext(); });
+}
+function goStep(i) { stopVisualSpeech(); view.s = i; renderVisual(); }
+$("vPrev").onclick = () => { if (view.s > 0) goStep(view.s - 1); };
+$("vNext").onclick = () => goStep(view.s === V().STEPS.length - 1 ? 0 : view.s + 1);
+document.addEventListener("keydown", e => {
+  if (view.mode !== "visual" || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target.closest("input, textarea, select, [contenteditable], #chatPanel")) return;
+  if (e.key === "ArrowRight" && view.s < V().STEPS.length - 1) { e.preventDefault(); goStep(view.s + 1); }
+  if (e.key === "ArrowLeft" && view.s > 0) { e.preventDefault(); goStep(view.s - 1); }
+});
+function showVisual(n) {
+  if (playing) stopAll();
+  const was = view.mode === "visual" && view.n === n;
+  view.mode = "visual"; view.n = n; if (!was) view.s = 0;
+  document.body.classList.add("in-visual");
+  $("visualView").hidden = false;
+  renderVisual();
+  window.scrollTo({ top: 0, behavior: "auto" });
+  markTab(CONCEPTS.findIndex(x => x.n === n));
+}
+function showLesson(n) {
+  stopVisualSpeech();
+  const leaving = view.mode === "visual";
+  view.mode = "lesson";
+  document.body.classList.remove("in-visual");
+  $("visualView").hidden = true;
+  const i = CONCEPTS.findIndex(c => c.n === n);
+  if (i >= 0) goToConcept(i, true); else if (leaving) window.scrollTo({ top: 0, behavior: "auto" });
+  if (!$("chatPanel").hidden) { updateChatContext(); if (!chat.turns.length) renderChips(); }
+}
+function route() {
+  const h = location.hash;
+  let m = h.match(/^#v(\d+)$/);
+  if (m && VISUALS[+m[1]]) { showVisual(+m[1]); return; }
+  m = h.match(/^#c(\d+)$/);
+  if (m) { showLesson(+m[1]); return; }
+  if (view.mode === "visual") showLesson(0);
+}
+/* ---- carry voice settings into every "See it visually" link ---- */
+function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+function voiceHash() {
+  const v = usingClaude() ? { name: "claude voice" } : selectedVoice();
+  if (!v) return "";
+  return `#v-${slug(v.name)}-r${Math.round(+$("rate").value * 10)}-t${$("teacher").checked ? 1 : 0}`;
+}
+function refreshLinks() { if (view.mode === "visual") showVisualVoice(); }
+
+/* ---- tabs: jump to a concept, or open its visual page ---- */
+function renderTabs() {
+  $("tabs").innerHTML = CONCEPTS.map((c, i) => `
+    <div class="tab" id="tab${i}">
+      <button class="tab-go" data-i="${i}"><span class="tab-n">${String(c.n).padStart(2, "0")}</span>${c.title}</button>
+      ${VISUALS[c.n] ? `<a class="tab-vis" href="#v${c.n}">See it visually →</a>` : `<span class="tab-soon">Visual coming soon</span>`}
+    </div>`).join("");
+  $("tabs").querySelectorAll(".tab-go").forEach(b => b.onclick = () => navTo("#c" + CONCEPTS[+b.dataset.i].n));
+}
+function smooth(instant) { return instant || matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"; }
+function goToConcept(i, instant) {
+  const card = $(`card${i}`), bar = document.querySelector(".tabs-bar");
+  const y = card.getBoundingClientRect().top + window.scrollY - bar.offsetHeight - 8;
+  window.scrollTo({ top: Math.max(0, y), behavior: smooth(instant) });
+  markTab(i);
+  card.querySelector(".card-head").focus({ preventScroll: true });
+}
+function backToTopics(i) {
+  window.scrollTo({ top: 0, behavior: smooth() });
+  markTab(i);
+  const go = document.querySelector(`#tab${i} .tab-go`); if (go) go.focus({ preventScroll: true });
+}
+function markTab(i) {
+  document.querySelectorAll(".tab").forEach((t, k) => t.classList.toggle("active", k === i));
+  const t = $(`tab${i}`), strip = $("tabs");
+  if (!t) return;
+  // scroll only the tab strip sideways, never the page
+  if (t.offsetLeft < strip.scrollLeft || t.offsetLeft + t.offsetWidth > strip.scrollLeft + strip.clientWidth)
+    strip.scrollTo({ left: t.offsetLeft - 8, behavior: smooth() });
+}
+function routeFromHash() { route(); }
+window.addEventListener("hashchange", () => route());
+
+$("rate").oninput = e => { $("rateVal").textContent = (+e.target.value).toFixed(1) + "×"; refreshLinks(); };
+$("rate").onchange = e => { try { localStorage.setItem("rate", e.target.value); } catch (err) {} };
+try { const r = localStorage.getItem("rate"); if (r) { $("rate").value = r; $("rateVal").textContent = (+r).toFixed(1) + "×"; } } catch (e) {}
+$("voice").onchange = e => { const v = e.target.value; try { localStorage.setItem("voice2", v === "claude" ? "claude" : voices[+v].name); } catch (err) {} if (playing) stopAll(); refreshLinks(); };
+try { if (localStorage.getItem("teacher") === "off") $("teacher").checked = false; } catch (e) {}
+$("teacher").onchange = e => { try { localStorage.setItem("teacher", e.target.checked ? "on" : "off"); } catch (err) {} refreshLinks(); };
+
+render(); renderTabs(); updateUI();
+setTimeout(routeFromHash, 50);
+if (!synth) { $("warn").hidden = false; $("voice").innerHTML = "<option>Not available</option>"; loadVoices(); }
+else { loadVoices(); synth.onvoiceschanged = loadVoices; }
+
+/* =========================================================
+   AI tutor: asks Claude through the viewer's own account
+   (sample capability), voice input (dictation), Claude voice (tts)
+   ========================================================= */
+const chat = { sample: null, dict: null, turns: [], ctl: null, busy: false, tier: "quick", lastQ: null };
+const ICON_SEND = '<path d="M3 20l18-8L3 4v6l12 2-12 2z"/>', ICON_STOP = '<path d="M6 6h12v12H6z"/>';
+const ICON_EXPAND = '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>', ICON_SHRINK = '<path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/>';
+const CONCEPT_LIST = CONCEPTS.map(c => `${c.n}. ${c.title}`).join("; ");
+
+function escapeHtml(t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function inlineMd(t) {
+  return escapeHtml(t)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (m, label, url) => ALLOWED_URLS.has(url.replace(/&amp;/g, "&")) ? `<a href="${url}" target="_blank" rel="noopener">${label} ↗</a>` : label)
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/(^|[^*])\*([^*\s][^*]*?)\*(?!\*)/g, "$1<em>$2</em>");
+}
+function renderMd(text) {
+  const out = []; let list = null, para = [];
+  const flushPara = () => { if (para.length) { out.push(`<p>${para.map(inlineMd).join("<br>")}</p>`); para = []; } };
+  const flushList = () => { if (list) { out.push(`<${list.tag}>${list.items.map(x => `<li>${inlineMd(x)}</li>`).join("")}</${list.tag}>`); list = null; } };
+  text.split("\n").forEach(raw => {
+    const line = raw.trimEnd();
+    let m;
+    if (!line.trim()) { flushPara(); flushList(); return; }
+    if ((m = line.match(/^\s*(?:[-*•]\s*)?SEARCH:\s*(.+)$/i))) {
+      flushPara(); flushList();
+      const q = m[1].replace(/^["“]|["”]$/g, "").trim();
+      const btn = `<a class="search-btn" href="${searchUrl(q)}" target="_blank" rel="noopener">🔎 ${escapeHtml(q)}</a>`;
+      if (out.length && out[out.length - 1].startsWith('<div class="search-links">')) out[out.length - 1] = out[out.length - 1].replace(/<\/div>$/, btn + "</div>");
+      else out.push(`<div class="search-links">${btn}</div>`);
+      return;
+    }
+    if ((m = line.match(/^\s*[-*•]\s+(.*)/))) { flushPara(); if (!list || list.tag !== "ul") { flushList(); list = { tag: "ul", items: [] }; } list.items.push(m[1]); return; }
+    if ((m = line.match(/^\s*\d+[.)]\s+(.*)/))) { flushPara(); if (!list || list.tag !== "ol") { flushList(); list = { tag: "ol", items: [] }; } list.items.push(m[1]); return; }
+    if ((m = line.match(/^#{1,6}\s+(.*)/))) { flushPara(); flushList(); out.push(`<h5>${inlineMd(m[1])}</h5>`); return; }
+    flushList(); para.push(line);
+  });
+  flushPara(); flushList();
+  return out.join("");
+}
+function plainText(md) { return md.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/^\s*(?:[-*•]\s*)?SEARCH:\s*(.+)$/gim, "Search for: $1").replace(/\*\*|`|^#+\s*/gm, "").replace(/^\s*[-*•]\s+/gm, "").trim(); }
+
+function focusConceptIndex() {
+  if (view.mode === "visual") return CONCEPTS.findIndex(x => x.n === view.n);
+  if (playing && current >= 0) return current;
+  const line = document.querySelector(".tabs-bar").getBoundingClientRect().bottom + 80;
+  for (let i = 0; i < CONCEPTS.length; i++) if ($(`card${i}`).getBoundingClientRect().bottom > line) return i;
+  return CONCEPTS.length - 1;
+}
+function updateChatContext() {
+  const c = CONCEPTS[focusConceptIndex()];
+  $("chatCtx").textContent = view.mode === "visual"
+    ? `On: ${String(c.n).padStart(2, "0")} · Step ${view.s + 1} of ${V().STEPS.length} · ${V().STEPS[view.s].stage}`
+    : `On: ${String(c.n).padStart(2, "0")} · ${c.title}`;
+  return c;
+}
+function diagramText() { return [...document.querySelectorAll("#vDiagram svg text")].map(t => t.textContent.trim()).filter(Boolean).join(" · ").slice(0, 2500); }
+function stripTags(h) { const d = document.createElement("div"); d.innerHTML = h; return d.textContent; }
+function visualContext() {
+  const v = V(), st = v.STEPS[view.s];
+  return `The learner is on the DIAGRAM view ("${VMETA[view.n].title}") for this concept.
+All steps: ${v.STEPS.map((x, i) => `${i + 1}. ${x.title.replace(/^\d+\s*·\s*/, "")}`).join("; ")}.
+Current step ${view.s + 1} of ${v.STEPS.length}: "${st.title}". Question: ${st.q}
+Key points shown:
+${st.points.map(x => "- " + stripTags(x)).join("\n")}
+Why it matters for a PM: ${st.pm}
+Narration for this step: ${st.say}
+Labels in the diagram on screen (numbers marked illustrative are examples, not measurements): ${diagramText()}
+When asked about "this diagram" or "here", explain what the picture shows using those labels.`;
+}
+function lessonText(c) { return c.sections.map(sec => (sec.h ? sec.h + ": " : "") + sec.text).join("\n").slice(0, 6000); }
+function instructions(c) {
+  return `You are a friendly, patient AI tutor inside a study page called "ML Concepts Narrator". The learner is a product manager (mechanical engineer turned PM, now moving into AI product management) working through a 30-concept machine learning roadmap, from basics to advanced. They already studied a separate 20-concept course on LLMs and AI agents.
+How to answer:
+- Teach like a good teacher: plain words, short paragraphs, one concrete example. The course's running example is an interview coach that predicts whether a candidate's interview answer is strong or weak; use it when it helps.
+- Add a short "why it matters for a PM" angle when useful.
+- Keep answers under about 180 words unless the learner asks for more depth.
+- Use simple Markdown only: **bold**, bullet lists, numbered steps. No tables.
+- If you are not sure about a fact, say so plainly. Do not invent product names, numbers or dates.
+- If asked to quiz, ask ONE question at a time and wait for the answer, then give feedback.
+- You cannot browse the web, so never invent links. When the learner asks for links, sources, papers or further reading, share links ONLY from the checked list below, as Markdown links like [title](url), copied exactly.
+- For anything the list doesn't cover (or newer information), suggest 1 to 3 web searches, each on its own line in exactly this form: SEARCH: <short search phrase>. The page turns these into clickable search buttons. Don't apologise for not browsing; just give the links and searches.
+Checked links for this concept:
+${(RESOURCES[c.n] || []).map(r => `- [${r.title}](${r.url})`).join("\n") || "- (none)"}
+The 30 concepts: ${CONCEPT_LIST}. Concepts marked as previews only have a short summary so far; teach them from your own knowledge.
+The learner is currently looking at concept ${c.n}: ${c.title}.${view.mode === "visual" ? "\n" + visualContext() + "\nThe concept's lesson text, for background:" : " The lesson text for it is:"}
+<lesson>
+${lessonText(c)}
+</lesson>`;
+}
+
+function setBusy(b) {
+  chat.busy = b;
+  $("sendIcon").innerHTML = b ? ICON_STOP : ICON_SEND;
+  $("sendLabel").textContent = b ? "Stop" : "Send";
+  $("chatSend").setAttribute("aria-label", b ? "Stop the answer" : "Send");
+}
+function scrollMsgs() { const m = $("chatMsgs"); m.scrollTop = m.scrollHeight; }
+function addMsg(role, html) {
+  const el = document.createElement("div");
+  el.className = "msg " + role;
+  if (role === "user") el.textContent = html; else el.innerHTML = html;
+  $("chatMsgs").append(el); scrollMsgs();
+  return el;
+}
+function renderChips() {
+  const c = updateChatContext();
+  const ideas = view.mode === "visual"
+    ? ["Explain this step more simply", "Walk me through this diagram", "Give me a real-world example", "Quiz me on this step", "Where can I read more about this?"]
+    : [`Explain ${c.title} more simply`, "Give me a real-world example", `How does ${c.title} connect to the other concepts?`, "Quiz me on this", "Where can I read more about this?"];
+  $("chatChips").innerHTML = chat.turns.length ? "" : ideas.map(t => `<button type="button" class="chip">${escapeHtml(t)}</button>`).join("");
+  $("chatChips").querySelectorAll(".chip").forEach(b => b.onclick = () => ask(b.textContent));
+}
+function welcome() {
+  const c = updateChatContext();
+  $("chatMsgs").innerHTML = "";
+  addMsg("bot", `<p>Hi! I'm your AI tutor. Ask me anything about <strong>${escapeHtml(c.title)}</strong> or any of the 30 concepts, or tap a suggestion below.</p>`);
+  renderChips();
+}
+const ERR = {
+  not_granted: "The AI tutor isn't allowed on this page yet. You can turn it on from this page's Permissions menu.",
+  sampling_disabled: "Claude isn't available for this account, so the tutor can't answer here.",
+  rate_limited: "That's a lot of questions in a short time. Wait a minute, then try again.",
+  session_expired: "Your Claude session has ended. Sign in again, then retry.",
+  refused: "I can't help with that one. Try asking it a different way.",
+  prompt_too_large: "This conversation got too long. Start a new chat with the ↺ button.",
+  empty_completion: "I didn't get an answer that time. Try rephrasing the question.",
+};
+function addTools(el, text, pair) {
+  const tools = document.createElement("div"); tools.className = "msg-tools";
+  if (pair) tools.append(makeSaveButton(pair));
+  const say = document.createElement("button"); say.type = "button"; say.textContent = "🔊 Read aloud";
+  say.onclick = () => readAloud(text, say);
+  tools.append(say); el.append(tools);
+}
+function readAloud(text, btn) {
+  stopAll();
+  const clean = plainText(text);
+  if (tts) {
+    const paras = clean.split(/\n+/).map(t => t.trim()).filter(Boolean).flatMap(t => t.match(/[\s\S]{1,1800}(?=\s|$)/g) || [t]).slice(0, 100);
+    btn.textContent = "🔊 Reading…";
+    tts.speak(paras.map(t => ({ text: t })), { rate: +$("rate").value }).catch(() => {}).finally(() => { btn.textContent = "🔊 Read aloud"; });
+  } else if (synth) {
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(clean); const v = selectedVoice(); if (v) u.voice = v; u.rate = +$("rate").value;
+    synth.speak(u);
+  }
+}
+
+async function ask(question) {
+  question = (question || "").trim();
+  if (!question || chat.busy || !chat.sample) return;
+  const c = updateChatContext();
+  const ctx = noteContext();
+  chat.lastQ = question;
+  $("chatInput").value = ""; $("chatChips").innerHTML = "";
+  addMsg("user", question);
+  chat.turns.push({ role: "user", content: question });
+  chat.turns = chat.turns.slice(-12);
+  if (chat.turns[0].role !== "user") chat.turns.shift();
+  const bubble = addMsg("bot", `<span class="thinking">${chat.tier === "quick" ? "Thinking…" : "Thinking deeply… this can take up to a minute."}</span>`);
+  chat.ctl = new AbortController(); setBusy(true);
+  try {
+    const { text, truncated } = await chat.sample([{ role: "user", content: instructions(c) + (chat.toolsOK ? NOTES_RULES : NOTES_RULES_NO_TOOLS) }, ...chat.turns], {
+      cache: false, modelTier: chat.tier, signal: chat.ctl.signal, ...(chat.toolsOK ? { tools: [saveTool(ctx)] } : {}),
+      onText: ({ text }) => { bubble.innerHTML = renderMd(text); scrollMsgs(); },
+    });
+    bubble.innerHTML = renderMd(text) + (truncated ? `<p class="thinking">(Answer was cut short. Ask me to continue.)</p>` : "");
+    const pair = { q: question, a: text, ctx, saved: false };
+    chat.pairs.push(pair);
+    addTools(bubble, text, pair);
+    chat.turns.push({ role: "assistant", content: text });
+  } catch (e) {
+    const kept = e && e.text;
+    if (kept) { bubble.innerHTML = renderMd(kept); chat.turns.push({ role: "assistant", content: kept }); } else bubble.remove();
+    if (!e || e.code !== "cancelled") {
+      const err = addMsg("err", escapeHtml(ERR[e && e.code] || "Something went wrong connecting to Claude."));
+      if (!ERR[e && e.code] || e.code === "empty_completion") {
+        const r = document.createElement("button"); r.type = "button"; r.textContent = "Try again"; r.className = "chip"; r.style.marginLeft = "10px";
+        r.onclick = () => { err.remove(); chat.turns = chat.turns.filter((t, k, a) => !(k === a.length - 1 && t.role === "user")); ask(chat.lastQ); };
+        err.append(r);
+      }
+      if (e && (e.code === "not_granted" || e.code === "sampling_disabled")) $("chatInput").disabled = true;
+    }
+  } finally { setBusy(false); scrollMsgs(); }
+}
+
+/* Keep the reader on the same concept when the page width changes */
+function keepPlace(change) {
+  if (view.mode === "visual") { change(); return; }
+  const i = focusConceptIndex(), card = $(`card${i}`), before = card.getBoundingClientRect().top;
+  change();
+  const after = card.getBoundingClientRect().top;
+  window.scrollBy({ top: after - before, behavior: "auto" });
+}
+function openChat() {
+  keepPlace(() => document.body.classList.add("chat-open"));
+  $("chatPanel").hidden = false; $("chatFab").setAttribute("aria-expanded", "true");
+  if (!$("chatMsgs").children.length) welcome(); else updateChatContext();
+  setTimeout(() => $("chatInput").focus(), 50);
+}
+function closeChat() {
+  keepPlace(() => document.body.classList.remove("chat-open", "chat-full"));
+  $("chatPanel").hidden = true; $("chatFab").setAttribute("aria-expanded", "false");
+  $("expandIcon").innerHTML = ICON_EXPAND;
+  $("chatFab").focus();
+}
+$("chatFab").onclick = openChat;
+$("chatClose").onclick = closeChat;
+$("chatSaveAll").onclick = () => saveWholeChat();
+$("chatNew").onclick = () => { if (chat.ctl) chat.ctl.abort(); chat.turns = []; chat.pairs = []; $("chatInput").disabled = false; welcome(); $("chatInput").focus(); };
+$("chatExpand").onclick = () => {
+  let full; keepPlace(() => { full = document.body.classList.toggle("chat-full"); });
+  $("expandIcon").innerHTML = full ? ICON_SHRINK : ICON_EXPAND;
+  $("chatExpand").setAttribute("aria-label", full ? "Back to half width" : "Expand to full width");
+  $("chatExpand").title = full ? "Half width" : "Full width";
+};
+$("chatPanel").addEventListener("keydown", e => { if (e.key === "Escape" && e.target.tagName !== "TEXTAREA") { e.preventDefault(); closeChat(); } });
+$("chatForm").onsubmit = e => { e.preventDefault(); if (chat.busy) { chat.ctl && chat.ctl.abort(); return; } ask($("chatInput").value); };
+$("chatInput").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); $("chatForm").requestSubmit(); } });
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
+  chat.tier = b.dataset.tier;
+  document.querySelectorAll(".seg button").forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-pressed", String(x === b)); });
+});
+let ctxTimer = null;
+window.addEventListener("scroll", () => { if ($("chatPanel").hidden) return; clearTimeout(ctxTimer); ctxTimer = setTimeout(() => { updateChatContext(); if (!chat.turns.length) renderChips(); }, 200); }, { passive: true });
+
+/* voice input */
+$("chatMic").onclick = () => {
+  const d = chat.dict; if (!d) return;
+  if (d.active()) { d.stop().catch(() => {}); return; }
+  d.start().catch(e => {
+    if (e && (e.code === "not_granted" || e.code === "unavailable")) $("chatMic").hidden = true;
+  });
+};
+
+/* light up capabilities when the viewer provides them */
+(async () => {
+  if (!window.claude || !window.claude.use) return;
+  claude.use("sample").then(s => { if (s) { chat.sample = s; $("chatFab").hidden = false; s.limits().then(l => { chat.toolsOK = !!(l && l.tools); }).catch(() => {}); } });
+  claude.use("dictation").then(d => {
+    if (!d) return;
+    chat.dict = d; $("chatMic").hidden = false;
+    d.onPartial(({ text }) => { $("chatPartial").hidden = !text; $("chatPartial").textContent = text ? "Listening: " + text : ""; });
+    d.onFinal(({ text }) => { const box = $("chatInput"); box.value = box.value ? box.value + text : text.replace(/^\s+/, ""); });
+    d.onState(({ state, reason }) => {
+      $("chatMic").classList.toggle("listening", state !== "idle");
+      $("chatMic").setAttribute("aria-label", state === "idle" ? "Ask by voice" : "Stop listening");
+      if (state === "idle") { $("chatPartial").hidden = true; if (reason === "not_granted" || reason === "unavailable") $("chatMic").hidden = true; }
+    });
+  });
+  claude.use("tts").then(t => {
+    if (!t) return;
+    tts = t; loadVoices();
+    t.onLine(({ id }) => { if (usingClaude() && playing && id != null) { sentenceIdx = +id; highlightItem(+id); } });
+    t.onState(({ state, reason }) => {
+      if (state === "idle" && usingClaude() && playing && (reason === "viewer_stopped" || reason === "hidden" || reason === "time_limit")) { playing = false; paused = false; updateUI(); }
+    });
+  });
+})();
+
+const NOTES_PAGE = "ml-narrator", PAGE_TITLE = "ML Concepts Narrator";
+
+function noteContext() { const c = CONCEPTS[focusConceptIndex()]; return { topicN: c.n, topicTitle: c.title, step: view.mode === "visual" ? `Step ${view.s + 1} · ${V().STEPS[view.s].stage}` : "" }; }
+/* =========================================================
+   My notes: saved questions and answers, per topic.
+   Stored privately in the viewer's claude.ai account (db, under
+   data/users/<id>), or in this browser when that isn't possible.
+   ========================================================= */
+const notes = { mode: "local", list: [], col: null, ready: false, unsub: null, downloads: null, filter: "", confirmId: null, editing: null };
+const NOTES_KEY = "tutorNotes:" + NOTES_PAGE;
+function loadLocal() { try { notes.list = JSON.parse(localStorage.getItem(NOTES_KEY) || "[]"); } catch (e) { notes.list = []; } notes.list.sort((a, b) => b.createdAt - a.createdAt); }
+function saveLocal() { try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes.list)); return true; } catch (e) { return false; } }
+function setWhere(text) { $("notesWhere").textContent = text || (notes.mode === "db" ? "Saved to your claude.ai account · private to you" : "Saved in this browser only"); }
+function fallbackLocal() { notes.mode = "local"; if (notes.unsub) { notes.unsub(); notes.unsub = null; } loadLocal(); setWhere(); renderNotes(); }
+async function migrateLocal() {
+  let local = []; try { local = JSON.parse(localStorage.getItem(NOTES_KEY) || "[]"); } catch (e) {}
+  if (!local.length) return;
+  for (const n of local) { const { id, ...body } = n; try { await notes.col.doc(String(id).replace(/[^A-Za-z0-9_.~:@+-]/g, "")).set(body); } catch (e) { return; } }
+  try { localStorage.removeItem(NOTES_KEY); } catch (e) {}
+}
+async function initNotes() {
+  loadLocal(); setWhere(); renderNotes();
+  if (!window.claude || !window.claude.use) return;
+  claude.use("downloads").then(d => { notes.downloads = d; });
+  const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+  if (!db || !user) return;
+  const uid = await user.id(); if (!uid) return;
+  if ((await user.can("data.write")) === false) return;
+  notes.col = db.collection("data/users/" + uid);
+  notes.mode = "db"; setWhere("Loading your saved notes…");
+  const timer = setTimeout(() => { if (!notes.ready) setWhere("Your saved notes can't be reached yet. Showing what's here."); }, 10000);
+  notes.unsub = notes.col.where("kind", "==", "note").orderBy("createdAt", "desc").onSnapshot(snap => {
+    notes.list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (!snap.metadata.fromCache && !notes.ready) { notes.ready = true; clearTimeout(timer); setWhere(); migrateLocal(); }
+    renderNotes();
+  }, () => { clearTimeout(timer); fallbackLocal(); });
+}
+const ALL_TOPICS = CONCEPTS.map(c => [c.n, c.title]);
+async function addNote(fields) {
+  const n = { kind: "note", source: fields.source || "ai", topicN: fields.topicN, topicTitle: fields.topicTitle, step: fields.step || "", question: String(fields.question || "").slice(0, 2000), answer: String(fields.answer || "").slice(0, 20000), mine: String(fields.mine || "").slice(0, 20000), createdAt: Date.now() };
+  if (notes.mode === "db") {
+    try { await notes.col.doc().set(n); return true; }
+    catch (e) {
+      if (e && e.code === "quota_exceeded") { toast("Your notes are full. Delete some old ones, then try again."); return false; }
+      if (e && e.code === "unavailable") { try { await new Promise(r => setTimeout(r, 400 + Math.random() * 600)); await notes.col.doc().set(n); return true; } catch (e2) {} }
+      fallbackLocal();
+    }
+  }
+  n.id = "l" + n.createdAt + Math.random().toString(36).slice(2, 7);
+  notes.list.unshift(n);
+  if (!saveLocal()) { notes.list.shift(); toast("This browser won't let the page save notes."); return false; }
+  renderNotes(); return true;
+}
+async function updateNote(id, patch) {
+  patch = { ...patch, updatedAt: Date.now() };
+  if (notes.mode === "db") {
+    try { await notes.col.doc(id).update(patch); return true; }
+    catch (e) { toast("Couldn't save your change. Try again."); return false; }
+  }
+  const n = notes.list.find(x => x.id === id); if (!n) return false;
+  Object.assign(n, patch); if (!saveLocal()) { toast("This browser won't let the page save notes."); return false; } renderNotes(); return true;
+}
+async function deleteNote(id) {
+  if (notes.mode === "db") { try { await notes.col.doc(id).delete(); } catch (e) { toast("Couldn't delete that note. Try again."); } return; }
+  notes.list = notes.list.filter(n => n.id !== id); saveLocal(); renderNotes();
+}
+function topicKey(n) { return `${String(n.topicN || 0).padStart(2, "0")} · ${n.topicTitle || "General"}`; }
+function noteMatches(n) {
+  const q = notes.filter.trim().toLowerCase(); if (!q) return true;
+  return [n.question, n.answer, n.mine, n.topicTitle, n.step].join(" ").toLowerCase().includes(q);
+}
+function fmtDate(t) { try { return new Date(t).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }); } catch (e) { return ""; } }
+function topicOptions(sel) { return ALL_TOPICS.map(([n, t]) => `<option value="${n}" ${n === sel ? "selected" : ""}>${String(n).padStart(2, "0")} · ${escapeHtml(t)}</option>`).join(""); }
+function editorHtml(kind, n) {
+  const ctx = noteContext();
+  if (kind === "new" || kind === "edit") {
+    const topicN = n ? n.topicN : ctx.topicN;
+    return `<form class="note-editor" data-kind="${kind}">
+      <label>Title<input name="title" maxlength="200" value="${n ? escapeHtml(n.question || "") : ""}" placeholder="e.g. My summary of attention" required></label>
+      <label>Topic<select name="topic">${topicOptions(topicN)}</select></label>
+      <label>Your note<textarea name="body" rows="5" maxlength="20000" placeholder="Write in your own words. **bold** and - bullet points work.">${n ? escapeHtml(n.mine || "") : ""}</textarea></label>
+      <div class="ed-actions"><button type="submit" class="ed-save">Save note</button><button type="button" class="ed-cancel">Cancel</button></div>
+    </form>`;
+  }
+  return `<form class="note-editor" data-kind="thoughts">
+      <label>My thoughts<textarea name="body" rows="4" maxlength="20000" placeholder="Your own takeaway, in your words.">${escapeHtml(n.mine || "")}</textarea></label>
+      <div class="ed-actions"><button type="submit" class="ed-save">Save</button><button type="button" class="ed-cancel">Cancel</button></div>
+    </form>`;
+}
+function noteCard(n) {
+  const mine = n.source === "mine", editing = notes.editing === n.id;
+  if (mine && editing) return `<article class="ncard mine" data-id="${escapeHtml(n.id)}">${editorHtml("edit", n)}</article>`;
+  return `<article class="ncard ${mine ? "mine" : ""}" data-id="${escapeHtml(n.id)}">
+      ${mine ? `<span class="mine-badge">✏️ My note</span>` : ""}
+      <div class="note-q">${escapeHtml(n.question || (mine ? "(untitled)" : "(no question)"))}</div>
+      <div class="note-meta">${n.step ? escapeHtml(n.step) + " · " : ""}${fmtDate(n.createdAt)}${n.updatedAt ? " · edited" : ""}</div>
+      ${mine ? (n.mine ? `<div class="note-a mine-body">${renderMd(n.mine)}</div>` : "")
+             : (n.answer ? `<div class="note-a clamp">${renderMd(n.answer)}</div>` : "")}
+      ${!mine && n.mine && !editing ? `<div class="thoughts"><b>My thoughts</b>${renderMd(n.mine)}</div>` : ""}
+      ${!mine && editing ? editorHtml("thoughts", n) : ""}
+      <div class="note-tools">
+        ${!mine && n.answer ? `<button type="button" data-act="more">Show more</button>` : ""}
+        ${mine ? `<button type="button" data-act="edit">✏️ Edit</button>` : `<button type="button" data-act="edit">✏️ ${n.mine ? "Edit my thoughts" : "Add my thoughts"}</button>`}
+        <button type="button" data-act="copy">Copy</button>
+        <button type="button" data-act="say">🔊 Read</button>
+        ${notes.confirmId === n.id ? `<button type="button" class="danger" data-act="del-yes">Delete for good</button><button type="button" data-act="del-no">Keep</button>` : `<button type="button" class="danger" data-act="del">Delete</button>`}
+      </div>
+    </article>`;
+}
+function renderNotes() {
+  $("notesCount").textContent = notes.list.length;
+  const top = notes.editing === "new" ? `<article class="ncard mine">${editorHtml("new")}</article>` : "";
+  const shown = notes.list.filter(noteMatches);
+  if (!notes.list.length) { $("notesList").innerHTML = top + (top ? "" : `<p class="notes-empty">No saved notes yet. Tap <strong>⭐ Save</strong> under an answer, ask the tutor “save this”, or write your own with <strong>✏️ New note</strong>.</p>`); focusEditor(); return; }
+  if (!shown.length) { $("notesList").innerHTML = top + `<p class="notes-empty">No notes match “${escapeHtml(notes.filter)}”.</p>`; focusEditor(); return; }
+  const groups = new Map();
+  shown.slice().sort((a, b) => (a.topicN || 0) - (b.topicN || 0) || b.createdAt - a.createdAt).forEach(n => { const k = topicKey(n); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(n); });
+  $("notesList").innerHTML = top + [...groups].map(([k, list]) => `<section class="notes-group"><h4>${escapeHtml(k)}</h4>${list.map(noteCard).join("")}</section>`).join("");
+  focusEditor();
+}
+function focusEditor() { const f = $("notesList").querySelector(".note-editor input, .note-editor textarea"); if (f && notes.editing) f.focus(); }
+function noteMd(n) {
+  const meta = `_${n.step ? n.step + " · " : ""}saved ${fmtDate(n.createdAt)}_`;
+  if (n.source === "mine") return `**My note: ${n.question || "Untitled"}**\n\n${n.mine || ""}\n\n${meta}`;
+  return `**Q:** ${n.question}\n\n${n.answer ? "**A:** " + n.answer + "\n\n" : ""}${n.mine ? "**My thoughts:** " + n.mine + "\n\n" : ""}${meta}`;
+}
+function allNotesMd() {
+  const groups = new Map();
+  notes.list.slice().sort((a, b) => (a.topicN || 0) - (b.topicN || 0) || a.createdAt - b.createdAt).forEach(n => { const k = topicKey(n); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(n); });
+  return `# My AI study notes · ${PAGE_TITLE}\n\nExported ${fmtDate(Date.now())}\n\n` + [...groups].map(([k, list]) => `## ${k}\n\n` + list.map(noteMd).join("\n\n---\n\n")).join("\n\n");
+}
+async function copyText(t, okMsg) {
+  try { await navigator.clipboard.writeText(t); toast(okMsg || "Copied"); }
+  catch (e) { toast("Copy isn't allowed here. Use Export instead."); }
+}
+function toast(msg) {
+  const t = document.createElement("div"); t.className = "chat-toast"; t.setAttribute("role", "status"); t.textContent = msg;
+  $("chatPanel").append(t); setTimeout(() => t.remove(), 2600);
+}
+$("notesList").addEventListener("click", e => {
+  const b = e.target.closest("button[data-act]"); if (!b) return;
+  const card = b.closest(".ncard"), id = card.dataset.id, n = notes.list.find(x => x.id === id); if (!n) return;
+  const act = b.dataset.act;
+  if (act === "more") { const a = card.querySelector(".note-a"); const open = a.classList.toggle("clamp"); b.textContent = open ? "Show more" : "Show less"; }
+  if (act === "copy") copyText(plainText(noteMd(n)), "Note copied");
+  if (act === "say") readAloud((n.question ? n.question + "\n\n" : "") + (n.answer || ""), b);
+  if (act === "edit") { notes.editing = id; notes.confirmId = null; renderNotes(); return; }
+  if (act === "del") { notes.confirmId = id; renderNotes(); }
+  if (act === "del-no") { notes.confirmId = null; renderNotes(); }
+  if (act === "del-yes") { notes.confirmId = null; deleteNote(id); }
+});
+$("notesList").addEventListener("click", e => {
+  if (!e.target.closest(".ed-cancel")) return;
+  notes.editing = null; renderNotes();
+});
+$("notesList").addEventListener("keydown", e => { if (e.key === "Escape" && notes.editing) { e.preventDefault(); notes.editing = null; renderNotes(); } });
+$("notesList").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, kind = f.dataset.kind, data = new FormData(f), btn = f.querySelector(".ed-save");
+  const body = String(data.get("body") || "").trim();
+  btn.disabled = true; btn.textContent = "Saving…";
+  let ok = false;
+  if (kind === "new" || kind === "edit") {
+    const title = String(data.get("title") || "").trim(), tn = +data.get("topic"), topic = ALL_TOPICS.find(t => t[0] === tn) || ALL_TOPICS[0];
+    if (!title && !body) { btn.disabled = false; btn.textContent = "Save note"; toast("Write a title or a note first."); return; }
+    const ctx = noteContext();
+    const fields = { source: "mine", topicN: topic[0], topicTitle: topic[1], question: title, mine: body, step: tn === ctx.topicN ? (ctx.step || "") : "" };
+    ok = kind === "new" ? await addNote(fields) : await updateNote(notes.editing, { topicN: fields.topicN, topicTitle: fields.topicTitle, question: title, mine: body });
+  } else {
+    ok = await updateNote(notes.editing, { mine: body });
+  }
+  if (ok) { notes.editing = null; renderNotes(); toast(kind === "new" ? "Note saved" : "Saved"); }
+  else { btn.disabled = false; btn.textContent = "Save"; }
+});
+$("notesNew").onclick = () => { notes.editing = "new"; notes.confirmId = null; notes.filter = ""; $("notesSearch").value = ""; renderNotes(); $("notesList").scrollTop = 0; };
+$("notesSearch").addEventListener("input", e => { notes.filter = e.target.value; renderNotes(); });
+$("notesCopyAll").onclick = () => { if (!notes.list.length) { toast("No notes to copy yet."); return; } copyText(allNotesMd(), "All notes copied. Paste them into your notes app."); };
+$("notesExport").onclick = async () => {
+  if (!notes.list.length) { toast("No notes to export yet."); return; }
+  const md = allNotesMd(), name = `ai-study-notes-${NOTES_PAGE}.md`;
+  if (!notes.downloads) { copyText(md, "Download isn't available here, so your notes were copied instead."); return; }
+  try { await notes.downloads.save({ filename: name, data: md }); toast("Notes exported"); }
+  catch (e) { if (e && e.code !== "declined") copyText(md, "Download didn't work, so your notes were copied instead."); }
+};
+function showTab(which) {
+  const notesOn = which === "notes";
+  $("tabChat").setAttribute("aria-selected", String(!notesOn)); $("tabNotes").setAttribute("aria-selected", String(notesOn));
+  ["chatMsgs", "chatChips", "chatForm"].forEach(id => { $(id).hidden = notesOn; });
+  document.querySelector(".chat-note").hidden = notesOn;
+  $("notesView").hidden = !notesOn;
+  if (notesOn) { notes.confirmId = null; notes.editing = null; renderNotes(); $("notesSearch").focus(); } else $("chatInput").focus();
+}
+$("tabChat").onclick = () => showTab("chat");
+$("tabNotes").onclick = () => showTab("notes");
+
+/* Save buttons on answers, and "save the whole chat" */
+chat.pairs = [];
+function makeSaveButton(pair) {
+  const b = document.createElement("button"); b.type = "button"; b.textContent = "⭐ Save";
+  b.onclick = async () => {
+    if (pair.saved) return;
+    b.textContent = "Saving…";
+    if (await addNote({ ...pair.ctx, question: pair.q, answer: pair.a })) { pair.saved = true; b.textContent = "✓ Saved"; b.classList.add("saved"); }
+    else b.textContent = "⭐ Save";
+  };
+  pair.btn = b; return b;
+}
+async function saveWholeChat() {
+  const todo = chat.pairs.filter(p => !p.saved);
+  if (!chat.pairs.length) { toast("Ask something first, then save it."); return; }
+  if (!todo.length) { toast("Everything in this chat is already saved."); return; }
+  let ok = 0;
+  for (const p of todo) { if (await addNote({ ...p.ctx, question: p.q, answer: p.a })) { ok++; p.saved = true; if (p.btn) { p.btn.textContent = "✓ Saved"; p.btn.classList.add("saved"); } } }
+  toast(`Saved ${ok} ${ok === 1 ? "answer" : "answers"} to My notes`);
+}
+/* A page tool so the tutor itself can save when asked */
+function saveTool(ctx) {
+  return {
+    name: "save_note",
+    description: "Save one question, optionally with its answer, to the learner's private 'My notes' for this topic. Use only when the learner asks to save, bookmark or keep something. Call once per item. Returns 'saved' or an error.",
+    inputSchema: { type: "object", properties: {
+      question: { type: "string", description: "The question to save, in the learner's words." },
+      answer: { type: "string", description: "The answer to save with it, in Markdown. Use your earlier answer from this chat when the learner wants answers saved. Omit to save only the question." },
+    }, required: ["question"] },
+    execute: async (input) => {
+      const ok = await addNote({ ...ctx, question: String(input.question || ""), answer: input.answer ? String(input.answer) : "" });
+      if (!ok) throw new Error("could not save");
+      return "saved";
+    },
+  };
+}
+const NOTES_RULES = `
+Saving notes: this page has a private "My notes" tab. When the learner asks you to save, bookmark or remember questions or answers, call the save_note tool once per item (include your earlier answer from this chat when they want the answer kept), then confirm in one short sentence and mention they can find it under "My notes". Never say you cannot save.`;
+const NOTES_RULES_NO_TOOLS = `
+Saving notes: this page has a private "My notes" tab. If the learner asks you to save something, tell them to tap "⭐ Save" under an answer, or the ⭐ button at the top of the panel to save the whole chat.`;
+initNotes();
+</script>
+
+</body></html>

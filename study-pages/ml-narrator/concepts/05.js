@@ -1,0 +1,2 @@
+{ n: 5, group: "Foundations", title: "Train, Validation & Test Sets", draft: true, terms: ["Train set", "Validation set", "Test set", "Cross-validation", "Data leakage"],
+  sections: [{ h: "The big idea", text: "To know if a model really works, you test it on data it has never seen. So you split your data into a training set, a validation set for tuning, and a test set for the final check. Data leakage is when test information sneaks into training, which makes results look far better than they are." }] }

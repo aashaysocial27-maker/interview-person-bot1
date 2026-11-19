@@ -1,0 +1,2 @@
+{ n: 11, group: "Classic Models", title: "Clustering & Anomaly Detection", draft: true, terms: ["K-means", "Clusters", "Anomaly detection", "Outliers"],
+  sections: [{ h: "The big idea", text: "Clustering groups similar items together without any labels, such as grouping candidates by the kind of mistakes they make. Anomaly detection finds the odd ones out, like fraud or a machine about to fail. Both are unsupervised learning." }] }

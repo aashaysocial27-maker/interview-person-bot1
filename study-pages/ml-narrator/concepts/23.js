@@ -1,0 +1,2 @@
+{ n: 23, group: "Deep Learning", title: "Reinforcement Learning", draft: true, terms: ["Agent", "Environment", "Reward", "Policy", "Exploration"],
+  sections: [{ h: "The big idea", text: "In reinforcement learning, an agent tries actions, gets rewards or penalties, and slowly learns a strategy that earns the most reward. It taught computers to beat world champions at Go, and it is used to align large language models." }] }

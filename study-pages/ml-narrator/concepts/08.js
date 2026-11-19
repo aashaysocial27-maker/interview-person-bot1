@@ -1,0 +1,2 @@
+{ n: 8, group: "Classic Models", title: "Decision Trees & Random Forests", draft: true, terms: ["Decision tree", "Random forest", "Bagging", "Feature importance"],
+  sections: [{ h: "The big idea", text: "A decision tree asks a chain of yes or no questions until it reaches an answer. One tree is easy to read but makes mistakes. A random forest trains hundreds of slightly different trees and lets them vote, which is far more accurate." }] }

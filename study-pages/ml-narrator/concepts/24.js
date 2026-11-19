@@ -1,0 +1,2 @@
+{ n: 24, group: "Deep Learning", title: "Recommender Systems", draft: true, terms: ["Collaborative filtering", "Content-based", "Cold start", "Ranking"],
+  sections: [{ h: "The big idea", text: "Recommenders decide what to show each user, from videos to products to practice questions. They learn from what similar users liked, and from the content itself. New users and new items with no history, called the cold start problem, need special care." }] }

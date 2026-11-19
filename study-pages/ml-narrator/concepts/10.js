@@ -1,0 +1,2 @@
+{ n: 10, group: "Classic Models", title: "KNN, SVM & Naive Bayes", draft: true, terms: ["K-nearest neighbors", "Support vector machine", "Naive Bayes", "Distance"],
+  sections: [{ h: "The big idea", text: "Three classic models with simple ideas. K-nearest neighbors copies the answer of the most similar past examples. A support vector machine draws the widest possible boundary between classes. Naive Bayes counts how often words appear with each answer, which made it the classic spam filter." }] }

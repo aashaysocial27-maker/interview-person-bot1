@@ -1,0 +1,2 @@
+{ n: 17, group: "How Models Learn", title: "Class Imbalance", draft: true, terms: ["Imbalanced data", "Oversampling", "SMOTE", "Class weights"],
+  sections: [{ h: "The big idea", text: "Sometimes the thing you care about is rare, like fraud in one transaction out of a thousand. A lazy model can just say never, and still be right most of the time. Class imbalance techniques make the model pay attention to the rare cases." }] }
