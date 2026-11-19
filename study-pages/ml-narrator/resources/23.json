@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "The Reinforcement Learning framework (Hugging Face Deep RL course)", "url": "https://huggingface.co/learn/deep-rl-course/unit1/rl-framework"},
+ {"kind": "Docs", "title": "Key Concepts in RL (OpenAI Spinning Up)", "url": "https://spinningup.openai.com/en/latest/spinningup/rl_intro.html"},
+ {"kind": "Book", "title": "Reinforcement Learning: An Introduction (Sutton & Barto)", "url": "http://incompleteideas.net/book/ebook/the-book.html"},
+ {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}
+]

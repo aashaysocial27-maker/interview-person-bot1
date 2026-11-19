@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Candidate generation overview (Google Recommendation Systems course)", "url": "https://developers.google.com/machine-learning/recommendation/overview/candidate-generation"},
+ {"kind": "Course", "title": "Collaborative filtering: advantages and disadvantages (Google)", "url": "https://developers.google.com/machine-learning/recommendation/collaborative/summary"},
+ {"kind": "Course", "title": "Recommendation Systems course summary (Google)", "url": "https://developers.google.com/machine-learning/recommendation/summary"},
+ {"kind": "Reference", "title": "Machine Learning Glossary: Recommendation Systems (Google)", "url": "https://developers.google.com/machine-learning/glossary/recsystems"}
+]

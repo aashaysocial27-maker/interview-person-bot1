@@ -1,0 +1,5 @@
+[
+ {"kind": "Book", "title": "Forecasting: Principles and Practice (Hyndman & Athanasopoulos, free online)", "url": "https://otexts.com/fpp2/index.html"},
+ {"kind": "Book", "title": "Time series cross-validation (Forecasting: Principles and Practice, 3rd ed.)", "url": "https://otexts.com/fpp3/tscv.html"},
+ {"kind": "Docs", "title": "Cross-validation, incl. time series splits (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"}
+]
