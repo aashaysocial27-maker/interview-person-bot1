@@ -244,6 +244,44 @@ tr:last-child td{border-bottom:none}
 /* plain list inside lessons */
 .plain-list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:66ch}
 
+/* projects */
+.proj-new{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) auto;gap:8px;align-items:end}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;color:var(--muted);font-weight:500}
+.field input{font:inherit;font-size:14px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0;width:100%}
+.field input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+.proj{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.proj-top{display:flex;justify-content:space-between;gap:12px;align-items:start}
+.proj-top h3{font-size:19px}
+.proj-top p{color:var(--muted);font-size:14px;margin-top:4px;overflow-wrap:anywhere}
+.proj-date{font:12px var(--mono);color:var(--muted)}
+.proj-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pane{background:var(--sunk);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pane h4{margin:0;font:600 14px var(--display);display:flex;justify-content:space-between;align-items:baseline}
+.pane h4 span{font:12px var(--mono);color:var(--muted);font-weight:400}
+.items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.item{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.item .ic{flex:0 0 auto;font:600 10px var(--mono);text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border-radius:5px;padding:3px 5px;min-width:34px;text-align:center}
+.item .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.item a{color:var(--fg);font-weight:500;font-size:14px;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item a:hover{color:var(--accent);text-decoration:underline}
+.item small{font:12px var(--mono);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.x{flex:0 0 auto;background:none;border:1px solid transparent;border-radius:6px;color:var(--muted);font-size:13px;padding:2px 8px}
+.x:hover{border-color:var(--line);color:var(--bad)}
+.x.confirm{border-color:var(--bad);color:var(--bad);background:var(--bad-soft)}
+.empty-row{font-size:13px;color:var(--muted)}
+.mini-form{display:flex;flex-wrap:wrap;gap:6px}
+.mini-form input{flex:1 1 120px;font:inherit;font-size:13px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 9px;min-width:0}
+.mini-form .btn{padding:6px 12px}
+.drop{border:1.5px dashed var(--line);border-radius:8px;padding:12px;text-align:center;font-size:13px;color:var(--muted);background:var(--surface);cursor:pointer}
+.drop.over{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.drop b{color:var(--accent)}
+.msg{font-size:13px;color:var(--muted)}
+.msg.err{color:var(--bad)}
+.msg.ok{color:var(--ok)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:640px){.proj-new,.proj-cols{grid-template-columns:1fr}}
+
 /* attachment card */
 .attach{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;min-width:0}
 .attach-head{display:flex;gap:14px;align-items:center;min-width:0}
@@ -478,7 +516,8 @@ const store = {
 };
 let done = store.get("fieldnotes-done", {});
 let current = SESSIONS.find(s => "#" + s.id === location.hash) || SESSIONS[0];
-let view = location.hash === "#learning-concepts" ? "concepts" : "topic";
+const viewFromHash = () => location.hash === "#learning-concepts" ? "concepts" : location.hash === "#projects" ? "projects" : "topic";
+let view = viewFromHash();
 const $ = s => document.querySelector(s);
 const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -486,8 +525,9 @@ function renderTabs(){
   $("#tabs").innerHTML = SESSIONS.map(s =>
     `<button class="tab" role="tab" aria-selected="${s === current}" data-id="${s.id}">${esc(s.label)}</button>`
   ).join("") + `<button class="tab concept" role="tab" aria-selected="${view === "concepts"}" data-id="learning-concepts">Learning Concepts</button>`
+    + `<button class="tab concept" role="tab" aria-selected="${view === "projects"}" data-id="projects">Projects</button>`
     + `<span class="tab add" aria-hidden="true">+ next topic</span>`;
-  if (view === "concepts") $("#tabs").querySelectorAll(".tab:not(.concept)").forEach(b => b.setAttribute("aria-selected", "false"));
+  if (view !== "topic") $("#tabs").querySelectorAll(".tab:not(.concept)").forEach(b => b.setAttribute("aria-selected", "false"));
   $("#tabs").querySelectorAll("[data-id]").forEach(b => b.onclick = () => { location.hash = b.dataset.id; });
 }
 
@@ -504,8 +544,9 @@ const chev = `<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentC
 function render(){
   renderTabs();
   stopMolecules();
-  $(".progress").hidden = view === "concepts";
+  $(".progress").hidden = view !== "topic";
   if (view === "concepts") return renderConcepts();
+  if (view === "projects") return renderProjects();
   $("#lede").textContent = current.intro;
   const s = current;
   let h = `<div class="section"><div class="toolbar"><div><span class="eyebrow">Topic ${SESSIONS.indexOf(s) + 1}</span><h2>${esc(s.title)}</h2></div>
@@ -553,6 +594,152 @@ function lessonCard(l, i, key){
 
 const REPO = "aashaysocial27-maker/interview-person-bot1";
 function bindNotebook(){}
+
+/* ============================================================
+   PROJECTS — stored in the page's shared database (db) and file store (assets).
+   Collection "projects": {name, summary, createdAt, links:[{title,url,addedAt}], files:[{id,name,type,size,addedAt}]}
+   ============================================================ */
+const P = { db: null, assets: null, user: null, ready: false, failed: "", list: [], subscribed: false, msgs: {} };
+const FILE_TYPES = { pdf:"application/pdf", png:"image/png", jpg:"image/jpeg", jpeg:"image/jpeg", gif:"image/gif", webp:"image/webp",
+  svg:"image/svg+xml", mp4:"video/mp4", webm:"video/webm", csv:"text/csv", md:"text/markdown", json:"application/json", txt:"text/plain" };
+const ACCEPT = Object.keys(FILE_TYPES).map(e => "." + e).join(",");
+const fmtSize = b => b < 1024 ? b + " B" : b < 1048576 ? (b / 1024).toFixed(0) + " KB" : (b / 1048576).toFixed(1) + " MB";
+const fmtDate = t => { try { return new Date(t).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }); } catch(e){ return ""; } };
+const safeUrl = u => { try { const x = new URL(u); return /^https?:$/.test(x.protocol) ? x.href : ""; } catch(e){ return ""; } };
+const UPLOAD_ERR = { too_large: "That file is over 20 MB. Compress it or split it, then try again.",
+  unsupported_type: "That file type can't be attached. Use PDF, an image, a video (MP4/WebM), or a text, Markdown, CSV or JSON file.",
+  quota_or_state: "This page's storage is full. Remove an attachment you no longer need, then try again.",
+  rate_limited: "Too many uploads at once. Wait a moment, then try again.",
+  not_granted: "Uploading needs edit access to this page.", upstream_auth: "Your session expired. Reload the page and sign in again." };
+
+async function initProjects(){
+  if (P.subscribed) return; P.subscribed = true;
+  let timer = setTimeout(() => { if (!P.ready){ P.failed = "Projects didn't load. Reload the page to try again."; if (view === "projects") renderProjects(); } }, 10000);
+  try { P.db = await claude.use("db"); } catch(e){ P.db = null; }
+  if (!P.db){ clearTimeout(timer); P.failed = "Projects are saved to your claude.ai account. Open this page signed in to claude.ai to see and add them."; if (view === "projects") renderProjects(); return; }
+  claude.use("assets").then(a => { P.assets = a; if (view === "projects") renderProjects(); }).catch(() => {});
+  claude.use("user").then(u => { P.user = u; if (view === "projects") renderProjects(); }).catch(() => {});
+  P.db.collection("projects").orderBy("createdAt", "desc").onSnapshot(snap => {
+    clearTimeout(timer); P.ready = true; P.failed = "";
+    P.list = snap.docs.map(d => ({ id: d.id, ...(d.data() || {}) }));
+    if (view === "projects") renderProjects();
+  }, err => { clearTimeout(timer); P.failed = "Projects couldn't load (" + (err && err.code || "error") + "). Reload the page to try again."; if (view === "projects") renderProjects(); });
+}
+
+function canWrite(){ const c = P.user && P.user.can ? P.user.can("data.write") : null; return c !== false; }
+
+function renderProjects(){
+  $("#lede").textContent = "Document your projects: add links and attach project details.";
+  const w = P.db && canWrite();
+  let h = `<div class="section"><div><span class="eyebrow">Projects</span><h2>My projects</h2></div>`;
+  if (w) h += `<form class="card proj-new" id="newProj">
+      <div class="field"><label for="pName">Project name</label><input id="pName" maxlength="120" required placeholder="e.g. Procurement clause extractor"></div>
+      <div class="field"><label for="pSummary">Short description (optional)</label><input id="pSummary" maxlength="300" placeholder="What it does, in one line"></div>
+      <button class="btn" type="submit">Add project</button>
+    </form><p class="msg" id="newMsg" aria-live="polite"></p>`;
+  if (P.failed) h += `<div class="empty">${esc(P.failed)}</div>`;
+  else if (!P.ready) h += `<div class="empty">Loading projects…</div>`;
+  else if (!P.list.length) h += `<div class="empty">No projects yet.${w ? " Add your first one above, then add its links and attach its files." : ""}</div>`;
+  else h += P.list.map(pr => projectCard(pr, w)).join("");
+  h += `</div>`;
+  $("#main").innerHTML = h;
+  bindProjects();
+}
+
+function projectCard(pr, w){
+  const links = Array.isArray(pr.links) ? pr.links : [], files = Array.isArray(pr.files) ? pr.files : [];
+  const m = P.msgs[pr.id] || {};
+  const linkItems = links.length ? links.map((l, i) => { const u = safeUrl(l.url); return `<li class="item"><span class="ic">link</span>
+      <span class="tx">${u ? `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(l.title || u)}</a>` : `<span>${esc(l.title || "")}</span>`}<small>${esc(u || String(l.url || ""))}</small></span>
+      ${w ? `<button class="x" data-act="rmLink" data-p="${esc(pr.id)}" data-i="${i}" aria-label="Remove link">Remove</button>` : ""}</li>`; }).join("")
+    : `<li class="empty-row">No links yet.</li>`;
+  const fileItems = files.length ? files.map((f, i) => { const ext = (String(f.name || "").split(".").pop() || "file").slice(0, 4);
+      return `<li class="item"><span class="ic">${esc(ext)}</span>
+      <span class="tx"><a href="/_blob/${encodeURIComponent(f.id || "")}" target="_blank" rel="noopener">${esc(f.name || "Attachment")}</a><small>${fmtSize(+f.size || 0)} · added ${esc(fmtDate(f.addedAt))}</small></span>
+      ${w && P.assets ? `<button class="x" data-act="rmFile" data-p="${esc(pr.id)}" data-i="${i}" aria-label="Remove attachment">Remove</button>` : ""}</li>`; }).join("")
+    : `<li class="empty-row">No attachments yet.</li>`;
+  return `<article class="proj" data-id="${esc(pr.id)}">
+    <div class="proj-top"><div><h3>${esc(pr.name || "Untitled project")}</h3>${pr.summary ? `<p>${esc(pr.summary)}</p>` : ""}<span class="proj-date">Added ${esc(fmtDate(pr.createdAt))}</span></div>
+      ${w ? `<button class="x" data-act="rmProj" data-p="${esc(pr.id)}">Delete project</button>` : ""}</div>
+    <div class="proj-cols">
+      <div class="pane"><h4>Links <span>${links.length}</span></h4><ul class="items">${linkItems}</ul>
+        ${w ? `<form class="mini-form" data-act="addLink" data-p="${esc(pr.id)}">
+          <label class="sr" for="lt-${esc(pr.id)}">Link title</label><input id="lt-${esc(pr.id)}" name="title" maxlength="120" placeholder="Title (e.g. Demo, GitHub repo)">
+          <label class="sr" for="lu-${esc(pr.id)}">Link URL</label><input id="lu-${esc(pr.id)}" name="url" maxlength="2000" placeholder="https://…" required>
+          <button class="btn" type="submit">Add link</button></form>` : ""}
+        <p class="msg ${m.linkErr ? "err" : ""}" aria-live="polite">${esc(m.link || "")}</p></div>
+      <div class="pane"><h4>Attachments <span>${files.length}</span></h4><ul class="items">${fileItems}</ul>
+        ${w && P.assets ? `<label class="drop" data-drop="${esc(pr.id)}"><input type="file" class="sr" accept="${ACCEPT}" multiple data-file="${esc(pr.id)}">
+          <b>Choose files</b> or drop them here<br><small>PDF, images, MP4/WebM, text, Markdown, CSV, JSON · up to 20 MB each</small></label>`
+          : w ? `<p class="msg">Attaching files needs edit access to this page.</p>` : ""}
+        <p class="msg ${m.fileErr ? "err" : m.fileOk ? "ok" : ""}" aria-live="polite">${esc(m.file || "")}</p></div>
+    </div></article>`;
+}
+
+function setMsg(id, patch){ P.msgs[id] = { ...(P.msgs[id] || {}), ...patch }; }
+const projDoc = id => P.db.collection("projects").doc(id);
+const findProj = id => P.list.find(p => p.id === id);
+
+function bindProjects(){
+  const nf = $("#newProj");
+  if (nf) nf.onsubmit = async e => { e.preventDefault();
+    const name = $("#pName").value.trim(), summary = $("#pSummary").value.trim();
+    if (!name){ $("#newMsg").textContent = "Give the project a name."; return; }
+    nf.querySelector("button").disabled = true;
+    try { await P.db.collection("projects").add({ name, summary, createdAt: new Date().toISOString(), links: [], files: [] }); }
+    catch(err){ $("#newMsg").textContent = "Couldn't add the project (" + (err && err.code || "error") + "). Try again."; nf.querySelector("button").disabled = false; }
+  };
+  document.querySelectorAll('form[data-act="addLink"]').forEach(f => f.onsubmit = async e => { e.preventDefault();
+    const id = f.dataset.p, pr = findProj(id); if (!pr) return;
+    let url = f.url.value.trim(); if (url && !/^[a-z]+:\/\//i.test(url)) url = "https://" + url;
+    if (!safeUrl(url)){ setMsg(id, { link: "Enter a web address starting with http:// or https://.", linkErr: true }); return renderProjects(); }
+    const links = (pr.links || []).concat({ title: f.title.value.trim() || new URL(url).hostname, url: safeUrl(url), addedAt: new Date().toISOString() });
+    setMsg(id, { link: "", linkErr: false });
+    try { await projDoc(id).update({ links }); } catch(err){ setMsg(id, { link: "Couldn't save the link (" + (err && err.code || "error") + ").", linkErr: true }); renderProjects(); }
+  });
+  document.querySelectorAll("[data-file]").forEach(inp => inp.onchange = () => { uploadFiles(inp.dataset.file, [...inp.files]); inp.value = ""; });
+  document.querySelectorAll("[data-drop]").forEach(d => {
+    d.ondragover = e => { e.preventDefault(); d.classList.add("over"); };
+    d.ondragleave = () => d.classList.remove("over");
+    d.ondrop = e => { e.preventDefault(); d.classList.remove("over"); uploadFiles(d.dataset.drop, [...e.dataTransfer.files]); };
+  });
+  document.querySelectorAll("button.x[data-act]").forEach(b => b.onclick = async () => {
+    if (!b.classList.contains("confirm")){ b.classList.add("confirm"); b.dataset.label = b.textContent; b.textContent = "Click again to confirm";
+      setTimeout(() => { if (b.isConnected){ b.classList.remove("confirm"); b.textContent = b.dataset.label; } }, 4000); return; }
+    const id = b.dataset.p, pr = findProj(id); if (!pr) return; b.disabled = true;
+    try {
+      if (b.dataset.act === "rmLink") await projDoc(id).update({ links: (pr.links || []).filter((_, i) => i !== +b.dataset.i) });
+      if (b.dataset.act === "rmFile"){ const f = (pr.files || [])[+b.dataset.i];
+        await projDoc(id).update({ files: (pr.files || []).filter((_, i) => i !== +b.dataset.i) });
+        if (f && f.id && P.assets) await P.assets.delete(f.id).catch(() => {}); }
+      if (b.dataset.act === "rmProj"){ await projDoc(id).delete();
+        if (P.assets) for (const f of pr.files || []) if (f.id) await P.assets.delete(f.id).catch(() => {}); }
+    } catch(err){ b.disabled = false; b.textContent = "Couldn't remove (" + (err && err.code || "error") + ")"; }
+  });
+}
+
+let uploading = false;
+async function uploadFiles(id, files){
+  if (!files.length || !P.assets) return;
+  if (uploading){ setMsg(id, { file: "An upload is already running. Wait for it to finish.", fileErr: true }); return renderProjects(); }
+  uploading = true;
+  let added = [], errs = [];
+  for (const f of files){
+    const ext = (f.name.split(".").pop() || "").toLowerCase(), type = FILE_TYPES[ext];
+    if (!type){ errs.push(f.name + ": " + UPLOAD_ERR.unsupported_type); continue; }
+    setMsg(id, { file: "Uploading " + f.name + "…", fileErr: false, fileOk: false }); renderProjects();
+    try { const r = await P.assets.upload(f, { type });
+      added.push({ id: r.id, name: f.name, type: r.contentType, size: r.sizeBytes, addedAt: new Date().toISOString() }); }
+    catch(err){ errs.push(f.name + ": " + (UPLOAD_ERR[err && err.code] || "Upload failed. Try again.")); }
+  }
+  if (added.length){ const pr = findProj(id);
+    try { await projDoc(id).update({ files: ((pr && pr.files) || []).concat(added) }); }
+    catch(err){ errs.push("Saved the files but couldn't list them (" + (err && err.code || "error") + ")."); } }
+  uploading = false;
+  setMsg(id, errs.length ? { file: errs.join(" "), fileErr: true, fileOk: false }
+    : { file: "Attached " + added.length + " file" + (added.length === 1 ? "" : "s") + ".", fileErr: false, fileOk: true });
+  renderProjects();
+}
 
 /* ============================================================
    LEARNING CONCEPTS — short explainers, one sub-tab each.
@@ -939,10 +1126,11 @@ function quiz(errors){
 }
 
 window.addEventListener("hashchange", () => {
-  view = location.hash === "#learning-concepts" ? "concepts" : "topic";
+  view = viewFromHash();
   current = SESSIONS.find(s => "#" + s.id === location.hash) || SESSIONS[0]; render();
   const first = document.querySelector(".lesson"); if (first) toggle(first, true);
 });
+initProjects();
 render();
 const firstLesson = document.querySelector(".lesson"); if (firstLesson) toggle(firstLesson, true);
 </script>
