@@ -449,6 +449,7 @@ const SESSIONS = [
       "PM takeaway",
       "a chatbot's quality depends on the model and on what context you give it. Memory, system prompts, history limits and cost are product decisions, not just engineering ones. That's the foundation for retrieval-based assistants (RAG) and AI agents."
     ],
+    "groups": [{"id": "sp", "title": "System prompts", "intro": "Here's what system prompts teach you:", "lessons": [{"title": "There are two layers of instruction.", "body": ["<ul class=\"plain-list\"><li><b>System prompt:</b> the bot's permanent job, rules and style. It's set by the builder and the user doesn't see it.</li><li><b>User prompt:</b> the question being asked right now.</li></ul>", "This is how one model becomes a fitness coach, a procurement assistant or a contract reviewer, without changing the model itself."]}, {"title": "It's the cheapest way to shape behaviour.", "body": ["Format (\"3 bullet points\"), tone (\"friendly\"), scope (\"only answer procurement questions\") and language are all controlled with plain English, with no training or extra code."]}, {"title": "Each platform puts it in a different place:", "body": ["Gemini in the config, OpenAI and Groq as a \"system\" message, Claude in a separate <code>system=</code> setting. The concept is the same everywhere."]}, {"title": "Rules must be clear and must not contradict each other.", "body": ["\"Always English, but follow the user\" leaves the model guessing. Good system prompts say which rule wins."]}, {"title": "Users can try to override it.", "body": ["Asking for Hindi tests whether the system prompt holds. In real products, this is where security issues like prompt injection (\"ignore your instructions…\") start."]}, {"title": "Models obey differently.", "body": ["The same system prompt can behave differently across Gemini, GPT, Claude and Llama, so always test it on the model you'll actually use."]}], "takeaway": ["PM takeaway", "the system prompt is effectively the product specification for an AI feature. It defines the role, the boundaries, the format and the fallback rules. Writing, testing and versioning it carefully is a core AI product skill, much like writing good requirements."]}],
     "notebooks": [
       {
         "file": "Basic_Chatbots_for_all_models_using_python_Explained.ipynb",
@@ -464,7 +465,8 @@ const SESSIONS = [
           "Antropic Claud Chatbot",
           "Groq Chat Bot"
         ]
-      }
+      },
+      {"file": "System_Prompt_Chatbot.ipynb", "path": "guide/System_Prompt_Chatbot.ipynb", "kb": 51, "cells": 19, "code": 14, "outputs": true, "sections": ["2. System Prompt", "OPEN AI", "Antropic Claud", "Groq", "Here's what system prompts teach you"]}
     ]
   }
 ];
@@ -490,8 +492,9 @@ function renderTabs(){
 }
 
 function progress(){
-  const n = current.lessons.length;
-  const c = current.lessons.filter((_, i) => done[current.id + ":" + i]).length;
+  const keys = current.lessons.map((_, i) => current.id + ":" + i)
+    .concat(...(current.groups || []).map(g => g.lessons.map((_, i) => current.id + ":" + g.id + ":" + i)));
+  const n = keys.length, c = keys.filter(k => done[k]).length;
   $("#pcount").textContent = c; $("#ptotal").textContent = n;
   $("#pbar").style.width = (n ? c / n * 100 : 0) + "%";
 }
@@ -507,19 +510,7 @@ function render(){
   const s = current;
   let h = `<div class="section"><div class="toolbar"><div><span class="eyebrow">Topic ${SESSIONS.indexOf(s) + 1}</span><h2>${esc(s.title)}</h2></div>
     <button class="linkbtn" id="expandAll">Expand all</button></div>` + (s.start ? startView(s.start) : "");
-  s.lessons.forEach((l, i) => {
-    const key = s.id + ":" + i, isDone = !!done[key];
-    h += `<article class="lesson ${isDone ? "done" : ""}" data-i="${i}">
-      <button class="lesson-head" aria-expanded="false" aria-controls="lb${i}">
-        <span class="num">${i + 1}</span><h3>${l.title}</h3>${chev}</button>
-      <div class="lesson-body" id="lb${i}" hidden>
-        ${l.body.map(p => p.startsWith("<ul") ? p : `<p>${p}</p>`).join("")}
-        ${l.diagram ? diagram(l.diagram) : ""}
-        ${l.widget ? widget(l.widget, s) : ""}
-        ${(l.after || []).map(p => `<p>${p}</p>`).join("")}
-        <button class="done-toggle" data-key="${key}">${isDone ? "✓ Understood" : "Mark as understood"}</button>
-      </div></article>`;
-  });
+  s.lessons.forEach((l, i) => { h += lessonCard(l, i, s.id + ":" + i); });
   h += `</div>`;
 
   if (s.pm) h += `<div class="section" style="margin-top:20px"><div><span class="eyebrow">Product view</span><h2>${esc(s.pmIntro)}</h2></div>
@@ -527,6 +518,13 @@ function render(){
     ${s.pmDiagrams ? `<div class="pm-dgs">${s.pmDiagrams.map(diagram).join("")}</div>` : ""}</div>`;
 
   if (s.takeaway) h += `<div class="next" style="margin-top:20px"><p><b>${esc(s.takeaway[0])}:</b> ${esc(s.takeaway[1])}</p></div>`;
+
+  (s.groups || []).forEach(g => {
+    h += `<div class="section" style="margin-top:28px"><div><span class="eyebrow">Concept</span><h2>${esc(g.title)}</h2><p class="lede" style="margin-top:6px">${esc(g.intro)}</p></div>`;
+    g.lessons.forEach((l, i) => { h += lessonCard(l, i, s.id + ":" + g.id + ":" + i); });
+    h += `</div>`;
+    if (g.takeaway) h += `<div class="next" style="margin-top:20px"><p><b>${esc(g.takeaway[0])}:</b> ${esc(g.takeaway[1])}</p></div>`;
+  });
 
   if (s.next) h += `<div class="next" style="margin-top:20px"><span class="eyebrow">Next step</span><p>${esc(s.next)}</p>
     <div class="fields">${s.nextFields.map(f => `<span class="tag">"${esc(f)}": …</span>`).join("")}</div></div>`;
@@ -537,6 +535,20 @@ function render(){
   bindNotebook();
   bind();
   progress();
+}
+
+function lessonCard(l, i, key){
+  const isDone = !!done[key], uid = key.replace(/[^a-z0-9]/gi, "-");
+  return `<article class="lesson ${isDone ? "done" : ""}" data-i="${i}">
+      <button class="lesson-head" aria-expanded="false" aria-controls="lb-${uid}">
+        <span class="num">${i + 1}</span><h3>${l.title}</h3>${chev}</button>
+      <div class="lesson-body" id="lb-${uid}" hidden>
+        ${l.body.map(p => p.startsWith("<ul") ? p : `<p>${p}</p>`).join("")}
+        ${l.diagram ? diagram(l.diagram) : ""}
+        ${l.widget ? widget(l.widget, current) : ""}
+        ${(l.after || []).map(p => `<p>${p}</p>`).join("")}
+        <button class="done-toggle" data-key="${key}">${isDone ? "✓ Understood" : "Mark as understood"}</button>
+      </div></article>`;
 }
 
 const REPO = "aashaysocial27-maker/interview-person-bot1";
