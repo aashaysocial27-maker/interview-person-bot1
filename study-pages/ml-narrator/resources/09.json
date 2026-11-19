@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Gradient Boosted Decision Trees (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/intro-to-gbdt"},
+ {"kind": "Course", "title": "Overfitting, regularization and early stopping in boosting (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/overfitting-gbdt"},
+ {"kind": "Docs", "title": "Introduction to Boosted Trees (XGBoost docs)", "url": "https://xgboost.readthedocs.io/en/stable/tutorials/model.html"},
+ {"kind": "Docs", "title": "Ensembles: gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}
+]

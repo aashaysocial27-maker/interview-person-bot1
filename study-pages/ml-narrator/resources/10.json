@@ -1,0 +1,5 @@
+[
+ {"kind": "Docs", "title": "Supervised learning guide: nearest neighbors, SVMs, naive Bayes (scikit-learn)", "url": "https://scikit-learn.org/stable/supervised_learning.html"},
+ {"kind": "Course", "title": "Classification: thresholds and confusion matrix (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification"},
+ {"kind": "Reference", "title": "Machine Learning Glossary (Google)", "url": "https://developers.google.com/machine-learning/glossary"}
+]

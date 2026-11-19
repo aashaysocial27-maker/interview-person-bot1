@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Decision trees (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/decision-trees"},
+ {"kind": "Course", "title": "Random forests (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/random-forests"},
+ {"kind": "Course", "title": "Decision Forests course introduction (Google)", "url": "https://developers.google.com/machine-learning/decision-forests"},
+ {"kind": "Docs", "title": "Ensembles: random forests and gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}
+]

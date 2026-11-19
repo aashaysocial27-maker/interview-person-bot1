@@ -518,12 +518,48 @@ const CONCEPTS = [
     { h: "How it connects", text: "In the Foundations group, we learned how data, features and testing work. This is the first Classic Model, and it is the same function we met in What Is Machine Learning. Next, in Decision Trees and Random Forests, we meet models that ask a series of yes or no questions, and can capture the curves and interactions a straight line misses." },
   ]
 },
-{ n: 8, group: "Classic Models", title: "Decision Trees & Random Forests", draft: true, terms: ["Decision tree", "Random forest", "Bagging", "Feature importance"],
-  sections: [{ h: "The big idea", text: "A decision tree asks a chain of yes or no questions until it reaches an answer. One tree is easy to read but makes mistakes. A random forest trains hundreds of slightly different trees and lets them vote, which is far more accurate." }] },
-{ n: 9, group: "Classic Models", title: "Gradient Boosting", draft: true, terms: ["Boosting", "XGBoost", "LightGBM", "Tabular data"],
-  sections: [{ h: "The big idea", text: "Gradient boosting builds trees one after another, and each new tree fixes the mistakes of the ones before it. Tools like XGBoost and LightGBM are often the most accurate choice for table data, such as user records or transactions." }] },
-{ n: 10, group: "Classic Models", title: "KNN, SVM & Naive Bayes", draft: true, terms: ["K-nearest neighbors", "Support vector machine", "Naive Bayes", "Distance"],
-  sections: [{ h: "The big idea", text: "Three classic models with simple ideas. K-nearest neighbors copies the answer of the most similar past examples. A support vector machine draws the widest possible boundary between classes. Naive Bayes counts how often words appear with each answer, which made it the classic spam filter." }] },
+{
+  n: 8, group: "Classic Models", title: "Decision Trees & Random Forests",
+  terms: ["Decision tree", "Node and leaf", "Split", "Random forest", "Bagging", "Majority vote"],
+  visual: { title: "Twenty Questions, Then a Vote", note: "Trace an answer down a tree, see why one tree overfits, then let a forest vote" },
+  sections: [
+    { h: "The big idea", text: "A decision tree works like a game of twenty questions. It asks a series of yes or no questions about an example, and each answer sends it down a branch, until it reaches a final answer. One tree is easy to read, but it can be fragile. A random forest trains hundreds of slightly different trees and lets them vote, which makes it far more reliable." },
+    { h: "1 · How a tree decides", text: "Here is a small tree for our coach. The first question is, does the answer state a clear result? If no, the tree says weak. If yes, it asks a second question, does the answer have three or more specific details? If yes, strong. If no, it asks one more question about structure. The end points are called leaves, and each leaf holds a final answer. Unlike a straight line, a tree can capture combinations, like a result only counting when it comes with details." },
+    { h: "2 · How a tree is built", text: "Nobody writes these questions by hand. During training, the tree tries many possible questions and picks the one that best separates strong answers from weak ones, so each group becomes as pure as possible. Then it repeats inside each group. It keeps splitting until the groups are pure, or until it reaches a limit, such as a maximum depth." },
+    { h: "3 · The trouble with one tree", text: "Left alone, a tree keeps splitting until every leaf holds just one or two answers. Then it is memorising, not learning. It may create a rule like, mentions Kubernetes means strong, from just two examples. A single tree is also unstable. Change a few training answers, and you can get a very different tree. That is the high variance we met in Overfitting and Underfitting." },
+    { h: "4 · Random forests", text: "A random forest fixes this with teamwork. It trains many trees, often hundreds. Each tree sees a random sample of the training answers, and at each split it may only look at a random subset of features. So every tree is a little different, and makes different mistakes. To predict, all the trees vote, and the majority wins. Their individual mistakes tend to cancel out. Random forests work well with little tuning, and they can show which features mattered most." },
+    { h: "Why it matters for a PM", text: "For a PM, a single small tree is one of the easiest models to explain, you can literally print it. A random forest is a strong, low effort default for table data, like user records. Forests can rank feature importance, which is great for spotting what drives a prediction. Just remember that an important feature is not proof of cause." },
+    { h: "How it connects", text: "In Linear and Logistic Regression, the model drew straight lines. Trees can capture curves and combinations instead. Random forests build trees side by side and let them vote. Next, in Gradient Boosting, we build trees one after another, with each new tree fixing the mistakes of the last, which is often the most accurate approach for table data." },
+  ]
+},
+{
+  n: 9, group: "Classic Models", title: "Gradient Boosting",
+  terms: ["Boosting", "Residual", "Learning rate", "Early stopping", "XGBoost", "LightGBM", "CatBoost"],
+  visual: { title: "Fixing Mistakes, One Tree at a Time", note: "Add trees one by one and watch each fix what the last one missed" },
+  sections: [
+    { h: "The big idea", text: "Gradient boosting builds a team of small trees, but not side by side like a random forest. It builds them one after another. Each new tree studies the mistakes the team is still making, and learns to fix them. Added together, many small corrections make a very accurate model. For table data, like user records or transactions, it is often the most accurate choice." },
+    { h: "1 · Learning from mistakes", text: "Say we want to predict a coach's score out of ten. Start with a simple guess for everyone, the average score of five. For an answer the coach rated eight, we are three points short. That gap is called the residual, the mistake left over. Tree one learns to predict these gaps. Add its correction, and the prediction moves closer, maybe to six and a half. Tree two learns what is still missing. And so on. It is like a team of editors, each fixing the errors the previous editor left behind." },
+    { h: "2 · Small steps", text: "If each tree corrected the whole mistake at once, the model would chase noise and overfit. So each correction is scaled down by a learning rate, such as zero point one. The model takes many small steps instead of a few big jumps. It needs more trees, but it generalises better. The team watches the validation score and stops adding trees when it stops improving. That is called early stopping." },
+    { h: "3 · Boosting versus forests", text: "Both use many trees, but in opposite ways. A random forest grows deep, independent trees in parallel and averages them, which mainly reduces variance. Boosting grows small trees in sequence, each fixing the last, which mainly reduces bias. Boosting is often more accurate, but it needs more care. It has more settings to tune, and unlike a forest it can overfit if you add too many trees." },
+    { h: "4 · Why it wins on table data", text: "Popular tools include XGBoost, LightGBM and CatBoost. They are fast, they handle missing values and mixed feature types, and they regularly win competitions on table data. They are not the best choice for raw text, images or audio, where neural networks shine. But for predicting which candidates will finish the course from their usage records, boosting is usually the model to beat." },
+    { h: "Why it matters for a PM", text: "For a PM, if the data lives in tables, ask the team whether they tried gradient boosting before reaching for deep learning. It is often cheaper and more accurate. The trade offs are more tuning and less transparency than a single tree. When users or regulators need reasons, pair it with an explanation tool such as SHAP, which we cover in the Explainability concept." },
+    { h: "How it connects", text: "In Decision Trees and Random Forests, trees worked side by side and voted. Here they work in a chain, each fixing the last. The idea of taking small steps to reduce mistakes comes back in Loss Functions and Gradient Descent. Next, in KNN, SVM and Naive Bayes, we meet three more classic models, each built on a simple, clever idea." },
+  ]
+},
+{
+  n: 10, group: "Classic Models", title: "KNN, SVM & Naive Bayes",
+  terms: ["K-nearest neighbors", "Distance", "Support vector machine", "Margin", "Kernel", "Naive Bayes"],
+  visual: { title: "Three Simple Ideas", note: "Ask the neighbours, draw the widest gap, and count the words" },
+  sections: [
+    { h: "The big idea", text: "Before neural networks took over, three classic models solved many real problems, each with one simple idea. K nearest neighbours copies the answer of the most similar past examples. A support vector machine draws the widest possible gap between two groups. Naive Bayes counts how often words appear with each answer. Their ideas still live on in today's AI products." },
+    { h: "1 · K-nearest neighbours", text: "K nearest neighbours, or KNN, has almost no training at all. It simply remembers every rated answer. When a new answer arrives, it finds the k most similar past answers, say five, and takes a vote. If four of the five were strong, it predicts strong. The choice of k matters. With k equal to one, a single odd neighbour can decide everything. KNN gets slow with lots of data, and it needs features on similar scales, because it measures distance." },
+    { h: "2 · Support vector machines", text: "A support vector machine, or SVM, looks for the boundary that separates strong and weak answers with the widest possible margin, like the widest road between two neighbourhoods. The few answers that sit right at the edge of the road are the support vectors, and they alone decide where the boundary goes. A trick called a kernel lets SVMs draw curved boundaries too. They work well on small and medium datasets with many features, like text." },
+    { h: "3 · Naive Bayes", text: "Naive Bayes is built for text. It counts how often each word appears in strong answers and in weak answers. Result and launched show up mostly in strong answers. Hard worker shows up mostly in weak ones. For a new answer, it combines the evidence from every word into a probability. It is called naive because it assumes each word is independent of the others, which is not really true, yet it still works surprisingly well. It was the classic spam filter." },
+    { h: "4 · When to use which", text: "Today, gradient boosting usually wins on tables, and neural networks win on text and images. But these three remain useful. Naive Bayes is a fast, cheap first baseline for text, like tagging user feedback. SVMs do well on small, clean datasets. And the idea behind KNN, find the most similar items, powers recommendations and the vector search inside retrieval augmented generation." },
+    { h: "Why it matters for a PM", text: "For a PM, KNN is the logic behind features like users similar to you, or answers like yours. When you hear vector search or embeddings, think nearest neighbours at a huge scale. Naive Bayes is worth suggesting when you need a quick text classifier with little data. And every one of these models needs features that are scaled and meaningful, so feature engineering still matters." },
+    { h: "How it connects", text: "This completes the supervised models in our Classic Models group, from straight lines to trees to these three. Next, in Clustering and Anomaly Detection, we switch to unsupervised learning, where there are no labels at all, and the model must find groups and oddities on its own." },
+  ]
+},
 { n: 11, group: "Classic Models", title: "Clustering & Anomaly Detection", draft: true, terms: ["K-means", "Clusters", "Anomaly detection", "Outliers"],
   sections: [{ h: "The big idea", text: "Clustering groups similar items together without any labels, such as grouping candidates by the kind of mistakes they make. Anomaly detection finds the odd ones out, like fraud or a machine about to fail. Both are unsupervised learning." }] },
 { n: 12, group: "Classic Models", title: "Dimensionality Reduction", draft: true, terms: ["PCA", "t-SNE", "UMAP", "Curse of dimensionality"],
@@ -565,7 +601,7 @@ const CONCEPTS = [
 { n: 30, group: "Real-World ML", title: "MLOps", draft: true, terms: ["ML pipelines", "Feature store", "Model registry", "CI/CD for ML"],
   sections: [{ h: "The big idea", text: "MLOps is the engineering that keeps machine learning running reliably in production. It covers data pipelines, versioning of data and models, automated retraining, safe deployment and rollback. It turns a one-off experiment into a dependable product." }] }
 ];
-const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}], "5": [{"kind": "Course", "title": "Datasets: Dividing the original dataset (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets"}, {"kind": "Docs", "title": "Cross-validation: evaluating estimator performance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"}, {"kind": "Docs", "title": "Common pitfalls: data leakage (scikit-learn)", "url": "https://scikit-learn.org/stable/common_pitfalls.html"}, {"kind": "Course", "title": "Advanced Learning Algorithms: model evaluation (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/advanced-learning-algorithms"}], "6": [{"kind": "Course", "title": "Overfitting (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/overfitting"}, {"kind": "Course", "title": "Overfitting: Model complexity (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/model-complexity"}, {"kind": "Example", "title": "Underfitting vs. Overfitting, with charts (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html"}, {"kind": "Docs", "title": "Validation curves: spotting bias and variance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/learning_curve.html"}], "7": [{"kind": "Course", "title": "Linear regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"}, {"kind": "Course", "title": "Logistic regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression"}, {"kind": "Course", "title": "Calculating a probability with the sigmoid function (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/sigmoid-function"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}]};
+const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}], "5": [{"kind": "Course", "title": "Datasets: Dividing the original dataset (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets"}, {"kind": "Docs", "title": "Cross-validation: evaluating estimator performance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"}, {"kind": "Docs", "title": "Common pitfalls: data leakage (scikit-learn)", "url": "https://scikit-learn.org/stable/common_pitfalls.html"}, {"kind": "Course", "title": "Advanced Learning Algorithms: model evaluation (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/advanced-learning-algorithms"}], "6": [{"kind": "Course", "title": "Overfitting (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/overfitting"}, {"kind": "Course", "title": "Overfitting: Model complexity (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/model-complexity"}, {"kind": "Example", "title": "Underfitting vs. Overfitting, with charts (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html"}, {"kind": "Docs", "title": "Validation curves: spotting bias and variance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/learning_curve.html"}], "7": [{"kind": "Course", "title": "Linear regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"}, {"kind": "Course", "title": "Logistic regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression"}, {"kind": "Course", "title": "Calculating a probability with the sigmoid function (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/sigmoid-function"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "8": [{"kind": "Course", "title": "Decision trees (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/decision-trees"}, {"kind": "Course", "title": "Random forests (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/random-forests"}, {"kind": "Course", "title": "Decision Forests course introduction (Google)", "url": "https://developers.google.com/machine-learning/decision-forests"}, {"kind": "Docs", "title": "Ensembles: random forests and gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "9": [{"kind": "Course", "title": "Gradient Boosted Decision Trees (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/intro-to-gbdt"}, {"kind": "Course", "title": "Overfitting, regularization and early stopping in boosting (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/overfitting-gbdt"}, {"kind": "Docs", "title": "Introduction to Boosted Trees (XGBoost docs)", "url": "https://xgboost.readthedocs.io/en/stable/tutorials/model.html"}, {"kind": "Docs", "title": "Ensembles: gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "10": [{"kind": "Docs", "title": "Supervised learning guide: nearest neighbors, SVMs, naive Bayes (scikit-learn)", "url": "https://scikit-learn.org/stable/supervised_learning.html"}, {"kind": "Course", "title": "Classification: thresholds and confusion matrix (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification"}, {"kind": "Reference", "title": "Machine Learning Glossary (Google)", "url": "https://developers.google.com/machine-learning/glossary"}]};
 const ALLOWED_URLS = new Set(Object.values(RESOURCES).flat().map(r => r.url));
 function learnHtml(n) {
   const list = RESOURCES[n] || [];
@@ -1730,6 +1766,346 @@ const STEPS = [
 return { STEPS, picker: { label: "Try a line:", step: 1, items: () => LINES.map(l => ({ label: l.label, color: l.c })), get: () => li, set: i => { li = i; } } };
 })();
 VMETA[7] = {"title": "The Best Straight Line", "sub": "Fit a straight line to the interview coach's data, see how training shrinks the error, squeeze the result into a probability, and read what each weight means."};
+
+VISUALS[8] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+const edge = (x1, y1, x2, y2, on, t) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${on ? "var(--ink)" : "var(--line)"}" stroke-width="${on ? 3 : 1.5}"/><text x="${(x1 + x2) / 2 + (x2 > x1 ? 6 : -6)}" y="${(y1 + y2) / 2}" text-anchor="${x2 > x1 ? "start" : "end"}" font-size="11.5" font-weight="600" ${on ? "" : 'class="muted"'}>${t}</text>`;
+
+/* answers from earlier concepts; result? details? structured? */
+const ANS = [
+  { label: "Answer X", c: "var(--t2)", text: "“I cut onboarding time 30% by rewriting the checklist with new hires.”", r: 1, d: 3, s: 1 },
+  { label: "Answer Y", c: "var(--t4)", text: "“I'm a hard worker and I always give 110%.”", r: 0, d: 1, s: 0 },
+  { label: "Answer Z", c: "var(--warm)", text: "“I led a redesign. It went well and the team liked it.”", r: 1, d: 1, s: 0 },
+];
+let ai = 0;
+function drawTree() {
+  const a = ANS[ai];
+  const p1 = a.r ? "yes" : "no", p2 = a.r ? (a.d >= 3 ? "yes" : "no") : null, p3 = p2 === "no" ? (a.s ? "yes" : "no") : null;
+  let s = svg(360);
+  const node = (x, y, t, on) => rect(x - 105, y, 210, 40, on ? "var(--ink)" : "var(--line)", 0, on ? 2 : 1.3) + `<text x="${x}" y="${y + 25}" text-anchor="middle" font-size="12.5" font-weight="600">${t}</text>`;
+  const leaf = (x, y, t, on) => { const c = t === "strong" ? A : W; return rect(x - 45, y, 90, 34, c, on ? .35 : .1, on ? 2.2 : 1.3) + `<text x="${x}" y="${y + 22}" text-anchor="middle" class="mono" font-size="13" font-weight="700" style="fill:${c}">${t}</text>`; };
+  s += edge(320, 60, 150, 110, p1 === "no", "no") + edge(320, 60, 440, 110, p1 === "yes", "yes");
+  s += edge(440, 150, 330, 195, p2 === "no", "no") + edge(440, 150, 560, 195, p2 === "yes", "yes");
+  s += edge(330, 235, 250, 280, p3 === "no", "no") + edge(330, 235, 410, 280, p3 === "yes", "yes");
+  s += node(320, 20, "States a clear result?", true);
+  s += leaf(150, 110, "weak", p1 === "no");
+  s += node(440, 110, "3 or more specific details?", p1 === "yes");
+  s += leaf(560, 195, "strong", p2 === "yes");
+  s += node(330, 195, "Clear structure?", p2 === "no");
+  s += leaf(250, 280, "weak", p3 === "no");
+  s += leaf(410, 280, "strong", p3 === "yes");
+  s += `<text x="20" y="346" font-size="12.5"><tspan font-weight="700" style="fill:${a.c}">${a.label}:</tspan> ${a.text}</text>`;
+  s += lbl(20, 300, "LEAVES HOLD");
+  s += lbl(20, 314, "THE ANSWER");
+  return s + `</svg>`;
+}
+
+function drawSplit() {
+  let s = svg(320);
+  s += lbl(20, 22, "WHICH FIRST QUESTION SEPARATES 20 ANSWERS BEST?");
+  const opt = (x, q, l, r, good) => {
+    let o = rect(x, 34, 290, 268, good ? A : "var(--line)", good ? .06 : 0) + `<text x="${x + 145}" y="62" text-anchor="middle" font-size="13" font-weight="700">${q}</text>`;
+    [[l, "yes", x + 20], [r, "no", x + 155]].forEach(([[sN, wN], t, gx]) => {
+      o += `<text x="${gx + 57}" y="92" text-anchor="middle" font-size="12" class="muted">${t}</text>`;
+      for (let i = 0; i < sN + wN; i++) { const isS = i < sN; o += `<circle cx="${gx + 14 + (i % 5) * 22}" cy="${112 + Math.floor(i / 5) * 22}" r="8" style="fill:${isS ? A : W}" fill-opacity=".8"/>`; }
+      const pure = Math.round(Math.max(sN, wN) / (sN + wN) * 100);
+      o += `<text x="${gx + 57}" y="232" text-anchor="middle" class="mono" font-size="13" font-weight="700">${pure}% pure</text>`;
+    });
+    o += `<text x="${x + 145}" y="276" text-anchor="middle" font-size="13" font-weight="700" style="fill:${good ? A : W}">${good ? "✓ Better split" : "✗ Groups still mixed"}</text>`;
+    return o;
+  };
+  s += opt(20, "Longer than 60 seconds?", [6, 5], [4, 5], 0);
+  s += opt(330, "States a clear result?", [9, 1], [1, 9], 1);
+  s += `<text x="20" y="316" font-size="11" class="muted">● strong  ● weak. Counts are illustrative. Training tries many questions and keeps the purest split.</text>`;
+  return s + `</svg>`;
+}
+
+function drawDeep() {
+  let s = svg(320);
+  s += lbl(20, 22, "A TREE LEFT TO GROW UNTIL EVERY LEAF IS PURE");
+  const lv = [[320], [170, 470], [95, 245, 395, 545], [55, 135, 205, 285, 355, 435, 505, 585]];
+  lv.forEach((row, d) => row.forEach((x, i) => {
+    if (d < 3) { const kids = lv[d + 1]; s += `<line x1="${x}" y1="${44 + d * 62 + 14}" x2="${kids[i * 2]}" y2="${44 + (d + 1) * 62}" style="stroke:var(--line)" stroke-width="1.4"/><line x1="${x}" y1="${44 + d * 62 + 14}" x2="${kids[i * 2 + 1]}" y2="${44 + (d + 1) * 62}" style="stroke:var(--line)" stroke-width="1.4"/>`; }
+  }));
+  lv.forEach((row, d) => row.forEach((x, i) => {
+    const y = 44 + d * 62;
+    if (d < 3) s += `<circle cx="${x}" cy="${y + 7}" r="9" style="fill:var(--surface);stroke:var(--ink)" stroke-width="1.3"/>`;
+    else { const c = i % 3 ? W : A; s += `<rect x="${x - 26}" y="${y}" width="52" height="26" rx="5" style="fill:${c};stroke:${c}" fill-opacity=".15"/><text x="${x}" y="${y + 17}" text-anchor="middle" font-size="10.5" class="mono">${i === 5 ? "2 ans." : "1 ans."}</text>`; }
+  }));
+  s += `<path d="M435 228 q 10 30 -40 44" fill="none" style="stroke:${W}" stroke-width="1.5" marker-end="url(#ah)"/>`;
+  s += rect(150, 268, 330, 40, W, .1) + `<text x="315" y="293" text-anchor="middle" font-size="12.5" style="fill:${W}" font-weight="600">“mentions Kubernetes → strong” from 2 answers</text>`;
+  return s + `</svg>`;
+}
+
+const VOTES = ["strong", "strong", "weak", "strong", "strong"];
+function drawForest() {
+  let s = svg(330);
+  s += lbl(20, 22, "5 TREES · EACH TRAINED ON A RANDOM SAMPLE · ANSWER X");
+  VOTES.forEach((v, i) => {
+    const x = 70 + i * 125, c = v === "strong" ? A : W;
+    s += `<path d="M${x} 40 l -36 60 h 72 z" style="fill:${G};stroke:${G}" fill-opacity=".12" stroke-width="1.3"/>`;
+    s += `<path d="M${x} 52 l -18 30 M${x} 52 l 18 30 M${x - 18} 82 l -10 14 M${x - 18} 82 l 10 14 M${x + 18} 82 l 10 14" style="stroke:var(--muted)" stroke-width="1.2" fill="none"/>`;
+    s += `<rect x="${x - 6}" y="100" width="12" height="16" style="fill:var(--muted)" fill-opacity=".5"/>`;
+    s += `<text x="${x}" y="134" text-anchor="middle" font-size="12" class="muted">Tree ${i + 1}</text>`;
+    s += rect(x - 42, 144, 84, 30, c, .15) + `<text x="${x}" y="164" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" style="fill:${c}">${v}</text>`;
+    s += `<line x1="${x}" y1="176" x2="320" y2="214" style="stroke:var(--line)" stroke-width="1.3"/>`;
+  });
+  s += rect(200, 216, 240, 52, A, .18, 2) + `<text x="320" y="240" text-anchor="middle" font-size="14" font-weight="700" style="fill:${A}">Majority vote: strong</text><text x="320" y="258" text-anchor="middle" class="mono" font-size="12">4 of 5 trees · 80%</text>`;
+  s += `<text x="20" y="298" font-size="12.5">Each tree makes different mistakes. Tree 3 is wrong, but the vote overrules it.</text>`;
+  s += `<text x="20" y="318" font-size="11" class="muted">Real forests use hundreds of trees. Votes are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "The tree", title: "1 · How a tree decides", q: "How does a tree judge an answer?",
+    points: ["The tree asks yes or no questions, starting at the top.", "Each answer sends the example down one branch.", "The end points, called <b>leaves</b>, hold the final answer.", "Pick an answer above the diagram to trace its path."],
+    pm: "A small tree is one of the most explainable models there is. You can show a user exactly why: “no clear result, so weak”.",
+    say: "Step one, how a tree decides. The tree starts at the top, with one question. Does the answer state a clear result? Answer X does, so it goes right. Next question. Does it have three or more specific details? Yes, so it lands on strong. Now try answer Z. It states a result, but has only one detail, so the tree asks one more question about structure. Its structure is unclear, so it lands on weak. Each end point is a leaf, holding the final answer.",
+    draw: drawTree },
+  { stage: "Splits", title: "2 · How a tree is built", q: "Who chooses the questions?",
+    points: ["Training tries many possible questions at each step.", "It keeps the one that makes the groups <b>purest</b>: mostly strong on one side, mostly weak on the other.", "“Longer than 60 seconds?” barely helps. “States a clear result?” separates well.", "Then it repeats inside each group."],
+    pm: "The first split is usually the single most informative signal in your data. It's a quick way to learn what really drives the outcome.",
+    say: "Step two, how a tree is built. Nobody writes these questions. Training tries lots of them and keeps the one that makes the purest groups. Look at the left. Longer than sixty seconds leaves both groups mixed. Now the right. States a clear result puts nine strong answers on one side and nine weak ones on the other. That's a much better split, so the tree uses it, and then repeats inside each group.",
+    draw: drawSplit },
+  { stage: "Too deep", title: "3 · The trouble with one tree", q: "What happens if the tree keeps growing?",
+    points: ["Left alone, a tree splits until each leaf holds one or two answers.", "That's <b>memorising</b>: rules like “mentions Kubernetes → strong” from 2 examples.", "One tree is also unstable: change a few answers and the whole tree changes.", "Limits like maximum depth help, but a forest helps more."],
+    pm: "If a tree's rules sound oddly specific when you read them, the tree is overfitting. Ask the team to limit its depth.",
+    say: "Step three, the trouble with one tree. If we let a tree keep growing, it splits until every leaf holds just one or two answers. Now it's memorising. It might invent a rule like, mentions Kubernetes means strong, from only two examples. A single tree is also unstable. Change a few training answers, and you can get a completely different tree. That's high variance.",
+    draw: drawDeep },
+  { stage: "Forest", title: "4 · Random forests", q: "How do many trees beat one?",
+    points: ["Train many trees, each on a <b>random sample</b> of answers and features.", "Each tree is a little different and makes different mistakes.", "To predict, the trees <b>vote</b>. The majority wins.", "Mistakes cancel out, so the forest is far more reliable."],
+    pm: "Random forests are a great low-effort default for table data. They also rank feature importance, but important doesn't mean it causes the outcome.",
+    say: "Step four, random forests. Instead of one tree, we train many. Each tree sees a random sample of the answers, and a random subset of the features, so each one turns out a little different. For answer X, four trees say strong and one says weak. The majority wins, so the forest says strong, with eighty percent of the votes. Each tree makes different mistakes, and the vote cancels them out.",
+    draw: drawForest },
+];
+return { STEPS, picker: { label: "Trace an answer:", step: 0, items: () => ANS.map(a => ({ label: a.label, color: a.c })), get: () => ai, set: i => { ai = i; } } };
+})();
+VMETA[8] = {"title": "Twenty Questions, Then a Vote", "sub": "Trace interview answers down a decision tree, see how the questions are chosen and why one deep tree memorises, then watch a random forest vote."};
+
+VISUALS[9] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)") => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="1.5" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+
+/* 5 answers, true coach scores; each tree closes 50% of the remaining gap (illustrative) */
+const TRUE = [8, 3, 6.5, 9, 4.5], NAMES = ["Ans 1", "Ans 2", "Ans 3", "Ans 4", "Ans 5"], START = 5;
+const STAGES = [0, 1, 2, 3, 10];
+const pred = (t, k) => t + (START - t) * Math.pow(0.5, k);
+let si = 1;
+function drawSteps() {
+  const k = STAGES[si];
+  let s = svg(370);
+  const X0 = 70, Y0 = 300, H = 24, colW = 105;
+  for (let v = 0; v <= 10; v += 2) s += `<line x1="${X0 - 10}" y1="${Y0 - v * H}" x2="${X0 + 5 * colW}" y2="${Y0 - v * H}" style="stroke:var(--line)"/><text x="${X0 - 16}" y="${Y0 - v * H + 4}" text-anchor="end" class="mono muted" font-size="10">${v}</text>`;
+  s += `<line x1="${X0 - 10}" y1="${Y0 - START * H}" x2="${X0 + 5 * colW}" y2="${Y0 - START * H}" style="stroke:var(--muted)" stroke-dasharray="3 3"/><text x="${X0 + 5 * colW + 4}" y="${Y0 - START * H + 4}" font-size="11" class="muted">start: 5</text>`;
+  let err = 0;
+  TRUE.forEach((t, i) => {
+    const x = X0 + i * colW + colW / 2, p = pred(t, k); err += Math.abs(t - p);
+    s += `<line x1="${x - 26}" y1="${Y0 - t * H}" x2="${x + 26}" y2="${Y0 - t * H}" style="stroke:var(--ink)" stroke-width="3"/>`;
+    s += `<line x1="${x}" y1="${Y0 - p * H}" x2="${x}" y2="${Y0 - t * H}" style="stroke:${W}" stroke-width="2" stroke-dasharray="3 2"/>`;
+    s += `<circle cx="${x}" cy="${Y0 - p * H}" r="8" style="fill:${A}" fill-opacity=".85"/>`;
+    s += `<text x="${x}" y="${Y0 + 18}" text-anchor="middle" font-size="12" class="muted">${NAMES[i]}</text><text x="${x}" y="${Y0 + 34}" text-anchor="middle" class="mono" font-size="11">${p.toFixed(1)} / ${t}</text>`;
+  });
+  s += `<text x="20" y="22" font-size="12.5"><tspan font-weight="700">▬</tspan> coach's real score   <tspan style="fill:${A}" font-weight="700">●</tspan> model's prediction   <tspan style="fill:${W}" font-weight="700">┆</tspan> residual (what's still wrong)</text>`;
+  s += `<text x="20" y="44" font-size="13" font-weight="700">After ${k} tree${k === 1 ? "" : "s"}: average miss ${(err / 5).toFixed(2)} points</text>`;
+  s += `<text x="20" y="362" font-size="11" class="muted">Pick how many trees above. Each tree closes about half the remaining gap here; numbers are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawRate() {
+  let s = svg(330);
+  const X0 = 70, Y0 = 260, W0 = 500, H0 = 200;
+  s += `<line x1="${X0}" y1="${Y0}" x2="${X0 + W0}" y2="${Y0}" style="stroke:var(--ink)"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y0 - H0}" style="stroke:var(--ink)"/>`;
+  s += `<text x="${X0 + W0 / 2}" y="${Y0 + 30}" text-anchor="middle" font-size="12" class="muted">Number of trees →</text><text x="34" y="${Y0 - H0 / 2}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 34 ${Y0 - H0 / 2})">Validation error →</text>`;
+  const big = t => 0.9 * Math.exp(-14 * t) + 0.32 + 0.5 * t * t, small = t => 0.9 * Math.exp(-4 * t) + 0.18 + 0.12 * t * t;
+  const path = f => Array.from({ length: 61 }, (_, i) => { const t = i / 60; return `${i ? "L" : "M"}${X0 + t * W0} ${Y0 - f(t) * H0 / 1.1}`; }).join(" ");
+  s += `<path d="${path(big)}" fill="none" style="stroke:${W}" stroke-width="2.2"/><path d="${path(small)}" fill="none" style="stroke:${A}" stroke-width="2.2"/>`;
+  s += `<text x="${X0 + W0 - 4}" y="${Y0 - big(1) * H0 / 1.1 - 8}" text-anchor="end" font-size="12" font-weight="600" style="fill:${W}">big steps (rate 1.0): overfits fast</text>`;
+  s += `<text x="${X0 + W0 - 4}" y="${Y0 - small(1) * H0 / 1.1 - 12}" text-anchor="end" font-size="12" font-weight="600" style="fill:${A}">small steps (rate 0.1): lower error</text>`;
+  let tmin = 0, vmin = 9; for (let i = 0; i <= 100; i++) { const t = i / 100; if (small(t) < vmin) { vmin = small(t); tmin = t; } }
+  const mx = X0 + tmin * W0, my = Y0 - vmin * H0 / 1.1;
+  s += `<line x1="${mx}" y1="${my}" x2="${mx}" y2="${Y0}" style="stroke:${A}" stroke-dasharray="4 3"/><circle cx="${mx}" cy="${my}" r="6" style="fill:${A}"/>`;
+  s += `<text x="${mx - 8}" y="${Y0 - 8}" text-anchor="end" font-size="12" font-weight="700" style="fill:${A}">early stopping: stop here</text>`;
+  s += `<text x="20" y="318" font-size="11" class="muted">Curves are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawCompare() {
+  let s = svg(330);
+  const tree = (x, y, c, sm) => `<path d="M${x} ${y} l ${sm ? -16 : -24} ${sm ? 26 : 40} h ${sm ? 32 : 48} z" style="fill:${c};stroke:${c}" fill-opacity=".18" stroke-width="1.3"/>`;
+  s += rect(15, 14, 295, 300, B, .05) + `<text x="30" y="40" font-size="15" font-weight="700" style="fill:${B}">Random forest</text><text x="30" y="60" font-size="12" class="muted">deep trees, side by side</text>`;
+  for (let i = 0; i < 5; i++) { s += tree(55 + i * 52, 80, B, 0); s += arrow(55 + i * 52, 124, 160, 166); }
+  s += rect(100, 168, 120, 34, B, .15) + `<text x="160" y="190" text-anchor="middle" font-size="12.5" font-weight="700">average / vote</text>`;
+  s += `<text x="30" y="232" font-size="12.5">Trees learn independently.</text><text x="30" y="252" font-size="12.5">Mainly reduces <tspan font-weight="700">variance</tspan>.</text><text x="30" y="272" font-size="12.5">Hard to overfit, little tuning.</text>`;
+  s += rect(330, 14, 295, 300, A, .05) + `<text x="345" y="40" font-size="15" font-weight="700" style="fill:${A}">Gradient boosting</text><text x="345" y="60" font-size="12" class="muted">small trees, one after another</text>`;
+  for (let i = 0; i < 5; i++) { s += tree(370 + i * 52, 90, A, 1); if (i < 4) s += arrow(386 + i * 52, 106, 406 + i * 52, 106, A); }
+  s += `<text x="478" y="140" text-anchor="middle" font-size="11.5" class="muted">each fixes the one before</text>`;
+  s += rect(418, 168, 120, 34, A, .15) + `<text x="478" y="190" text-anchor="middle" font-size="12.5" font-weight="700">add them up</text>`;
+  s += `<text x="345" y="232" font-size="12.5">Trees learn from earlier mistakes.</text><text x="345" y="252" font-size="12.5">Mainly reduces <tspan font-weight="700">bias</tspan>.</text><text x="345" y="272" font-size="12.5">Often more accurate, needs tuning,</text><text x="345" y="290" font-size="12.5">can overfit without early stopping.</text>`;
+  return s + `</svg>`;
+}
+
+function drawWhen() {
+  let s = svg(320);
+  s += lbl(20, 22, "A STARTING POINT FOR CHOOSING A MODEL");
+  const rows = [["Tables: user records, transactions, usage", "Gradient boosting (XGBoost, LightGBM, CatBoost)", A], ["Tables, need a quick strong default", "Random forest", B], ["Must explain every decision, or tiny data", "Logistic regression or one small tree", P], ["Raw text, images, audio", "Neural networks or a pretrained model", G]];
+  rows.forEach(([d, m, c], i) => {
+    const y = 34 + i * 62;
+    s += rect(20, y, 270, 50) + `<text x="34" y="${y + 30}" font-size="12.5">${d}</text>`;
+    s += arrow(296, y + 25, 326, y + 25);
+    s += rect(332, y, 290, 50, c, .12) + `<text x="346" y="${y + 30}" font-size="12.5" font-weight="700" style="fill:${c}">${m}</text>`;
+  });
+  s += `<text x="20" y="300" font-size="12" class="muted">Coach example: predicting who finishes the course from usage records → gradient boosting.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Fix mistakes", title: "1 · Learning from mistakes", q: "How can small trees add up to a great model?",
+    points: ["Start with one guess for everyone: the average, 5.", "The gap to the real score is the <b>residual</b>, what's still wrong.", "Each new tree learns to predict those gaps, and its correction is added.", "Pick how many trees above and watch the gaps shrink."],
+    pm: "Boosting is like a team of editors: each one only fixes what the last one missed. That's why it gets so accurate on table data.",
+    say: "Step one, learning from mistakes. We start with one simple guess for every answer, the average score of five. The dashed red lines show how far off we are. Those gaps are the residuals. Tree one learns to predict the gaps, and we add its correction. Now pick two trees, then three, then ten. Each new tree fixes what is still wrong, and the predictions close in on the real scores.",
+    draw: drawSteps },
+  { stage: "Small steps", title: "2 · Small steps and early stopping", q: "Why not fix each mistake all at once?",
+    points: ["Big corrections chase noise and overfit quickly.", "A <b>learning rate</b>, like 0.1, scales each tree's correction down.", "Many small steps reach a lower error.", "<b>Early stopping</b>: stop adding trees when validation error stops improving."],
+    pm: "More trees isn't always better. Ask whether the team used early stopping on a validation set, so the model stops before it starts memorising.",
+    say: "Step two, small steps. If every tree corrected the whole mistake at once, the model would chase noise and overfit fast. That's the red line. Instead, we scale each correction down with a learning rate, like zero point one. The green line takes longer, but it reaches a lower error. And we stop adding trees right at its lowest point. That's called early stopping.",
+    draw: drawRate },
+  { stage: "vs forests", title: "3 · Boosting versus random forests", q: "Both use many trees. What's the difference?",
+    points: ["<b>Forest</b>: deep, independent trees in parallel, averaged. Reduces variance.", "<b>Boosting</b>: small trees in sequence, each fixing the last. Reduces bias.", "Boosting is often more accurate, but needs more tuning.", "Unlike a forest, boosting can overfit if you add too many trees."],
+    pm: "A forest is the safe, low-effort choice. Boosting usually squeezes out more accuracy, at the cost of more tuning time.",
+    say: "Step three, boosting versus random forests. Both use many trees, but in opposite ways. A random forest grows deep trees side by side, independently, and averages them. That mainly reduces variance. Boosting grows small trees one after another, each fixing the last. That mainly reduces bias. Boosting is often more accurate, but it needs more tuning, and it can overfit if you're not careful.",
+    draw: drawCompare },
+  { stage: "When to use", title: "4 · When it wins", q: "When should a team reach for boosting?",
+    points: ["Table data: boosting is usually the model to beat.", "XGBoost, LightGBM and CatBoost are fast and handle missing values.", "For text, images and audio, neural networks win.", "When every decision needs a reason, simpler models may be better."],
+    pm: "For table data, ask “did we try gradient boosting?” before anyone proposes deep learning. It's often cheaper and more accurate.",
+    say: "Step four, when boosting wins. If your data lives in tables, like user records, transactions or usage logs, gradient boosting is usually the model to beat. Tools like XG Boost, Light GBM and Cat Boost are fast, and they handle missing values well. For raw text, images or audio, neural networks win instead. And if every decision must be explained, a simpler model may be the better choice.",
+    draw: drawWhen },
+];
+return { STEPS, picker: { label: "Trees added:", step: 0, items: () => STAGES.map(k => ({ label: String(k), color: "var(--accent)" })), get: () => si, set: i => { si = i; } } };
+})();
+VMETA[9] = {"title": "Fixing Mistakes, One Tree at a Time", "sub": "Predict the coach's scores with a chain of small trees, each fixing what the last one missed. Then see why small steps win and when boosting beats other models."};
+
+VISUALS[10] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+const X = v => 50 + v * 30, Y = v => 300 - v * 27;
+function axes(xl, yl) {
+  let s = "";
+  for (let v = 0; v <= 10; v += 2) s += `<line x1="${X(v)}" y1="${Y(0)}" x2="${X(v)}" y2="${Y(10)}" style="stroke:var(--line)"/><line x1="${X(0)}" y1="${Y(v)}" x2="${X(10)}" y2="${Y(v)}" style="stroke:var(--line)"/>`;
+  return s + `<text x="${X(5)}" y="${Y(0) + 20}" text-anchor="middle" font-size="12" class="muted">${xl}</text><text x="20" y="${Y(5)}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 20 ${Y(5)})">${yl}</text>`;
+}
+const dot = (x, y, strong, extra = "") => strong ? `<circle cx="${X(x)}" cy="${Y(y)}" r="6" style="fill:${A}" fill-opacity=".85" ${extra}/>` : `<rect x="${X(x) - 5}" y="${Y(y) - 5}" width="10" height="10" style="fill:${W}" fill-opacity=".85" ${extra}/>`;
+
+/* training answers: [specific, structured, strong?] illustrative */
+const PTS = [[5.6, 5.4, 0], [4.3, 6.2, 1], [6.4, 4.4, 1], [3.6, 4.2, 1], [6.2, 6.8, 1], [7.5, 6.2, 1], [8.2, 8.0, 1], [7.0, 8.4, 1], [2.0, 3.0, 0], [3.0, 1.8, 0], [1.2, 5.6, 0], [4.6, 2.4, 0], [2.4, 7.4, 0], [8.4, 2.8, 1], [1.4, 1.2, 0]];
+const NEW = [5, 5];
+const KS = [1, 3, 7];
+let ki = 0;
+function drawKNN() {
+  const k = KS[ki];
+  const d = PTS.map((p, i) => ({ i, d: Math.hypot(p[0] - NEW[0], p[1] - NEW[1]) })).sort((a, b) => a.d - b.d);
+  const near = d.slice(0, k), r = near[k - 1].d;
+  const sv = near.filter(n => PTS[n.i][2]).length, wv = k - sv, out = sv > wv;
+  let s = svg(340) + axes("How specific →", "How structured →");
+  s += `<circle cx="${X(NEW[0])}" cy="${Y(NEW[1])}" r="${r * 30 + 8}" style="fill:${out ? A : W};stroke:${out ? A : W}" fill-opacity=".07" stroke-dasharray="5 4" stroke-width="1.5"/>`;
+  near.forEach(n => { const p = PTS[n.i]; s += `<line x1="${X(NEW[0])}" y1="${Y(NEW[1])}" x2="${X(p[0])}" y2="${Y(p[1])}" style="stroke:var(--muted)" stroke-width="1.2"/>`; });
+  PTS.forEach(p => { s += dot(p[0], p[1], p[2]); });
+  s += `<circle cx="${X(NEW[0])}" cy="${Y(NEW[1])}" r="9" style="fill:var(--surface);stroke:var(--ink)" stroke-width="2.5"/><text x="${X(NEW[0])}" y="${Y(NEW[1]) + 4}" text-anchor="middle" font-size="11" font-weight="700">?</text>`;
+  const bx = 400;
+  s += lbl(bx, 40, `K = ${k} NEAREST NEIGHBOURS`);
+  s += `<text x="${bx}" y="72" font-size="13"><tspan style="fill:${A}" font-weight="700">● strong: ${sv}</tspan>    <tspan style="fill:${W}" font-weight="700">■ weak: ${wv}</tspan></text>`;
+  s += rect(bx, 88, 225, 56, out ? A : W, .14) + `<text x="${bx + 14}" y="113" font-size="14" font-weight="700" style="fill:${out ? A : W}">Prediction: ${out ? "strong" : "weak"}</text><text x="${bx + 14}" y="133" font-size="12">${k === 1 ? "one odd neighbour decides" : `majority of ${k} neighbours`}</text>`;
+  s += `<text x="${bx}" y="176" font-size="12.5">No training: it just remembers</text><text x="${bx}" y="194" font-size="12.5">every rated answer.</text>`;
+  s += `<text x="${bx}" y="224" font-size="12.5">Small k: sensitive to odd examples.</text><text x="${bx}" y="242" font-size="12.5">Large k: smoother, but blurrier.</text>`;
+  s += `<text x="${bx}" y="280" font-size="11" class="muted">Pick k above. Data is illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+/* SVM: separable sets */
+const SV = [[2, 6.5, 0], [1.5, 4, 0], [3, 3, 0], [2.6, 1.6, 0], [1, 7.6, 0], [4.2, 1.2, 0], [6.6, 8.6, 1], [6.2, 6.2, 1], [8.6, 7.4, 1], [6.8, 4.2, 1], [8.8, 4.4, 1], [9, 2.6, 1]];
+function drawSVM() {
+  let s = svg(340) + axes("How specific →", "How structured →");
+  /* boundary: x + 0.3y = 6.31 ; margin edges at 4.56 (weak SV) and 8.06 (strong SVs) */
+  const line = (c, col, w, dash) => `<line x1="${X(c - 0.3 * 0)}" y1="${Y(0)}" x2="${X(c - 0.3 * 10)}" y2="${Y(10)}" style="stroke:${col}" stroke-width="${w}" ${dash ? 'stroke-dasharray="6 4"' : ""}/>`;
+  s += `<path d="M${X(4.56)} ${Y(0)} L${X(8.06)} ${Y(0)} L${X(5.06)} ${Y(10)} L${X(1.56)} ${Y(10)} Z" style="fill:${A}" fill-opacity=".09"/>`;
+  s += line(4.56, "var(--muted)", 1.3, 1) + line(8.06, "var(--muted)", 1.3, 1) + line(6.31, "var(--ink)", 2.5, 0);
+  s += `<line x1="${X(5.2)}" y1="${Y(0)}" x2="${X(6.4)}" y2="${Y(10)}" style="stroke:${G}" stroke-width="1.8" stroke-dasharray="2 4"/>`;
+  SV.forEach(p => { s += dot(p[0], p[1], p[2]); });
+  [[4.2, 1.2], [6.8, 4.2], [6.2, 6.2]].forEach(([x, y]) => { s += `<circle cx="${X(x)}" cy="${Y(y)}" r="11" style="fill:none;stroke:var(--ink)" stroke-width="1.6"/>`; });
+  const bx = 400;
+  s += lbl(bx, 40, "WIDEST ROAD BETWEEN THE GROUPS");
+  s += `<text x="${bx}" y="70" font-size="12.5"><tspan font-weight="700">━</tspan> SVM boundary</text><text x="${bx}" y="92" font-size="12.5"><tspan style="fill:${A}" font-weight="700">▒</tspan> the margin, as wide as possible</text>`;
+  s += `<text x="${bx}" y="114" font-size="12.5"><tspan font-weight="700">◯</tspan> support vectors: the edge cases</text><text x="${bx}" y="132" font-size="12.5">that alone set the boundary</text>`;
+  s += `<text x="${bx}" y="160" font-size="12.5"><tspan style="fill:${G}" font-weight="700">┈</tspan> also separates, but hugs</text><text x="${bx}" y="178" font-size="12.5">the points: fragile on new data</text>`;
+  s += rect(bx, 200, 225, 64, P, .08) + `<text x="${bx + 12}" y="222" font-size="12.5" font-weight="700" style="fill:${P}">Kernel trick</text><text x="${bx + 12}" y="242" font-size="12">lets the boundary curve when a</text><text x="${bx + 12}" y="258" font-size="12">straight road won't fit.</text>`;
+  return s + `</svg>`;
+}
+
+function drawNB() {
+  let s = svg(340);
+  s += lbl(20, 22, "HOW OFTEN EACH WORD APPEARS (PER 100 ANSWERS)");
+  const words = [["“result”", 62, 9], ["“launched”", 38, 6], ["“hard worker”", 7, 41], ["“um”", 22, 48]];
+  s += `<text x="190" y="46" text-anchor="middle" font-size="12" font-weight="700" style="fill:${A}">in strong</text><text x="330" y="46" text-anchor="middle" font-size="12" font-weight="700" style="fill:${W}">in weak</text><text x="470" y="46" text-anchor="middle" font-size="12" class="muted">points to</text>`;
+  words.forEach(([w, a, b], i) => {
+    const y = 58 + i * 38, toS = a > b;
+    s += `<text x="20" y="${y + 20}" class="mono" font-size="13">${w}</text>`;
+    s += `<rect x="140" y="${y + 6}" width="${a * 1.6}" height="18" rx="3" style="fill:${A}" fill-opacity=".6"/><text x="${146 + a * 1.6}" y="${y + 20}" class="mono" font-size="11">${a}</text>`;
+    s += `<rect x="280" y="${y + 6}" width="${b * 1.6}" height="18" rx="3" style="fill:${W}" fill-opacity=".6"/><text x="${286 + b * 1.6}" y="${y + 20}" class="mono" font-size="11">${b}</text>`;
+    s += `<text x="470" y="${y + 20}" text-anchor="middle" font-size="12.5" font-weight="700" style="fill:${toS ? A : W}">${toS ? "strong" : "weak"} ×${(toS ? a / b : b / a).toFixed(1)}</text>`;
+  });
+  s += lbl(20, 228, "NEW ANSWER");
+  s += rect(20, 238, 600, 34) + `<text x="34" y="260" font-size="13">“Um, I <tspan font-weight="700" style="fill:${A}">launched</tspan> the new flow and the <tspan font-weight="700" style="fill:${A}">result</tspan> was 20% fewer drop-offs.”</text>`;
+  s += rect(20, 282, 600, 44, A, .12) + `<text x="34" y="309" font-size="13">Combine the evidence: two strong words outweigh one “um” → <tspan font-weight="700" style="fill:${A}">strong, about 95%</tspan></text>`;
+  return s + `</svg>`;
+}
+
+function drawWhich() {
+  let s = svg(320);
+  const cols = [["KNN", B, ["Copies similar past examples", "No training, slow on big data", "Lives on in vector search and", "“users like you” features"]], ["SVM", P, ["Widest gap between groups", "Strong on small, clean data", "with many features", "Less common today"]], ["Naive Bayes", G, ["Counts words per class", "Very fast, needs little data", "Great first baseline for text,", "like tagging user feedback"]]];
+  cols.forEach(([t, c, lines], i) => {
+    const x = 15 + i * 207;
+    s += rect(x, 14, 197, 210, c, .07) + `<text x="${x + 14}" y="44" font-size="16" font-weight="700" style="fill:${c}">${t}</text>`;
+    lines.forEach((l, k) => { s += `<text x="${x + 14}" y="${76 + k * 24}" font-size="12.5">${l}</text>`; });
+  });
+  s += rect(15, 240, 610, 64, "var(--line)") + `<text x="30" y="266" font-size="13">Today, <tspan font-weight="700">gradient boosting</tspan> usually wins on tables and <tspan font-weight="700">neural networks</tspan> on text and images.</text><text x="30" y="288" font-size="13">These three stay useful as fast baselines, and their ideas power modern features.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "KNN", title: "1 · K-nearest neighbours", q: "Can a model just copy similar examples?",
+    points: ["KNN remembers every rated answer. There's almost no training.", "For a new answer, find the <b>k</b> most similar ones and take a vote.", "With k = 1, one odd neighbour decides. With k = 3 or 7, the majority wins.", "Pick k above the diagram to see the prediction change."],
+    pm: "“Users like you also liked…” is nearest-neighbour thinking. So is the vector search behind retrieval-augmented generation.",
+    say: "Step one, k nearest neighbours. This model has almost no training. It remembers every rated answer. When a new answer arrives, shown as the question mark, it finds the most similar past answers and takes a vote. With k equal to one, the single closest neighbour happens to be weak, so it predicts weak. Now pick three. Two of the three are strong, so the prediction flips to strong. The choice of k really matters.",
+    draw: drawKNN },
+  { stage: "SVM", title: "2 · Support vector machines", q: "Which boundary is the best one?",
+    points: ["Many lines can separate strong from weak answers.", "An SVM picks the one with the <b>widest margin</b>, like the widest road.", "The answers on the edge of the road are the <b>support vectors</b>. They alone set the boundary.", "A <b>kernel</b> lets the boundary curve when needed."],
+    pm: "SVMs were the go-to text classifier before deep learning. You'll still meet them in older systems and on small, clean datasets.",
+    say: "Step two, support vector machines. Many lines could separate the strong answers from the weak ones. The dotted orange line works, but it hugs the points, so it's fragile on new data. An SVM picks the boundary with the widest margin, like the widest possible road between two neighbourhoods. The circled answers sit right on the edge. They are the support vectors, and they alone decide where the road goes.",
+    draw: drawSVM },
+  { stage: "Naive Bayes", title: "3 · Naive Bayes", q: "How can counting words classify answers?",
+    points: ["Count how often each word appears in strong answers and in weak answers.", "“result” and “launched” point to strong. “hard worker” and “um” point to weak.", "For a new answer, combine every word's evidence into a probability.", "“Naive” because it treats words as independent. It still works well."],
+    pm: "Need a quick text classifier with little data, like tagging feedback as bug, feature request or praise? Naive Bayes is a fast, cheap first try.",
+    say: "Step three, naive Bayes. This model counts words. Result appears in sixty two of every hundred strong answers, but only nine weak ones, so it points to strong. Hard worker points to weak. For a new answer, the model combines the evidence from every word. Here, launched and result outweigh one um, so it predicts strong. It's called naive because it treats each word as independent, which isn't really true, but it works surprisingly well.",
+    draw: drawNB },
+  { stage: "Which one?", title: "4 · When to use which", q: "Are these models still useful today?",
+    points: ["<b>KNN</b>: similarity. Its idea powers vector search and recommendations.", "<b>SVM</b>: small, clean datasets with many features.", "<b>Naive Bayes</b>: fast first baseline for text.", "For most new work: boosting on tables, neural networks on text and images."],
+    pm: "When someone mentions embeddings and vector search, think “KNN at huge scale”. The old idea is at the heart of modern AI features.",
+    say: "Step four, when to use which. K nearest neighbours is all about similarity, and its idea powers vector search and recommendations today. Support vector machines shine on small, clean datasets with many features. Naive Bayes is a fast first baseline for text. For most new work, gradient boosting wins on tables and neural networks win on text and images. But these three ideas are still everywhere.",
+    draw: drawWhich },
+];
+return { STEPS, picker: { label: "Number of neighbours (k):", step: 0, items: () => KS.map(k => ({ label: "k = " + k, color: "var(--t2)" })), get: () => ki, set: i => { ki = i; } } };
+})();
+VMETA[10] = {"title": "Three Simple Ideas", "sub": "Three classic models applied to the interview coach: ask the nearest neighbours, draw the widest road between strong and weak answers, and count the words."};
 
 
 const view = { mode: "lesson", n: 0, s: 0 };

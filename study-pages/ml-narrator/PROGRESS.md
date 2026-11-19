@@ -24,8 +24,8 @@ Publish `index.html` to the live page URL (capabilities: db, dictation, download
 |---|---|---|
 | 0 | 1 What Is Machine Learning | Done, approved for rollout |
 | 1 | 2 Types of Learning, 3 Data & Labeling, 4 Features & Feature Engineering | Done |
-| 2 | 5 Train/Validation/Test Sets, 6 Overfitting & Underfitting, 7 Linear & Logistic Regression | Published, waiting for review |
-| 3 | 8–10 | Not started |
+| 2 | 5 Train/Validation/Test Sets, 6 Overfitting & Underfitting, 7 Linear & Logistic Regression | Done |
+| 3 | 8 Decision Trees & Random Forests, 9 Gradient Boosting, 10 KNN, SVM & Naive Bayes | Published, waiting for review |
 | 4 | 11–13 | Not started |
 | 5 | 14–16 | Not started |
 | 6 | 17–19 | Not started |
