@@ -1,0 +1,5 @@
+[
+ {"kind": "Notes", "title": "Convolutional Neural Networks (Stanford CS231n)", "url": "https://cs231n.github.io/convolutional-networks/"},
+ {"kind": "Course", "title": "ML Practicum: Image Classification with CNNs (Google)", "url": "https://developers.google.com/machine-learning/practica/image-classification"},
+ {"kind": "Codelab", "title": "Build CNNs to enhance computer vision (Google)", "url": "https://developers.google.com/codelabs/tensorflow-4-cnns"}
+]

@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Embeddings (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/embeddings"},
+ {"kind": "Course", "title": "Obtaining embeddings (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/embeddings/obtaining-embeddings"},
+ {"kind": "Course", "title": "Transfer learning (Hugging Face Computer Vision course)", "url": "https://huggingface.co/learn/computer-vision-course/en/unit2/cnns/intro-transfer-learning"},
+ {"kind": "Notes", "title": "Transfer learning (Stanford CS231n)", "url": "https://cs231n.github.io/transfer-learning/"}
+]

@@ -1,0 +1,5 @@
+[
+ {"kind": "Book", "title": "Recurrent Neural Networks, chapter 9 (Dive into Deep Learning)", "url": "https://www.d2l.ai/chapter_recurrent-neural-networks/"},
+ {"kind": "Book", "title": "Modern RNNs: LSTM and GRU, chapter 10 (Dive into Deep Learning)", "url": "https://d2l.ai/chapter_recurrent-modern/index.html"},
+ {"kind": "Article", "title": "Understanding LSTM Networks (colah's blog)", "url": "https://colah.github.io/posts/2015-08-Understanding-LSTMs/"}
+]

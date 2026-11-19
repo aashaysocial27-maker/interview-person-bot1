@@ -28,8 +28,8 @@ Publish `index.html` to the live page URL (capabilities: db, dictation, download
 | 3 | 8 Decision Trees & Random Forests, 9 Gradient Boosting, 10 KNN, SVM & Naive Bayes | Done |
 | 4 | 11 Clustering & Anomaly Detection, 12 Dimensionality Reduction, 13 Loss Functions | Done |
 | 5 | 14 Gradient Descent & Optimizers, 15 Regularization, 16 Hyperparameter Tuning | Done |
-| 6 | 17 Class Imbalance, 18 Evaluation Metrics, 19 Neural Networks & Backpropagation | Published, waiting for review |
-| 7 | 20–22 | Not started |
+| 6 | 17 Class Imbalance, 18 Evaluation Metrics, 19 Neural Networks & Backpropagation | Done |
+| 7 | 20 Convolutional Networks, 21 Sequence Models, 22 Transfer Learning & Embeddings | Published, waiting for review |
 | 8 | 23–25 | Not started |
 | 9 | 26–28 | Not started |
 | 10 | 29–30 | Not started |
