@@ -241,6 +241,11 @@ tr:last-child td{border-bottom:none}
   .hist3 .row{grid-template-columns:1fr;gap:4px}
 }
 
+/* json try-it */
+.json-try{width:100%;font:13px/1.5 var(--mono);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical;tab-size:4}
+.json-try:focus{outline:2px solid var(--accent);outline-offset:0}
+.json-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
 /* header link */
 .title-row{display:flex;align-items:center;justify-content:flex-start;gap:10px 18px;flex-wrap:wrap}
 .head-link{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ok);color:var(--ok);background:var(--ok-soft);border-radius:10px;padding:8px 16px;font:600 15px var(--display);text-decoration:none}
@@ -765,6 +770,7 @@ async function uploadFiles(id, files){
 const CONCEPTS = [
   { id: "temperature", label: "Temperature" },
   { id: "sdk", label: "SDK" },
+  { id: "json", label: "JSON" },
   { id: "pydantic", label: "Pydantic" }
 ];
 let concept = store.get("fieldnotes-concept", "temperature");
@@ -782,13 +788,14 @@ function renderConcepts(){
   let h = `<div class="section"><div><span class="eyebrow">Learning Concepts</span><h2>Ideas behind the code</h2></div>
     <div class="subtabs" role="tablist">${CONCEPTS.map(c =>
       `<button class="subtab" role="tab" aria-selected="${c.id === concept}" data-c="${c.id}">${c.label}</button>`).join("")}</div>
-    <div class="concept-body">${concept === "sdk" ? sdkView() : concept === "pydantic" ? pydanticView() : temperatureView()}</div></div>`;
+    <div class="concept-body">${concept === "sdk" ? sdkView() : concept === "pydantic" ? pydanticView() : concept === "json" ? jsonView() : temperatureView()}</div></div>`;
   if (nb) h += notebookView(nb);
   $("#main").innerHTML = h;
   document.querySelectorAll("[data-c]").forEach(b => b.onclick = () => {
     concept = b.dataset.c; store.set("fieldnotes-concept", concept); stopMolecules(); renderConcepts(); });
   bindNotebook();
   if (concept === "temperature") bindTemperature();
+  if (concept === "json") bindJson();
   document.querySelectorAll(".code-copy").forEach(b => b.onclick = async () => {
     const pre = b.closest(".code-block").querySelector("pre");
     try { await navigator.clipboard.writeText(pre.textContent); b.textContent = "Copied"; }
@@ -929,6 +936,97 @@ function startMolecules(){
     if (!still) molRaf = requestAnimationFrame(frame);
   };
   frame();
+}
+
+const JSON_SAMPLE = "{\n \"color\" : \"Purple\",\n \"id\" : \"210\",\n \"composition\" : {\n\t\"R\" : 70,\n\t\"G\" : 39,\n\t\"B\" : 89\n }\n}";
+
+function jsonView(){
+  return `
+  <div class="prose">
+    <h3>What is JSON?</h3>
+    <p><b>JSON</b> stands for JavaScript Object Notation. It is a general-purpose text format for representing structured data.</p>
+    <p>Every major programming language has built-in support for converting its objects to JSON and back.</p>
+  </div>
+
+  <div class="card">
+    <h3>A JSON object</h3>
+    <div class="code-block"><div class="nb-bar"><span class="mono">json</span><button class="nb-copy code-copy">Copy</button></div><pre>{
+ &quot;color&quot; : &quot;Purple&quot;,
+ &quot;id&quot; : &quot;210&quot;,
+ &quot;composition&quot; : {
+	&quot;R&quot; : 70,
+	&quot;G&quot; : 39,
+	&quot;B&quot; : 89
+ }
+}</pre></div>
+  </div>
+
+  <div class="prose">
+    <p><b>JSON (JavaScript Object Notation)</b> is a lightweight, text-based format used for storing and exchanging data. It is built on two universal structures, <b>objects</b> and <b>arrays</b>, and is designed to be easy for humans to read and for machines to parse.</p>
+  </div>
+
+  <div class="card">
+    <h3>1. Core structural rules</h3>
+    <div class="prose"><ul>
+      <li><b>Key-value pairs:</b> data is stored as <code>&quot;key&quot;: value</code> pairs. Keys must always be strings wrapped in <b>double quotes</b> (<code>&quot;&quot;</code>), followed by a colon (<code>:</code>).</li>
+      <li><b>Objects (<code>{ }</code>):</b> an unordered collection of key-value pairs enclosed in curly braces. Multiple pairs are separated by commas.</li>
+      <li><b>Arrays (<code>[ ]</code>):</b> an ordered list of values enclosed in square brackets, separated by commas.</li>
+      <li><b>Nesting:</b> objects and arrays can be nested inside one another to represent complex, hierarchical data.</li>
+      <li><b>Strict syntax:</b> single quotes (<code>&#x27;&#x27;</code>), trailing commas after the last item, and comments are not allowed in standard JSON.</li>
+    </ul></div>
+  </div>
+
+  <div class="card">
+    <h3>2. Supported data types</h3>
+    <p>A JSON value must be one of the following six data types:</p>
+    <div class="tbl"><table><thead><tr><th>Data type</th><th>Description</th><th>Example</th></tr></thead><tbody>
+      <tr><td><b>String</b></td><td>Text enclosed in double quotes</td><td><code>&quot;Anna&quot;</code>, <code>&quot;Warsaw&quot;</code></td></tr><tr><td><b>Number</b></td><td>Integer or floating-point number (no quotes)</td><td><code>31</code>, <code>99.95</code>, <code>-10</code></td></tr><tr><td><b>Boolean</b></td><td>True or false value (lowercase, no quotes)</td><td><code>true</code>, <code>false</code></td></tr><tr><td><b>Null</b></td><td>Represents an empty or non-existent value</td><td><code>null</code></td></tr><tr><td><b>Object</b></td><td>A nested set of key-value pairs</td><td><code>{&quot;city&quot;: &quot;Warsaw&quot;}</code></td></tr><tr><td><b>Array</b></td><td>An ordered list of any valid JSON types</td><td><code>[&quot;reading&quot;, &quot;cycling&quot;]</code></td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="card">
+    <h3>3. Complete example</h3>
+    <p>Here is how those structures and data types combine into a single JSON object:</p>
+    <div class="code-block"><div class="nb-bar"><span class="mono">json</span><button class="nb-copy code-copy">Copy</button></div><pre>{
+  &quot;id&quot;: 1,
+  &quot;firstName&quot;: &quot;Anna&quot;,
+  &quot;lastName&quot;: &quot;Smith&quot;,
+  &quot;age&quot;: 31,
+  &quot;isActive&quot;: true,
+  &quot;nickname&quot;: null,
+  &quot;address&quot;: {
+    &quot;city&quot;: &quot;Warsaw&quot;,
+    &quot;country&quot;: &quot;Poland&quot;
+  },
+  &quot;hobbies&quot;: [&quot;reading&quot;, &quot;cycling&quot;, &quot;photography&quot;]
+}</pre></div>
+    <p>In this example:</p>
+    <div class="prose"><ul>
+      <li>The root structure is an <b>object</b> <code>{ ... }</code>.</li>
+      <li><code>&quot;id&quot;</code> and <code>&quot;age&quot;</code> hold <b>numbers</b>.</li>
+      <li><code>&quot;firstName&quot;</code> and <code>&quot;lastName&quot;</code> hold <b>strings</b>.</li>
+      <li><code>&quot;isActive&quot;</code> holds a <b>boolean</b>, while <code>&quot;nickname&quot;</code> is <b>null</b>.</li>
+      <li><code>&quot;address&quot;</code> demonstrates a <b>nested object</b>, and <code>&quot;hobbies&quot;</code> demonstrates an <b>array</b> of strings.</li>
+    </ul></div>
+  </div>
+
+  <div class="card">
+    <h3>Try it: is this valid JSON?</h3>
+    <p class="fig-cap">Edit the text, then check it. Try adding a trailing comma or swapping double quotes for single quotes to see the rules above in action.</p>
+    <label class="sr" for="jsonTry">JSON to check</label>
+    <textarea id="jsonTry" class="json-try" spellcheck="false" rows="9">${esc(JSON_SAMPLE)}</textarea>
+    <div class="json-bar"><button class="btn" id="jsonCheck">Check JSON</button><button class="btn ghost" id="jsonReset">Reset</button><span class="msg" id="jsonOut" aria-live="polite"></span></div>
+  </div>`;
+}
+
+function bindJson(){
+  const ta = $("#jsonTry"), out = $("#jsonOut"); if (!ta) return;
+  $("#jsonCheck").onclick = () => {
+    try { const v = JSON.parse(ta.value); const kind = Array.isArray(v) ? "an array" : v === null ? "null" : typeof v === "object" ? "an object with " + Object.keys(v).length + " keys" : "a " + typeof v;
+      out.className = "msg ok"; out.textContent = "Valid JSON: " + kind + "."; }
+    catch(e){ out.className = "msg err"; out.textContent = "Not valid JSON: " + e.message; }
+  };
+  $("#jsonReset").onclick = () => { ta.value = JSON_SAMPLE; out.textContent = ""; };
 }
 
 const PYDANTIC_CODE = "# pip install pydantic   (already installed in Colab)\nfrom typing import Optional\nfrom pydantic import BaseModel, Field, ValidationError\n\n# 1. Describe the shape you expect, once\nclass SupplierClause(BaseModel):\n    party: str\n    payment_terms_days: int = Field(description=\"Days the buyer has to pay\")\n    penalty: Optional[str] = None          # optional: may be missing\n\n# 2. Pretend this JSON text came back from Gemini, GPT or Claude\nllm_output = '{\"party\": \"Acme Ltd\", \"payment_terms_days\": \"30\", \"penalty\": \"2% per week late\"}'\n\n# 3. Validate it: turns text into a checked Python object\nclause = SupplierClause.model_validate_json(llm_output)\nprint(clause.party)                        # Acme Ltd\nprint(clause.payment_terms_days + 15)      # 45  (\"30\" was converted to the number 30)\n\n# 4. Bad output fails loudly instead of slipping through\ntry:\n    SupplierClause.model_validate_json('{\"party\": \"Acme Ltd\"}')\nexcept ValidationError as e:\n    print(e)                               # 1 validation error ... payment_terms_days  Field required";
