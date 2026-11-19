@@ -1,0 +1,5 @@
+[
+ {"kind": "Docs", "title": "An introduction to explainable AI with Shapley values (SHAP docs)", "url": "https://shap.readthedocs.io/en/latest/example_notebooks/overviews/An%20introduction%20to%20explainable%20AI%20with%20Shapley%20values.html"},
+ {"kind": "Book", "title": "SHAP, chapter 18 (Interpretable Machine Learning, Molnar)", "url": "https://christophm.github.io/interpretable-ml-book/shap.html"},
+ {"kind": "Book", "title": "Shapley Values, chapter 17 (Interpretable Machine Learning, Molnar)", "url": "https://christophm.github.io/interpretable-ml-book/shapley.html"}
+]

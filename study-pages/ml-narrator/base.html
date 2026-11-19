@@ -358,7 +358,7 @@ body.chat-open .chat-fab { display: none; }
   </section>
   <p class="section-label lesson-only">Concepts</p>
   <div class="list lesson-only" id="list"></div>
-  <p class="note lesson-only">Concepts marked “Preview” get their full lesson, diagrams and links in a later batch.</p>
+  <p class="note lesson-only">All 30 concepts have a narrated lesson, a visual walkthrough and checked links.</p>
   <div class="end-space lesson-only" aria-hidden="true"></div>
 </div>
 
@@ -903,7 +903,7 @@ How to answer:
 - For anything the list doesn't cover (or newer information), suggest 1 to 3 web searches, each on its own line in exactly this form: SEARCH: <short search phrase>. The page turns these into clickable search buttons. Don't apologise for not browsing; just give the links and searches.
 Checked links for this concept:
 ${(RESOURCES[c.n] || []).map(r => `- [${r.title}](${r.url})`).join("\n") || "- (none)"}
-The 30 concepts: ${CONCEPT_LIST}. Concepts marked as previews only have a short summary so far; teach them from your own knowledge.
+The 30 concepts: ${CONCEPT_LIST}.
 The learner is currently looking at concept ${c.n}: ${c.title}.${view.mode === "visual" ? "\n" + visualContext() + "\nThe concept's lesson text, for background:" : " The lesson text for it is:"}
 <lesson>
 ${lessonText(c)}

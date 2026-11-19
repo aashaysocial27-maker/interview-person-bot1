@@ -1,0 +1,6 @@
+[
+ {"kind": "Guide", "title": "MLOps: Continuous delivery and automation pipelines (Google Cloud)", "url": "https://docs.cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning"},
+ {"kind": "Paper", "title": "Hidden Technical Debt in Machine Learning Systems (Sculley et al., NeurIPS 2015)", "url": "https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems"},
+ {"kind": "Guide", "title": "ML pipelines (Google, Managing ML Projects)", "url": "https://developers.google.com/machine-learning/managing-ml-projects/pipelines"},
+ {"kind": "Docs", "title": "ML Model Registry (MLflow)", "url": "https://mlflow.org/docs/latest/ml/model-registry/"}
+]

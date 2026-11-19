@@ -30,6 +30,7 @@ Publish `index.html` to the live page URL (capabilities: db, dictation, download
 | 5 | 14 Gradient Descent & Optimizers, 15 Regularization, 16 Hyperparameter Tuning | Done |
 | 6 | 17 Class Imbalance, 18 Evaluation Metrics, 19 Neural Networks & Backpropagation | Done |
 | 7 | 20 Convolutional Networks, 21 Sequence Models, 22 Transfer Learning & Embeddings | Done |
-| 8 | 23 Reinforcement Learning, 24 Recommender Systems, 25 Time-Series Forecasting | Published, waiting for review |
-| 9 | 26–28 | Not started |
-| 10 | 29–30 | Not started |
+| 8 | 23 Reinforcement Learning, 24 Recommender Systems, 25 Time-Series Forecasting | Done |
+| 9+10 (combined) | 26 Explainability, 27 Bias & Fairness, 28 A/B Testing, 29 Data Drift & Monitoring, 30 MLOps | Published, waiting for review |
+
+All 30 concepts are complete. No previews remain.

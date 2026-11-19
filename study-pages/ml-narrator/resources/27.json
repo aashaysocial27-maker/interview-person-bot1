@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Fairness (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/fairness"},
+ {"kind": "Course", "title": "Fairness: Types of bias (Google)", "url": "https://developers.google.com/machine-learning/crash-course/fairness/types-of-bias"},
+ {"kind": "Course", "title": "Fairness: Evaluating for bias (Google)", "url": "https://developers.google.com/machine-learning/crash-course/fairness/evaluating-for-bias"},
+ {"kind": "Docs", "title": "Performing a fairness assessment (Fairlearn)", "url": "https://fairlearn.org/main/user_guide/assessment/perform_fairness_assessment.html"}
+]

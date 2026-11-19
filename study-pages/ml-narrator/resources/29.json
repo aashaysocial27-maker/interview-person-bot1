@@ -1,0 +1,5 @@
+[
+ {"kind": "Course", "title": "Production ML systems, incl. monitoring pipelines (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/production-ml-systems"},
+ {"kind": "Guide", "title": "Productionization: logging, monitoring, alerting (Google)", "url": "https://developers.google.com/machine-learning/managing-ml-projects/production"},
+ {"kind": "Docs", "title": "Data drift explained (Evidently AI)", "url": "https://docs.evidentlyai.com/metrics/explainer_drift"}
+]

@@ -1,0 +1,6 @@
+[
+ {"kind": "Book", "title": "Trustworthy Online Controlled Experiments (Kohavi, Tang, Xu)", "url": "https://experimentguide.com/"},
+ {"kind": "Guide", "title": "Rules of Machine Learning: metrics and experiments (Google)", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"},
+ {"kind": "Tool", "title": "A/B test sample size calculator (Evan Miller)", "url": "https://www.evanmiller.org/ab-testing/sample-size.html"},
+ {"kind": "Article", "title": "How Not To Run an A/B Test: the peeking problem (Evan Miller)", "url": "https://www.evanmiller.org/how-not-to-run-an-ab-test.html"}
+]
