@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Overfitting: L2 regularization (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/regularization"},
+ {"kind": "Course", "title": "Training neural networks: dropout and best practices (Google)", "url": "https://developers.google.com/machine-learning/crash-course/training-neural-networks/best-practices"},
+ {"kind": "Course", "title": "Overfitting: Interpreting loss curves (Google)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/interpreting-loss-curves"},
+ {"kind": "Reference", "title": "Machine Learning Glossary: ML Fundamentals (Google)", "url": "https://developers.google.com/machine-learning/glossary/fundamentals"}
+]

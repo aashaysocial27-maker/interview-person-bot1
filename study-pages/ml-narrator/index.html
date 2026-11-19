@@ -602,12 +602,48 @@ const CONCEPTS = [
     { h: "How it connects", text: "In Linear and Logistic Regression, we added up squared errors to find the best line. That total was a loss. Here we saw the main kinds. Next, in Gradient Descent and Optimizers, we learn how a model actually lowers its loss, step by small step." },
   ]
 },
-{ n: 14, group: "How Models Learn", title: "Gradient Descent & Optimizers", draft: true, terms: ["Gradient", "Learning rate", "SGD", "Adam"],
-  sections: [{ h: "The big idea", text: "Gradient descent is how a model improves. Picture walking downhill in fog, always taking a small step in the steepest downward direction. The learning rate sets the step size. Optimizers like Adam are smarter ways of taking those steps." }] },
-{ n: 15, group: "How Models Learn", title: "Regularization", draft: true, terms: ["L1 and L2", "Dropout", "Early stopping", "Data augmentation"],
-  sections: [{ h: "The big idea", text: "Regularization is a set of tricks that stop a model from overfitting. It gently penalises complexity, randomly switches parts off during training, or stops training at the right moment. The aim is a model that works on new data, not just the training set." }] },
-{ n: 16, group: "How Models Learn", title: "Hyperparameter Tuning", draft: true, terms: ["Hyperparameters", "Grid search", "Random search", "Bayesian optimization"],
-  sections: [{ h: "The big idea", text: "Parameters are learned during training, but hyperparameters are settings you choose before training starts, such as the learning rate or the number of trees. Tuning means trying many combinations and keeping the one that scores best on the validation set." }] },
+{
+  n: 14, group: "How Models Learn", title: "Gradient Descent & Optimizers",
+  terms: ["Gradient", "Learning rate", "Mini-batch", "Epoch", "Momentum", "Adam"],
+  visual: { title: "Walking Downhill in Fog", note: "Take steps down the loss curve and see what happens when they're too small or too big" },
+  sections: [
+    { h: "The big idea", text: "In Loss Functions, we learned that training means making the loss as small as possible. Gradient descent is how a model does it. Picture yourself on a hillside in thick fog, trying to reach the bottom of the valley. You can't see far, but you can feel which way the ground slopes under your feet. So you take a small step downhill, feel the slope again, and repeat." },
+    { h: "1 · The slope tells the way", text: "Every possible setting of the model's weights gives a different loss. You can picture this as a landscape of hills and valleys, and we want the lowest point. The gradient is the slope at the model's current spot. It points in the direction where the loss rises fastest. So the model steps the opposite way, downhill. After each step, it measures the slope again. When the ground is flat, it has arrived." },
+    { h: "2 · The learning rate", text: "The learning rate sets how big each step is. Too small, and training crawls, needing thousands of extra steps. Too big, and the model overshoots the valley, bouncing from side to side, and can even fly off and get worse. A good learning rate gets down quickly and settles. It is one of the most important settings a team chooses." },
+    { h: "3 · Batches and epochs", text: "Measuring the exact slope over all one thousand training answers before every step is slow. So in practice, the model looks at a small random batch, say thirty two answers, estimates the slope from them, and takes a step. The path is a bit wobbly, but each step is fast, so overall it is much quicker. This is called stochastic, or mini batch, gradient descent. One full pass through all the training data is called an epoch." },
+    { h: "4 · Smarter optimizers", text: "Plain gradient descent can get stuck in small dips, or crawl along flat stretches. Momentum helps, like a ball rolling downhill that keeps its speed and rolls through small bumps. Adam goes further. It adapts the step size for each weight on its own, based on how that weight has been changing. Adam is the default choice for training most neural networks today, including large language models." },
+    { h: "Why it matters for a PM", text: "For a PM, gradient descent is why training takes time and money. More steps and more epochs mean more computing cost. When you see a loss curve, you should expect it to fall and then flatten. If it jumps around wildly or shoots up, the learning rate is often the culprit. Asking to see the training and validation loss curves is a simple way to check that training went well." },
+    { h: "How it connects", text: "In Loss Functions, we defined what the model should minimise. Here we saw how it walks downhill to do it. The same idea trains everything from linear regression to gradient boosting to the giant models in your AI course. Next, in Regularization, we learn how to stop the model from walking so far that it memorises the training data." },
+  ]
+},
+{
+  n: 15, group: "How Models Learn", title: "Regularization",
+  terms: ["Regularization", "L2 and L1 penalty", "Lambda (strength)", "Dropout", "Early stopping", "Data augmentation"],
+  visual: { title: "Keeping the Model Honest", note: "Turn up the penalty on big weights, switch off random neurons, and stop at the right moment" },
+  sections: [
+    { h: "The big idea", text: "Regularization is a set of tricks that stop a model from overfitting. They all push the model toward simpler explanations, the way a good teacher prefers a clear, general rule over a long list of special cases. The model gives up a little accuracy on its training data, and in return works much better on new data." },
+    { h: "1 · Penalties on big weights", text: "The most common trick adds a penalty to the loss. The model now pays not only for its mistakes, but also for having large weights. L2 regularization gently shrinks all the weights toward zero, so no single feature can dominate. L1 regularization goes further, and pushes useless weights all the way to zero, which also removes features the model doesn't need. A setting called lambda controls how strong the penalty is." },
+    { h: "2 · Dropout", text: "Dropout is used in neural networks. During training, it randomly switches off a share of the neurons at each step, often twenty to fifty percent. The network can never rely on any single neuron, so it learns several ways to reach the answer. It is like a team where anyone might be absent on a given day, so everyone gets cross trained. At prediction time, all the neurons are switched back on." },
+    { h: "3 · Early stopping", text: "As training goes on, the training loss keeps falling. But at some point the validation loss stops improving and starts to rise, because the model has begun to memorise. Early stopping watches the validation loss, and keeps the version of the model from the moment it was at its best. It is simple, cheap, and very widely used." },
+    { h: "4 · More and varied data", text: "The most reliable cure for overfitting is more good data. When that is hard to get, data augmentation creates new training examples by varying existing ones. For images, that means flips, crops and colour changes. For our coach, it could mean paraphrasing answers. But each variation must keep its label true. If a paraphrase drops the result from a strong answer, it is no longer a strong answer." },
+    { h: "Why it matters for a PM", text: "For a PM, regularization is a dial between memorising and generalising. Too little, and the model overfits. Too much, and it becomes too simple and underfits. The right setting is found on the validation set. If a model looks great in training but disappoints in testing, ask which regularization the team used, and whether more or augmented data is an option." },
+    { h: "How it connects", text: "In Overfitting and Underfitting, we listed regularization as a fix. Here we saw the main kinds. Settings like lambda, the dropout rate and the stopping point are all chosen before or during training, not learned. Next, in Hyperparameter Tuning, we learn how teams choose them well." },
+  ]
+},
+{
+  n: 16, group: "How Models Learn", title: "Hyperparameter Tuning",
+  terms: ["Parameter", "Hyperparameter", "Grid search", "Random search", "Bayesian optimization", "Search budget"],
+  visual: { title: "Turning the Knobs", note: "Compare grid, random and smart search on the same budget of training runs" },
+  sections: [
+    { h: "The big idea", text: "A model learns its parameters, like the weights, from the data. But some settings must be chosen before training even starts, like the learning rate, the depth of each tree, or the strength of regularization. These are called hyperparameters. Hyperparameter tuning means trying different settings and keeping the ones that work best on the validation set." },
+    { h: "1 · Parameters versus hyperparameters", text: "Think of baking. The recipe's oven temperature and baking time are set by you before you start. Those are hyperparameters. How the cake actually rises inside the oven is what the training process works out. Those are the parameters. For our coach, the weights are learned. The learning rate, the number of trees, the tree depth, k in KNN, and lambda for regularization are all chosen by the team." },
+    { h: "2 · Grid search", text: "The simplest approach is grid search. Pick a few values for each setting, and try every combination. Three learning rates times three tree depths makes nine training runs. It is easy to understand, but it grows very fast. Five settings with five values each is over three thousand runs. And the best value may sit between the grid points, where nobody looked." },
+    { h: "3 · Random and smart search", text: "Random search picks combinations at random within sensible ranges. With the same number of runs, it usually finds good settings faster, because often only one or two settings really matter, and random search tries many more distinct values of them. Smarter still is Bayesian optimization, used by tools like Optuna. It learns from each finished run, and chooses the next run where results look most promising. Bad runs can also be stopped early to save time." },
+    { h: "4 · Tuning the right way", text: "A few rules keep tuning honest. Judge every setting on the validation set, or with cross validation, never on the test set. Start from sensible defaults, because they are often close to good. Set a budget, such as fifty runs, before you begin. Record every run, so results can be repeated. And expect diminishing returns. The first few runs usually bring the biggest gains." },
+    { h: "Why it matters for a PM", text: "For a PM, tuning is a cost decision. Every run uses compute and time. Agree a budget and a stopping rule up front, such as stop when ten runs bring no improvement. And keep perspective. Tuning often adds a point or two of accuracy, while better data or better features can add far more." },
+    { h: "How it connects", text: "In Regularization and Gradient Descent, we met settings like lambda and the learning rate. Here we learned how to choose them. Next, in Class Imbalance, we tackle a common trap, when the thing you care about is rare, and a lazy model can look accurate by ignoring it." },
+  ]
+},
 { n: 17, group: "How Models Learn", title: "Class Imbalance", draft: true, terms: ["Imbalanced data", "Oversampling", "SMOTE", "Class weights"],
   sections: [{ h: "The big idea", text: "Sometimes the thing you care about is rare, like fraud in one transaction out of a thousand. A lazy model can just say never, and still be right most of the time. Class imbalance techniques make the model pay attention to the rare cases." }] },
 { n: 18, group: "How Models Learn", title: "Evaluation Metrics", draft: true, terms: ["Accuracy", "Precision", "Recall", "F1", "ROC AUC", "Confusion matrix"],
@@ -637,7 +673,7 @@ const CONCEPTS = [
 { n: 30, group: "Real-World ML", title: "MLOps", draft: true, terms: ["ML pipelines", "Feature store", "Model registry", "CI/CD for ML"],
   sections: [{ h: "The big idea", text: "MLOps is the engineering that keeps machine learning running reliably in production. It covers data pipelines, versioning of data and models, automated retraining, safe deployment and rollback. It turns a one-off experiment into a dependable product." }] }
 ];
-const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}], "5": [{"kind": "Course", "title": "Datasets: Dividing the original dataset (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets"}, {"kind": "Docs", "title": "Cross-validation: evaluating estimator performance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"}, {"kind": "Docs", "title": "Common pitfalls: data leakage (scikit-learn)", "url": "https://scikit-learn.org/stable/common_pitfalls.html"}, {"kind": "Course", "title": "Advanced Learning Algorithms: model evaluation (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/advanced-learning-algorithms"}], "6": [{"kind": "Course", "title": "Overfitting (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/overfitting"}, {"kind": "Course", "title": "Overfitting: Model complexity (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/model-complexity"}, {"kind": "Example", "title": "Underfitting vs. Overfitting, with charts (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html"}, {"kind": "Docs", "title": "Validation curves: spotting bias and variance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/learning_curve.html"}], "7": [{"kind": "Course", "title": "Linear regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"}, {"kind": "Course", "title": "Logistic regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression"}, {"kind": "Course", "title": "Calculating a probability with the sigmoid function (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/sigmoid-function"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "8": [{"kind": "Course", "title": "Decision trees (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/decision-trees"}, {"kind": "Course", "title": "Random forests (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/random-forests"}, {"kind": "Course", "title": "Decision Forests course introduction (Google)", "url": "https://developers.google.com/machine-learning/decision-forests"}, {"kind": "Docs", "title": "Ensembles: random forests and gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "9": [{"kind": "Course", "title": "Gradient Boosted Decision Trees (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/intro-to-gbdt"}, {"kind": "Course", "title": "Overfitting, regularization and early stopping in boosting (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/overfitting-gbdt"}, {"kind": "Docs", "title": "Introduction to Boosted Trees (XGBoost docs)", "url": "https://xgboost.readthedocs.io/en/stable/tutorials/model.html"}, {"kind": "Docs", "title": "Ensembles: gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "10": [{"kind": "Docs", "title": "Supervised learning guide: nearest neighbors, SVMs, naive Bayes (scikit-learn)", "url": "https://scikit-learn.org/stable/supervised_learning.html"}, {"kind": "Course", "title": "Classification: thresholds and confusion matrix (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification"}, {"kind": "Reference", "title": "Machine Learning Glossary (Google)", "url": "https://developers.google.com/machine-learning/glossary"}], "11": [{"kind": "Course", "title": "What is clustering? (Google Clustering course)", "url": "https://developers.google.com/machine-learning/clustering/overview"}, {"kind": "Course", "title": "What is k-means clustering? (Google)", "url": "https://developers.google.com/machine-learning/clustering/kmeans/overview"}, {"kind": "Docs", "title": "Novelty and outlier detection, incl. Isolation Forest (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/outlier_detection.html"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}], "12": [{"kind": "Docs", "title": "sklearn.decomposition: PCA and related methods (scikit-learn)", "url": "https://scikit-learn.org/stable/api/sklearn.decomposition.html"}, {"kind": "Docs", "title": "Manifold learning, incl. t-SNE (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/manifold.html"}, {"kind": "Article", "title": "How to Use t-SNE Effectively (Distill)", "url": "https://distill.pub/2016/misread-tsne/"}, {"kind": "Docs", "title": "How UMAP Works (UMAP docs)", "url": "https://umap-learn.readthedocs.io/en/latest/how_umap_works.html"}], "13": [{"kind": "Course", "title": "Linear regression: Loss (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/loss"}, {"kind": "Course", "title": "Logistic regression: Loss and regularization (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/loss-regularization"}, {"kind": "Reference", "title": "Machine Learning Glossary: ML Fundamentals (Google)", "url": "https://developers.google.com/machine-learning/glossary/fundamentals"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}]};
+const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}], "5": [{"kind": "Course", "title": "Datasets: Dividing the original dataset (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets"}, {"kind": "Docs", "title": "Cross-validation: evaluating estimator performance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"}, {"kind": "Docs", "title": "Common pitfalls: data leakage (scikit-learn)", "url": "https://scikit-learn.org/stable/common_pitfalls.html"}, {"kind": "Course", "title": "Advanced Learning Algorithms: model evaluation (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/advanced-learning-algorithms"}], "6": [{"kind": "Course", "title": "Overfitting (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/overfitting"}, {"kind": "Course", "title": "Overfitting: Model complexity (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/model-complexity"}, {"kind": "Example", "title": "Underfitting vs. Overfitting, with charts (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html"}, {"kind": "Docs", "title": "Validation curves: spotting bias and variance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/learning_curve.html"}], "7": [{"kind": "Course", "title": "Linear regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"}, {"kind": "Course", "title": "Logistic regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression"}, {"kind": "Course", "title": "Calculating a probability with the sigmoid function (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/sigmoid-function"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "8": [{"kind": "Course", "title": "Decision trees (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/decision-trees"}, {"kind": "Course", "title": "Random forests (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/random-forests"}, {"kind": "Course", "title": "Decision Forests course introduction (Google)", "url": "https://developers.google.com/machine-learning/decision-forests"}, {"kind": "Docs", "title": "Ensembles: random forests and gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "9": [{"kind": "Course", "title": "Gradient Boosted Decision Trees (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/intro-to-gbdt"}, {"kind": "Course", "title": "Overfitting, regularization and early stopping in boosting (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/overfitting-gbdt"}, {"kind": "Docs", "title": "Introduction to Boosted Trees (XGBoost docs)", "url": "https://xgboost.readthedocs.io/en/stable/tutorials/model.html"}, {"kind": "Docs", "title": "Ensembles: gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "10": [{"kind": "Docs", "title": "Supervised learning guide: nearest neighbors, SVMs, naive Bayes (scikit-learn)", "url": "https://scikit-learn.org/stable/supervised_learning.html"}, {"kind": "Course", "title": "Classification: thresholds and confusion matrix (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification"}, {"kind": "Reference", "title": "Machine Learning Glossary (Google)", "url": "https://developers.google.com/machine-learning/glossary"}], "11": [{"kind": "Course", "title": "What is clustering? (Google Clustering course)", "url": "https://developers.google.com/machine-learning/clustering/overview"}, {"kind": "Course", "title": "What is k-means clustering? (Google)", "url": "https://developers.google.com/machine-learning/clustering/kmeans/overview"}, {"kind": "Docs", "title": "Novelty and outlier detection, incl. Isolation Forest (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/outlier_detection.html"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}], "12": [{"kind": "Docs", "title": "sklearn.decomposition: PCA and related methods (scikit-learn)", "url": "https://scikit-learn.org/stable/api/sklearn.decomposition.html"}, {"kind": "Docs", "title": "Manifold learning, incl. t-SNE (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/manifold.html"}, {"kind": "Article", "title": "How to Use t-SNE Effectively (Distill)", "url": "https://distill.pub/2016/misread-tsne/"}, {"kind": "Docs", "title": "How UMAP Works (UMAP docs)", "url": "https://umap-learn.readthedocs.io/en/latest/how_umap_works.html"}], "13": [{"kind": "Course", "title": "Linear regression: Loss (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/loss"}, {"kind": "Course", "title": "Logistic regression: Loss and regularization (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/loss-regularization"}, {"kind": "Reference", "title": "Machine Learning Glossary: ML Fundamentals (Google)", "url": "https://developers.google.com/machine-learning/glossary/fundamentals"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "14": [{"kind": "Course", "title": "Linear regression: Gradient descent (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent"}, {"kind": "Course", "title": "Hyperparameters: learning rate, batch size, epochs (Google)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/hyperparameters"}, {"kind": "Paper", "title": "Adam: A Method for Stochastic Optimization (Kingma & Ba)", "url": "https://arxiv.org/abs/1412.6980"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "15": [{"kind": "Course", "title": "Overfitting: L2 regularization (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/regularization"}, {"kind": "Course", "title": "Training neural networks: dropout and best practices (Google)", "url": "https://developers.google.com/machine-learning/crash-course/training-neural-networks/best-practices"}, {"kind": "Course", "title": "Overfitting: Interpreting loss curves (Google)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/interpreting-loss-curves"}, {"kind": "Reference", "title": "Machine Learning Glossary: ML Fundamentals (Google)", "url": "https://developers.google.com/machine-learning/glossary/fundamentals"}], "16": [{"kind": "Docs", "title": "Tuning the hyper-parameters of an estimator (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/grid_search.html"}, {"kind": "Example", "title": "Comparing randomized search and grid search (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_randomized_search.html"}, {"kind": "Guide", "title": "Deep Learning Tuning Playbook (Google Research)", "url": "https://github.com/google-research/tuning_playbook"}, {"kind": "Docs", "title": "Optuna: a hyperparameter optimization framework", "url": "https://optuna.readthedocs.io/"}]};
 const ALLOWED_URLS = new Set(Object.values(RESOURCES).flat().map(r => r.url));
 function learnHtml(n) {
   const list = RESOURCES[n] || [];
@@ -2465,6 +2501,345 @@ const STEPS = [
 return { STEPS, picker: { label: "Model's confidence:", step: 2, items: () => CONF.map(c => ({ label: c.label, color: c.c })), get: () => ci, set: i => { ci = i; } } };
 })();
 VMETA[13] = {"title": "Scoring Every Mistake", "sub": "Turn the interview coach's mistakes into one number, compare losses for scores and for strong-or-weak predictions, and weight the mistakes that hurt users most."};
+
+VISUALS[14] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)", w = 1.5) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="${w}" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+
+/* one weight w in [0,10]; loss f(w) = (w-6)^2 / 2.5 ; illustrative */
+const f = w => (w - 6) ** 2 / 2.5, df = w => 2 * (w - 6) / 2.5;
+const WX = w => 60 + w * 30, LY = l => 280 - Math.min(l, 16) * 15;
+function curve() {
+  let s = `<line x1="${WX(0)}" y1="${LY(0)}" x2="${WX(10)}" y2="${LY(0)}" style="stroke:var(--ink)"/><line x1="${WX(0)}" y1="${LY(0)}" x2="${WX(0)}" y2="${LY(16)}" style="stroke:var(--ink)"/>`;
+  s += `<path d="${Array.from({ length: 101 }, (_, i) => { const w = i / 10; return `${i ? "L" : "M"}${WX(w)} ${LY(f(w))}`; }).join(" ")}" fill="none" style="stroke:var(--ink)" stroke-width="2"/>`;
+  s += `<text x="${WX(5)}" y="${LY(0) + 22}" text-anchor="middle" font-size="12" class="muted">a weight's value →</text><text x="34" y="${LY(8)}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 34 ${LY(8)})">Loss →</text>`;
+  s += `<text x="${WX(6)}" y="${LY(0) - 8}" text-anchor="middle" font-size="11.5" font-weight="700" style="fill:${A}">lowest loss</text>`;
+  return s;
+}
+function drawSlope() {
+  let s = svg(320) + curve();
+  const w = 1.6, l = f(w), g = df(w), dx = 1.4;
+  s += `<line x1="${WX(w - dx)}" y1="${LY(l - g * dx)}" x2="${WX(w + dx)}" y2="${LY(l + g * dx)}" style="stroke:${W}" stroke-width="2" stroke-dasharray="5 4"/>`;
+  s += `<circle cx="${WX(w)}" cy="${LY(l)}" r="9" style="fill:${B}"/>`;
+  s += arrow(WX(w) + 12, LY(l) + 4, WX(w + 1.1), LY(f(w + 1.1)) - 2, A, 2.5);
+  s += `<text x="${WX(w) - 6}" y="${LY(l) - 16}" text-anchor="middle" font-size="12" font-weight="700" style="fill:${B}">you are here</text>`;
+  s += `<text x="${WX(w - 1)}" y="${LY(l - g * -1) - 6}" font-size="11.5" font-weight="600" style="fill:${W}">slope (gradient)</text>`;
+  const bx = 400;
+  s += rect(bx, 30, 225, 196, "var(--line)") + lbl(bx + 14, 52, "THE LOOP");
+  ["1. Measure the slope here.", "2. Step the opposite way:", "    downhill.", "3. Measure again.", "4. Repeat until the ground", "    is flat."].forEach((t, i) => { s += `<text x="${bx + 14}" y="${78 + i * 22}" font-size="12.5">${t}</text>`; });
+  s += `<text x="${bx}" y="252" font-size="12" class="muted">Real models have millions of weights,</text><text x="${bx}" y="268" font-size="12" class="muted">so the “hill” has millions of directions.</text><text x="${bx}" y="296" font-size="11" class="muted">Illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+const RATES = [{ label: "Too small", lr: 0.12, c: "var(--t2)", note: "Crawls. Needs many more steps." }, { label: "Just right", lr: 0.75, c: "var(--accent)", note: "Gets down fast and settles." }, { label: "Too big", lr: 2.6, c: "var(--t3)", note: "Overshoots and bounces away." }];
+let ri = 1;
+function drawRate() {
+  const r = RATES[ri];
+  let s = svg(320) + curve();
+  let w = 0.8; const pts = [w];
+  for (let i = 0; i < 7; i++) { w = w - r.lr * df(w); pts.push(Math.max(-0.4, Math.min(10.4, w))); }
+  pts.forEach((v, i) => {
+    if (i) s += `<line x1="${WX(pts[i - 1])}" y1="${LY(f(pts[i - 1]))}" x2="${WX(v)}" y2="${LY(f(v))}" style="stroke:${r.c}" stroke-width="1.8" marker-end="url(#ah)"/>`;
+  });
+  pts.forEach((v, i) => { s += `<circle cx="${WX(v)}" cy="${LY(f(v))}" r="${i ? 5.5 : 8}" style="fill:${r.c}" fill-opacity="${i ? .85 : 1}"/>`; });
+  const bx = 400, end = f(pts[pts.length - 1]);
+  s += lbl(bx, 40, "LEARNING RATE = STEP SIZE");
+  s += rect(bx, 54, 225, 80, r.c, .12) + `<text x="${bx + 14}" y="80" font-size="15" font-weight="700" style="fill:${r.c}">${r.label} · ${r.lr}</text><text x="${bx + 14}" y="102" font-size="12.5">${r.note}</text><text x="${bx + 14}" y="122" class="mono" font-size="12">loss after 7 steps: ${end > 15 ? "16+" : end.toFixed(2)}</text>`;
+  s += `<text x="${bx}" y="168" font-size="12.5">Same start, same 7 steps.</text><text x="${bx}" y="188" font-size="12.5">Only the step size changes.</text>`;
+  s += `<text x="${bx}" y="222" font-size="12.5">Wild, jumpy loss curves in real</text><text x="${bx}" y="240" font-size="12.5">training often mean the learning</text><text x="${bx}" y="258" font-size="12.5">rate is too high.</text>`;
+  s += `<text x="${bx}" y="296" font-size="11" class="muted">Pick a learning rate above. Illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawBatch() {
+  let s = svg(330);
+  const cx = 180, cy = 165;
+  [130, 100, 72, 46, 22].forEach((r, i) => { s += `<ellipse cx="${cx}" cy="${cy}" rx="${r * 1.25}" ry="${r * .8}" style="fill:${A};stroke:${A}" fill-opacity="${.03 + i * .03}" stroke-opacity=".5"/>`; });
+  s += `<text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="11" font-weight="700" style="fill:${A}">lowest</text>`;
+  const full = [[40, 70], [80, 95], [115, 120], [145, 140], [165, 155]];
+  s += `<path d="M${full.map(p => p.join(" ")).join(" L")}" fill="none" style="stroke:${B}" stroke-width="2.5"/>`;
+  full.forEach(([x, y]) => { s += `<circle cx="${x}" cy="${y}" r="5" style="fill:${B}"/>`; });
+  const mini = [[40, 260], [62, 236], [58, 220], [86, 214], [92, 196], [118, 200], [126, 182], [148, 184], [152, 170], [170, 172]];
+  s += `<path d="M${mini.map(p => p.join(" ")).join(" L")}" fill="none" style="stroke:${G}" stroke-width="2"/>`;
+  mini.forEach(([x, y]) => { s += `<circle cx="${x}" cy="${y}" r="3.5" style="fill:${G}"/>`; });
+  s += `<text x="30" y="58" font-size="12" font-weight="700" style="fill:${B}">all 1,000 answers per step</text><text x="30" y="290" font-size="12" font-weight="700" style="fill:${G}">32 answers per step</text>`;
+  s += `<text x="30" y="306" font-size="11" class="muted">wobbly, but each step is ~30× cheaper</text>`;
+  const bx = 380;
+  s += lbl(bx, 40, "THE VOCABULARY");
+  [["Batch", "the answers used for one step, e.g. 32"], ["Step", "one update of the weights"], ["Epoch", "one full pass over all 1,000 answers"]].forEach(([t, d], i) => { s += rect(bx, 52 + i * 58, 245, 48, "var(--line)") + `<text x="${bx + 12}" y="${72 + i * 58}" font-size="13" font-weight="700">${t}</text><text x="${bx + 12}" y="${90 + i * 58}" font-size="11.5">${d}</text>`; });
+  s += rect(bx, 232, 245, 60, A, .08) + `<text x="${bx + 12}" y="256" font-size="12.5">1,000 answers ÷ 32 per batch</text><text x="${bx + 12}" y="278" class="mono" font-size="12.5" font-weight="700" style="fill:${A}">≈ 32 steps per epoch</text>`;
+  return s + `</svg>`;
+}
+
+function drawMomentum() {
+  let s = svg(350);
+  const G = (x, c, w) => Math.exp(-(((x - c) / w) ** 2));
+  const h = x => 120 + 40 * G(x, 230, 28) + 130 * G(x, 470, 80) + 0.04 * (x - 40);
+  s += lbl(20, 22, "A BUMPY LOSS LANDSCAPE · LOWER IS BETTER");
+  s += `<path d="M${Array.from({ length: 59 }, (_, i) => { const x = 40 + i * 10; return `${x} ${h(x)}`; }).join(" L")}" fill="none" style="stroke:var(--ink)" stroke-width="2"/>`;
+  s += `<circle cx="230" cy="${h(230) - 10}" r="10" style="fill:${B}"/><text x="230" y="${h(230) + 24}" text-anchor="middle" font-size="12" font-weight="700" style="fill:${B}">plain: stuck in a small dip</text>`;
+  s += `<path d="M70 ${h(70) - 26} Q 240 ${h(230) - 90} 455 ${h(455) - 22}" fill="none" style="stroke:${A}" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ah)"/>`;
+  s += `<circle cx="470" cy="${h(470) - 10}" r="10" style="fill:${A}"/><text x="592" y="224" text-anchor="middle" font-size="12" font-weight="700" style="fill:${A}">momentum</text><text x="592" y="240" text-anchor="middle" font-size="12" font-weight="700" style="fill:${A}">rolls through</text>`;
+  s += rect(20, 280, 295, 60, A, .08) + `<text x="34" y="302" font-size="13" font-weight="700" style="fill:${A}">Momentum</text><text x="34" y="322" font-size="12">Keeps speed, like a rolling ball.</text>`;
+  s += rect(330, 280, 295, 60, P, .08) + `<text x="344" y="302" font-size="13" font-weight="700" style="fill:${P}">Adam</text><text x="344" y="322" font-size="12">Adapts the step size for every weight.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Slope", title: "1 · The slope tells the way", q: "How does a model know which way to change its weights?",
+    points: ["Each weight value gives a different loss. Together they form a landscape.", "The <b>gradient</b> is the slope where the model stands.", "Step the opposite way, downhill, then measure again.", "Stop when the ground is flat: the lowest loss."],
+    pm: "This loop of measure, step, repeat is what you're paying for when training takes hours of compute.",
+    say: "Step one, the slope tells the way. Imagine standing on a foggy hillside. You can't see the valley, but you can feel the slope under your feet. The model does the same. The gradient tells it which way the loss goes up, so it steps the other way, downhill. Then it measures the slope again, and repeats, until the ground is flat. That's the lowest loss.",
+    draw: drawSlope },
+  { stage: "Learning rate", title: "2 · The learning rate", q: "How big should each step be?",
+    points: ["The <b>learning rate</b> sets the step size.", "Too small: crawls toward the bottom.", "Too big: overshoots, bounces and can fly off.", "Pick a learning rate above to compare 7 steps."],
+    pm: "If a team reports unstable or exploding training, the learning rate is the first suspect. It's one of the most important settings in any training run.",
+    say: "Step two, the learning rate. This is the size of each step. With just right, the model gets close to the bottom in a few steps and settles. Now pick too small. Same seven steps, but it's still crawling down the slope. Now pick too big. Each step overshoots the valley, and the model bounces further and further away. The loss actually gets worse.",
+    draw: drawRate },
+  { stage: "Batches", title: "3 · Batches and epochs", q: "Does every step need all the data?",
+    points: ["Using all 1,000 answers per step is accurate but slow.", "A <b>mini-batch</b> of 32 answers gives a wobbly but cheap estimate.", "Many cheap steps beat a few expensive ones.", "An <b>epoch</b> is one full pass through all the training data."],
+    pm: "Batch size and number of epochs drive training cost and time. Teams tune them against the compute budget you agree.",
+    say: "Step three, batches and epochs. Measuring the slope over all one thousand answers for every step is accurate, but slow. Instead, the model grabs a random batch of thirty two answers, estimates the slope, and steps. The path wobbles, but each step is about thirty times cheaper. One full pass through all the training answers is called an epoch, about thirty two steps here.",
+    draw: drawBatch },
+  { stage: "Optimizers", title: "4 · Smarter optimizers", q: "How do models avoid getting stuck?",
+    points: ["Plain gradient descent can stall in small dips or flat stretches.", "<b>Momentum</b> keeps speed, like a rolling ball.", "<b>Adam</b> adapts the step size for each weight.", "Adam is the default for most neural networks, including LLMs."],
+    pm: "You don't need the maths. Just know that the optimizer choice affects how fast and how reliably training finishes, and therefore cost.",
+    say: "Step four, smarter optimizers. Plain gradient descent can get stuck in a small dip, like the blue ball here. Momentum helps. Like a ball rolling downhill, it keeps its speed and rolls through small bumps. Adam goes further, adapting the step size for every weight on its own. Adam is the default for training most neural networks today, including large language models.",
+    draw: drawMomentum },
+];
+return { STEPS, picker: { label: "Learning rate:", step: 1, items: () => RATES.map(r => ({ label: r.label, color: r.c })), get: () => ri, set: i => { ri = i; } } };
+})();
+VMETA[14] = {"title": "Walking Downhill in Fog", "sub": "See how a model uses the slope of the loss to improve, what happens when its steps are too small or too big, and how batches and smarter optimizers speed it up."};
+
+VISUALS[15] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)", w = 1.5) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="${w}" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+
+const FEATS = [["specific details", 2.4], ["states a result", 1.9], ["clear structure", 1.2], ["filler words", -0.9], ["mentions “Kubernetes”", 2.8], ["answered on a Tuesday", -1.6]];
+const LAMBDAS = [{ label: "No penalty", k: 0, c: "var(--t3)", tr: 99, va: 70, v: "Overfitting: noisy features get big weights." }, { label: "Medium", k: 1, c: "var(--accent)", tr: 90, va: 85, v: "Noise shrinks to almost nothing. Best validation." }, { label: "Very strong", k: 2, c: "var(--t2)", tr: 71, va: 69, v: "Everything shrinks. Now it underfits." }];
+const shrink = (w, k, i) => k === 0 ? w : k === 1 ? (i >= 4 ? w * 0.08 : w * 0.75) : w * 0.15;
+let li = 0;
+function drawPenalty() {
+  const L = LAMBDAS[li];
+  let s = svg(340);
+  s += lbl(20, 22, "LEARNED WEIGHTS · LOSS = MISTAKES + λ × SIZE OF WEIGHTS");
+  const zx = 330;
+  FEATS.forEach(([t, w], i) => {
+    const y = 36 + i * 34, v = shrink(w, L.k, i), wd = Math.abs(v) * 55, noisy = i >= 4;
+    s += `<text x="${zx - 160}" y="${y + 18}" text-anchor="end" font-size="12.5" ${noisy ? `style="fill:${W}"` : ""}>${t}</text>`;
+    s += `<rect x="${v > 0 ? zx : zx - wd}" y="${y + 5}" width="${Math.max(wd, 1.5)}" height="18" rx="3" style="fill:${noisy ? W : A}" fill-opacity=".6"/>`;
+    s += `<text x="${v >= 0 ? zx + wd + 6 : zx - wd - 6}" y="${y + 18}" text-anchor="${v >= 0 ? "start" : "end"}" class="mono" font-size="11.5">${v > 0 ? "+" : ""}${v.toFixed(2)}</text>`;
+  });
+  s += `<line x1="${zx}" y1="34" x2="${zx}" y2="240" style="stroke:var(--ink)"/>`;
+  s += `<text x="20" y="262" font-size="11.5" style="fill:${W}">red = coincidences in the training data</text>`;
+  s += rect(20, 274, 600, 56, L.c, .12) + `<text x="34" y="296" font-size="13" font-weight="700" style="fill:${L.c}">${L.label}: training ${L.tr}% · validation ${L.va}%</text><text x="34" y="316" font-size="12.5">${L.v}</text>`;
+  return s + `</svg>`;
+}
+
+const r = (seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647)(13);
+const OFF = [[0, 0, 1, 0, 1], [1, 0, 0, 1, 0], [0, 1, 0, 0, 1]];
+function drawDropout() {
+  let s = svg(320);
+  const net = (ox, off, title) => {
+    const layers = [3, 5, 5, 1], xs = [0, 80, 160, 240].map(x => ox + x);
+    let o = `<text x="${ox + 120}" y="30" text-anchor="middle" font-size="13" font-weight="700">${title}</text>`;
+    const pos = layers.map((n, l) => Array.from({ length: n }, (_, i) => [xs[l], 70 + (i - (n - 1) / 2) * 38 + 80]));
+    for (let l = 0; l < 3; l++) pos[l].forEach((a, i) => pos[l + 1].forEach((b, j) => {
+      const dead = (l === 1 && off && off[0][i]) || (l === 2 && off && off[1][i]) || (l + 1 === 1 && off && off[0][j]) || (l + 1 === 2 && off && off[1][j]);
+      o += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" style="stroke:var(--line)" stroke-opacity="${dead ? .25 : 1}" stroke-width="1"/>`;
+    }));
+    pos.forEach((col, l) => col.forEach(([x, y], i) => {
+      const dead = off && ((l === 1 && off[0][i]) || (l === 2 && off[1][i]));
+      o += `<circle cx="${x}" cy="${y}" r="11" style="fill:${dead ? "var(--bg)" : l === 3 ? A : B};stroke:${dead ? "var(--muted)" : l === 3 ? A : B}" fill-opacity="${dead ? 1 : .3}" ${dead ? 'stroke-dasharray="3 2"' : ""}/>`;
+      if (dead) o += `<path d="M${x - 5} ${y - 5} L${x + 5} ${y + 5} M${x + 5} ${y - 5} L${x - 5} ${y + 5}" style="stroke:${W}" stroke-width="2"/>`;
+    }));
+    return o;
+  };
+  s += net(30, [OFF[0], OFF[1]], "Training step 1");
+  s += net(350, [OFF[1], OFF[2]], "Training step 2");
+  s += `<text x="20" y="300" font-size="12.5">Each step switches off a different random 40% of neurons. No neuron can be relied on alone,</text><text x="20" y="316" font-size="12.5">so the network learns several routes to the answer. At prediction time, all are switched on.</text>`;
+  return s + `</svg>`;
+}
+
+function drawEarly() {
+  let s = svg(330);
+  const X0 = 70, Y0 = 250, W0 = 520, H0 = 200;
+  s += `<line x1="${X0}" y1="${Y0}" x2="${X0 + W0}" y2="${Y0}" style="stroke:var(--ink)"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y0 - H0}" style="stroke:var(--ink)"/>`;
+  s += `<text x="${X0 + W0 / 2}" y="${Y0 + 26}" text-anchor="middle" font-size="12" class="muted">Training time (epochs) →</text><text x="34" y="${Y0 - H0 / 2}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 34 ${Y0 - H0 / 2})">Loss →</text>`;
+  const tr = t => .85 * Math.exp(-3.4 * t) + .05, va = t => .8 * Math.exp(-3.6 * t) + .2 + .42 * t * t;
+  const path = fn => Array.from({ length: 61 }, (_, i) => { const t = i / 60; return `${i ? "L" : "M"}${X0 + t * W0} ${Y0 - fn(t) * H0}`; }).join(" ");
+  s += `<path d="${path(tr)}" fill="none" style="stroke:var(--ink)" stroke-width="2.2"/><path d="${path(va)}" fill="none" style="stroke:${W}" stroke-width="2.2"/>`;
+  let tb = 0, vb = 9; for (let i = 0; i <= 100; i++) { const t = i / 100; if (va(t) < vb) { vb = va(t); tb = t; } }
+  const bx = X0 + tb * W0, by = Y0 - vb * H0;
+  s += `<rect x="${bx}" y="${Y0 - H0}" width="${X0 + W0 - bx}" height="${H0}" style="fill:${W}" fill-opacity=".06"/>`;
+  s += `<line x1="${bx}" y1="${Y0 - H0}" x2="${bx}" y2="${Y0}" style="stroke:${A}" stroke-width="2" stroke-dasharray="6 4"/><circle cx="${bx}" cy="${by}" r="7" style="fill:${A}"/>`;
+  s += `<text x="${bx - 8}" y="${Y0 - H0 + 16}" text-anchor="end" font-size="12.5" font-weight="700" style="fill:${A}">stop here: keep this version</text>`;
+  s += `<text x="${bx + 12}" y="${Y0 - H0 + 34}" font-size="12" style="fill:${W}">extra training only memorises</text>`;
+  s += `<text x="${X0 + W0 - 4}" y="${Y0 - va(1) * H0 - 8}" text-anchor="end" font-size="12" font-weight="600" style="fill:${W}">validation loss</text><text x="${X0 + W0 - 4}" y="${Y0 - tr(1) * H0 - 8}" text-anchor="end" font-size="12" font-weight="600">training loss</text>`;
+  s += `<text x="20" y="300" font-size="12.5">Save a copy (a checkpoint) after each epoch, then keep the one with the lowest validation loss.</text>`;
+  s += `<text x="20" y="320" font-size="11" class="muted">Curves are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawAugment() {
+  let s = svg(340);
+  s += lbl(20, 22, "ONE STRONG ANSWER → NEW TRAINING EXAMPLES");
+  s += rect(20, 32, 600, 40, A, .1) + `<text x="34" y="57" font-size="12.5">“I cut onboarding time 30% by rewriting the checklist with new hires.”</text><text x="610" y="57" text-anchor="end" class="mono" font-size="12" font-weight="700" style="fill:${A}">strong</text>`;
+  s += arrow(320, 76, 320, 96);
+  const v = [["“By rewriting the checklist alongside new hires, I reduced onboarding time by 30%.”", "strong", 1], ["“I worked with new hires on the checklist, and onboarding got 30% faster.”", "strong", 1], ["“I rewrote the onboarding checklist with new hires.”", "strong?", 0]];
+  v.forEach(([t, l, ok], i) => {
+    const y = 102 + i * 50, c = ok ? A : W;
+    s += rect(20, y, 600, 40, c, ok ? .05 : .1) + `<text x="34" y="${y + 25}" font-size="12">${t}</text><text x="610" y="${y + 25}" text-anchor="end" class="mono" font-size="12" font-weight="700" style="fill:${c}">${ok ? "✓ " : "✗ "}${l}</text>`;
+  });
+  s += rect(20, 262, 600, 66, W, .07) + `<text x="34" y="286" font-size="12.5" font-weight="700" style="fill:${W}">The last one dropped the result (30%).</text><text x="34" y="308" font-size="12.5">It is no longer a strong answer, so its label is wrong. Every variation must keep its label true.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Penalty", title: "1 · Penalties on big weights", q: "How do we stop a model leaning on coincidences?",
+    points: ["Add a penalty to the loss for large weights: <b>loss = mistakes + λ × weight size</b>.", "<b>L2</b> shrinks every weight toward zero. <b>L1</b> pushes useless ones to exactly zero.", "Red rows are coincidences, like “answered on a Tuesday”.", "Pick a strength above: none, medium, very strong."],
+    pm: "λ is a dial between memorising and generalising. The right setting is the one with the best validation score, not the best training score.",
+    say: "Step one, penalties on big weights. Without a penalty, the model gives big weights to coincidences, like mentioning Kubernetes, or answering on a Tuesday. Training looks great at ninety nine percent, but validation is only seventy. Now pick medium. The penalty shrinks the noisy weights almost to zero, and validation rises to eighty five. Now pick very strong. Everything shrinks, even the useful weights, and the model underfits.",
+    draw: drawPenalty },
+  { stage: "Dropout", title: "2 · Dropout", q: "How do neural networks avoid relying on a few neurons?",
+    points: ["During training, randomly switch off a share of neurons at each step.", "A different random set each time, often 20 to 50%.", "The network learns several routes to the answer.", "At prediction time, every neuron is switched back on."],
+    pm: "Dropout is like cross-training a team so the work never depends on one person. It's a standard setting the team tunes, not something you need to manage.",
+    say: "Step two, dropout. In a neural network, dropout randomly switches off some neurons at every training step. In step one, these neurons are off. In step two, a different set is off. Because no neuron can be relied on alone, the network learns several routes to the right answer. It's like a team where anyone might be absent, so everyone is cross trained. At prediction time, all the neurons are back on.",
+    draw: drawDropout },
+  { stage: "Early stop", title: "3 · Early stopping", q: "When should training stop?",
+    points: ["Training loss keeps falling the longer you train.", "Validation loss falls, then starts to rise: memorising has begun.", "<b>Early stopping</b> keeps the version from the lowest validation point.", "Teams save a checkpoint each epoch and keep the best one."],
+    pm: "Longer training isn't always better. Early stopping also saves compute, because you stop paying once the model stops improving.",
+    say: "Step three, early stopping. The longer we train, the lower the training loss goes. But the validation loss falls, and then starts to rise. That's the moment memorising begins. Early stopping watches the validation loss, and keeps the version of the model from its lowest point. Anything after that just memorises the training data, and costs extra compute.",
+    draw: drawEarly },
+  { stage: "Augment", title: "4 · More and varied data", q: "Can we make more training data from what we have?",
+    points: ["More good data is the most reliable cure for overfitting.", "<b>Data augmentation</b> creates variations of existing examples.", "For the coach: paraphrase answers. For images: flips and crops.", "Each variation must keep its label true."],
+    pm: "Augmentation is cheap data, but check samples by hand. A variation that changes the meaning teaches the model the wrong lesson.",
+    say: "Step four, more and varied data. The most reliable cure for overfitting is more good data. Data augmentation makes new examples by varying the ones we have. Here, one strong answer becomes three paraphrases. The first two keep the result, thirty percent faster, so they're still strong. But the last one dropped the result. It isn't a strong answer any more, so its label is wrong. Every variation must keep its label true.",
+    draw: drawAugment },
+];
+return { STEPS, picker: { label: "Penalty strength (λ):", step: 0, items: () => LAMBDAS.map(l => ({ label: l.label, color: l.c })), get: () => li, set: i => { li = i; } } };
+})();
+VMETA[15] = {"title": "Keeping the Model Honest", "sub": "Turn up the penalty on the interview coach's weights, switch off random neurons, stop training at the best moment, and make new examples without breaking their labels."};
+
+VISUALS[16] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)", w = 1.5) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="${w}" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+
+function drawKnobs() {
+  let s = svg(320);
+  s += rect(15, 14, 295, 200, B, .07) + `<text x="30" y="42" font-size="15" font-weight="700" style="fill:${B}">Parameters</text><text x="30" y="62" font-size="12" class="muted">learned from the data, during training</text>`;
+  ["the weights of a regression", "the questions in each tree", "the numbers inside a neural network", "millions or billions of them"].forEach((t, i) => { s += `<text x="30" y="${94 + i * 26}" font-size="12.5">• ${t}</text>`; });
+  s += rect(330, 14, 295, 200, A, .07) + `<text x="345" y="42" font-size="15" font-weight="700" style="fill:${A}">Hyperparameters</text><text x="345" y="62" font-size="12" class="muted">chosen by the team, before training</text>`;
+  [["learning rate", "concept 14"], ["regularization strength λ", "concept 15"], ["tree depth, number of trees", "concepts 8–9"], ["k in KNN", "concept 10"]].forEach(([t, c], i) => { s += `<text x="345" y="${94 + i * 26}" font-size="12.5">• ${t}</text><text x="612" y="${94 + i * 26}" text-anchor="end" font-size="11" class="muted">${c}</text>`; });
+  s += rect(15, 230, 610, 76, G, .08) + `<text x="30" y="254" font-size="13" font-weight="700" style="fill:${G}">Baking analogy</text><text x="30" y="276" font-size="12.5">You set the oven temperature and the timer (hyperparameters).</text><text x="30" y="294" font-size="12.5">How the cake rises inside the oven is worked out during baking (parameters).</text>`;
+  return s + `</svg>`;
+}
+
+const LRS = ["0.001", "0.01", "0.1", "1.0"], DEPTHS = ["2", "4", "6", "8"];
+const GRID = [[68, 72, 73, 71], [74, 80, 83, 79], [76, 84, 82, 78], [61, 66, 64, 60]];
+function drawGrid() {
+  let s = svg(330);
+  const X0 = 150, Y0 = 50, cw = 90, ch = 50;
+  s += `<text x="${X0 + 2 * cw}" y="30" text-anchor="middle" font-size="12" class="muted">Tree depth →</text>`;
+  DEPTHS.forEach((d, j) => { s += `<text x="${X0 + j * cw + cw / 2}" y="${Y0 - 6}" text-anchor="middle" class="mono" font-size="12">${d}</text>`; });
+  s += `<text x="40" y="${Y0 + 2 * ch}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 40 ${Y0 + 2 * ch})">Learning rate →</text>`;
+  LRS.forEach((l, i) => { s += `<text x="${X0 - 10}" y="${Y0 + i * ch + ch / 2 + 4}" text-anchor="end" class="mono" font-size="12">${l}</text>`; });
+  GRID.forEach((row, i) => row.forEach((v, j) => {
+    const best = v === 84, t = (v - 60) / 24;
+    s += `<rect x="${X0 + j * cw + 2}" y="${Y0 + i * ch + 2}" width="${cw - 4}" height="${ch - 4}" rx="5" style="fill:${A};stroke:${best ? "var(--ink)" : "none"}" fill-opacity="${.08 + t * .55}" stroke-width="2.5"/>`;
+    s += `<text x="${X0 + j * cw + cw / 2}" y="${Y0 + i * ch + ch / 2 + 5}" text-anchor="middle" class="mono" font-size="13" ${best ? 'font-weight="700"' : ""}>${v}%</text>`;
+  }));
+  const bx = 525;
+  s += `<text x="${bx}" y="70" font-size="12.5">4 × 4 =</text><text x="${bx}" y="90" font-size="12.5" font-weight="700">16 runs</text>`;
+  s += `<text x="${bx}" y="130" font-size="12.5">Best: 84%</text><text x="${bx}" y="148" font-size="12" class="muted">lr 0.1, depth 4</text>`;
+  s += rect(20, 262, 605, 58, W, .08) + `<text x="34" y="284" font-size="12.5"><tspan font-weight="700" style="fill:${W}">It explodes:</tspan> 5 settings × 5 values each = 3,125 runs.</text><text x="34" y="304" font-size="12.5">And the true best may sit between grid points, like lr 0.05, where nobody looked.</text>`;
+  s += `<text x="${bx}" y="186" font-size="11" class="muted">Validation</text><text x="${bx}" y="200" font-size="11" class="muted">scores,</text><text x="${bx}" y="214" font-size="11" class="muted">illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+/* score depends mostly on x (learning rate), barely on y (depth) */
+const score = (x, y) => 60 + 25 * Math.exp(-(((x - 0.63) / 0.12) ** 2)) + 3 * Math.exp(-(((y - 0.5) / 0.4) ** 2));
+const rng = seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const METHODS = (() => {
+  const g = []; [0.15, 0.5, 0.85].forEach(x => [0.15, 0.5, 0.85].forEach(y => g.push([x, y])));
+  const r = rng(29), rnd = Array.from({ length: 9 }, () => [0.06 + r() * 0.88, 0.06 + r() * 0.88]);
+  const by = [[0.15, 0.5], [0.85, 0.5], [0.5, 0.2], [0.55, 0.7], [0.6, 0.45], [0.66, 0.55], [0.63, 0.3], [0.64, 0.62], [0.62, 0.5]];
+  return [{ label: "Grid (9 runs)", c: "var(--t2)", pts: g }, { label: "Random (9 runs)", c: "var(--t4)", pts: rnd }, { label: "Bayesian (9 runs)", c: "var(--accent)", pts: by }];
+})();
+let mi = 0;
+function drawSearch() {
+  const M = METHODS[mi], X0 = 50, Y0 = 290, S = 260;
+  let s = svg(340);
+  for (let i = 0; i < 26; i++) { const x = i / 26 + 1 / 52; s += `<rect x="${X0 + (i / 26) * S}" y="${Y0 - S}" width="${S / 26 + .5}" height="${S}" style="fill:${A}" fill-opacity="${(score(x, .5) - 60) / 28 * .45}"/>`; }
+  s += `<rect x="${X0}" y="${Y0 - S}" width="${S}" height="${S}" style="fill:none;stroke:var(--ink)"/>`;
+  s += `<text x="${X0 + S / 2}" y="${Y0 + 20}" text-anchor="middle" font-size="12" class="muted">Learning rate → (matters a lot)</text><text x="${X0 - 16}" y="${Y0 - S / 2}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 ${X0 - 16} ${Y0 - S / 2})">Tree depth → (matters little)</text>`;
+  let best = 0, bp = null;
+  M.pts.forEach(([x, y], i) => { const v = score(x, y); if (v > best) { best = v; bp = [x, y]; } s += `<circle cx="${X0 + x * S}" cy="${Y0 - y * S}" r="7" style="fill:${M.c};stroke:var(--surface)" stroke-width="1.5"/>${mi === 2 ? `<text x="${X0 + x * S + 9}" y="${Y0 - y * S - 7}" font-size="10" class="mono">${i + 1}</text>` : ""}`; });
+  s += `<circle cx="${X0 + bp[0] * S}" cy="${Y0 - bp[1] * S}" r="13" style="fill:none;stroke:var(--ink)" stroke-width="2"/>`;
+  const distinct = new Set(M.pts.map(p => p[0].toFixed(2))).size;
+  const bx = 350;
+  s += lbl(bx, 40, "SAME BUDGET: 9 TRAINING RUNS");
+  s += rect(bx, 52, 275, 68, M.c, .12) + `<text x="${bx + 14}" y="78" font-size="14" font-weight="700" style="fill:${M.c}">${M.label}</text><text x="${bx + 14}" y="104" font-size="13">Best validation score: <tspan font-weight="700">${best.toFixed(0)}%</tspan></text>`;
+  const notes = ["Only 3 distinct learning rates tried,", "and none hits the peak band.", "", ""];
+  const txt = mi === 0 ? ["Only 3 different learning rates tried.", "The peak band falls between them."] : mi === 1 ? [`${distinct} different learning rates tried,`, "so one lands closer to the peak."] : ["Runs 1–4 explore. Then each new run", "goes where results look best."];
+  txt.forEach((t, i) => { s += `<text x="${bx}" y="${150 + i * 20}" font-size="12.5">${t}</text>`; });
+  s += `<text x="${bx}" y="206" font-size="12.5">Darker band = higher score.</text>`;
+  s += `<text x="${bx}" y="238" font-size="12" class="muted">Tools like Optuna do Bayesian search</text><text x="${bx}" y="254" font-size="12" class="muted">and stop bad runs early.</text>`;
+  s += `<text x="${bx}" y="290" font-size="11" class="muted">Pick a method above. Illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawRules() {
+  let s = svg(330);
+  const rules = [["Judge on validation, never test", "or use cross-validation (concept 5)"], ["Start from sensible defaults", "they're often close to good already"], ["Set a budget first", "e.g. 50 runs, or stop after 10 with no gain"], ["Record every run", "settings, data and score, so it can be repeated"]];
+  rules.forEach(([t, d], i) => { const x = 20 + (i % 2) * 305, y = 16 + Math.floor(i / 2) * 70; s += rect(x, y, 295, 60, A, .07) + `<text x="${x + 14}" y="${y + 25}" font-size="13" font-weight="700" style="fill:${A}">${i + 1}. ${t}</text><text x="${x + 14}" y="${y + 45}" font-size="12">${d}</text>`; });
+  s += lbl(20, 182, "DIMINISHING RETURNS");
+  const pts = [[0, 70], [5, 78], [10, 81], [20, 82.5], [30, 83], [50, 83.3]], X0 = 60, Y0 = 300, sx = 9.5, sy = 7;
+  s += `<line x1="${X0}" y1="${Y0}" x2="${X0 + 50 * sx}" y2="${Y0}" style="stroke:var(--ink)"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y0 - 100}" style="stroke:var(--ink)"/>`;
+  s += `<path d="M${pts.map(([r, v]) => `${X0 + r * sx} ${Y0 - (v - 68) * sy}`).join(" L")}" fill="none" style="stroke:${B}" stroke-width="2.5"/>`;
+  pts.forEach(([r, v]) => { s += `<circle cx="${X0 + r * sx}" cy="${Y0 - (v - 68) * sy}" r="4" style="fill:${B}"/><text x="${X0 + r * sx}" y="${Y0 - (v - 68) * sy - 9}" text-anchor="middle" class="mono" font-size="10.5">${v}%</text>`; });
+  s += `<text x="${X0 + 25 * sx}" y="${Y0 + 18}" text-anchor="middle" font-size="11.5" class="muted">number of tuning runs →</text>`;
+  s += `<text x="${X0 + 50 * sx + 10}" y="230" font-size="12" class="muted">Most gain</text><text x="${X0 + 50 * sx + 10}" y="246" font-size="12" class="muted">comes early.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Knobs", title: "1 · Parameters versus hyperparameters", q: "What does the team choose, and what does the model learn?",
+    points: ["<b>Parameters</b>, like weights, are learned from the data.", "<b>Hyperparameters</b> are chosen before training: learning rate, λ, tree depth, k.", "Think baking: you set the oven and timer; the cake rises on its own.", "Tuning means finding good hyperparameters."],
+    pm: "When a team says “we're tuning”, they're searching these knobs. It's normal, but it takes compute and calendar time, so plan for it.",
+    say: "Step one, parameters versus hyperparameters. Parameters, like the weights, are learned by the model from the data. Hyperparameters are knobs the team sets before training starts. The learning rate, the strength of regularization, the depth of each tree, or k in nearest neighbours. Think of baking. You set the oven temperature and the timer. How the cake rises is worked out inside the oven.",
+    draw: drawKnobs },
+  { stage: "Grid", title: "2 · Grid search", q: "What's the simplest way to search?",
+    points: ["Pick a few values for each knob and try <b>every combination</b>.", "4 learning rates × 4 depths = 16 runs. Best here: 84%.", "It explodes fast: 5 knobs × 5 values = 3,125 runs.", "The true best may sit between grid points."],
+    pm: "Grid search is easy to explain and fine for one or two knobs. Beyond that, it burns compute fast.",
+    say: "Step two, grid search. We pick four learning rates and four tree depths, and train a model for every combination. That's sixteen runs. Each square shows a validation score, and the best is eighty four percent. It's simple, but it explodes. Five knobs with five values each is over three thousand runs. And the true best value might sit between two grid points, where nobody looked.",
+    draw: drawGrid },
+  { stage: "Smart search", title: "3 · Random and smart search", q: "Can we find good settings with fewer runs?",
+    points: ["Here the learning rate matters a lot; tree depth barely matters.", "<b>Grid</b> tries only 3 learning rates, and misses the peak.", "<b>Random</b> tries 9 different learning rates, and gets closer.", "<b>Bayesian</b> learns from each run and homes in on the peak. Try each above."],
+    pm: "Ask which search method the team uses. Random or Bayesian search usually reaches the same quality with far fewer runs, which saves money.",
+    say: "Step three, random and smart search. In this example, the learning rate matters a lot, and tree depth barely matters. With nine runs, grid search only tries three different learning rates, and none hits the peak band. Now pick random. It tries nine different learning rates, and one lands closer. Now pick Bayesian. The first runs explore, then each new run goes where results look best, and it homes in on the peak.",
+    draw: drawSearch },
+  { stage: "Rules", title: "4 · Tuning the right way", q: "How do we keep tuning honest and affordable?",
+    points: ["Judge on validation or cross-validation, never on the test set.", "Start from sensible defaults.", "Set a budget and a stopping rule first.", "Record every run. Expect most gains to come early."],
+    pm: "Agree the tuning budget up front. A point or two from tuning is nice, but better data or features often gain far more.",
+    say: "Step four, tuning the right way. Judge every setting on the validation set, never on the test set. Start from sensible defaults. Agree a budget before you begin, like fifty runs, or stop after ten runs with no improvement. And record every run, so results can be repeated. Notice the curve. Most of the gain comes in the first few runs, and after that, returns shrink fast.",
+    draw: drawRules },
+];
+return { STEPS, picker: { label: "Search method:", step: 2, items: () => METHODS.map(m => ({ label: m.label, color: m.c })), get: () => mi, set: i => { mi = i; } } };
+})();
+VMETA[16] = {"title": "Turning the Knobs", "sub": "Tell parameters from hyperparameters, then compare grid, random and Bayesian search for the interview coach's settings on the same budget of training runs."};
 
 
 const view = { mode: "lesson", n: 0, s: 0 };

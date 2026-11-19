@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Linear regression: Gradient descent (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent"},
+ {"kind": "Course", "title": "Hyperparameters: learning rate, batch size, epochs (Google)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/hyperparameters"},
+ {"kind": "Paper", "title": "Adam: A Method for Stochastic Optimization (Kingma & Ba)", "url": "https://arxiv.org/abs/1412.6980"},
+ {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}
+]

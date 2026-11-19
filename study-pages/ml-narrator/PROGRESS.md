@@ -26,8 +26,8 @@ Publish `index.html` to the live page URL (capabilities: db, dictation, download
 | 1 | 2 Types of Learning, 3 Data & Labeling, 4 Features & Feature Engineering | Done |
 | 2 | 5 Train/Validation/Test Sets, 6 Overfitting & Underfitting, 7 Linear & Logistic Regression | Done |
 | 3 | 8 Decision Trees & Random Forests, 9 Gradient Boosting, 10 KNN, SVM & Naive Bayes | Done |
-| 4 | 11 Clustering & Anomaly Detection, 12 Dimensionality Reduction, 13 Loss Functions | Published, waiting for review |
-| 5 | 14–16 | Not started |
+| 4 | 11 Clustering & Anomaly Detection, 12 Dimensionality Reduction, 13 Loss Functions | Done |
+| 5 | 14 Gradient Descent & Optimizers, 15 Regularization, 16 Hyperparameter Tuning | Published, waiting for review |
 | 6 | 17–19 | Not started |
 | 7 | 20–22 | Not started |
 | 8 | 23–25 | Not started |
