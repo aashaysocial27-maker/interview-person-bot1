@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Datasets: Class-imbalanced datasets (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/imbalanced-datasets"},
+ {"kind": "Course", "title": "Accuracy, recall, precision: why accuracy misleads (Google)", "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall"},
+ {"kind": "Docs", "title": "Over-sampling, incl. SMOTE (imbalanced-learn)", "url": "https://imbalanced-learn.org/stable/over_sampling.html"},
+ {"kind": "Example", "title": "Precision-Recall curves (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html"}
+]

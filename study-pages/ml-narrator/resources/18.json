@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Accuracy, recall, precision and related metrics (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall"},
+ {"kind": "Course", "title": "Classification: ROC and AUC (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc"},
+ {"kind": "Reference", "title": "Machine Learning Glossary: Metrics (Google)", "url": "https://developers.google.com/machine-learning/glossary/metrics"},
+ {"kind": "Docs", "title": "Metrics and scoring (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"}
+]

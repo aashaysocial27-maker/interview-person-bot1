@@ -644,12 +644,48 @@ const CONCEPTS = [
     { h: "How it connects", text: "In Regularization and Gradient Descent, we met settings like lambda and the learning rate. Here we learned how to choose them. Next, in Class Imbalance, we tackle a common trap, when the thing you care about is rare, and a lazy model can look accurate by ignoring it." },
   ]
 },
-{ n: 17, group: "How Models Learn", title: "Class Imbalance", draft: true, terms: ["Imbalanced data", "Oversampling", "SMOTE", "Class weights"],
-  sections: [{ h: "The big idea", text: "Sometimes the thing you care about is rare, like fraud in one transaction out of a thousand. A lazy model can just say never, and still be right most of the time. Class imbalance techniques make the model pay attention to the rare cases." }] },
-{ n: 18, group: "How Models Learn", title: "Evaluation Metrics", draft: true, terms: ["Accuracy", "Precision", "Recall", "F1", "ROC AUC", "Confusion matrix"],
-  sections: [{ h: "The big idea", text: "Accuracy alone can fool you. Precision asks, when the model says yes, how often is it right? Recall asks, of all the real yes cases, how many did it find? Picking the right metric is a product decision about which mistake costs more." }] },
-{ n: 19, group: "Deep Learning", title: "Neural Networks & Backpropagation", draft: true, terms: ["Neurons", "Layers", "Activation", "Backpropagation"],
-  sections: [{ h: "The big idea", text: "A neural network is layers of simple units, loosely inspired by the brain. Each layer turns its input into a slightly more useful version. Backpropagation is how the network learns, by sending the error backwards and adjusting every connection a little." }] },
+{
+  n: 17, group: "How Models Learn", title: "Class Imbalance",
+  terms: ["Imbalanced data", "Majority and minority class", "Oversampling", "SMOTE", "Undersampling", "Class weights"],
+  visual: { title: "Finding the Needle", note: "See why 98% accuracy can mean nothing, then rebalance the data and catch the rare cases" },
+  sections: [
+    { h: "The big idea", text: "Often the thing you care most about is rare. Fraud, machine failures, or, for our coach, answers copied from the internet. Say only twenty of every thousand answers are copied. A model learns mostly from the other nine hundred and eighty, and may simply learn to ignore the rare case. Class imbalance techniques make the model pay attention to it." },
+    { h: "1 · The accuracy trap", text: "Imagine a lazy model that always says, not copied. It is right nine hundred and eighty times out of a thousand, so its accuracy is ninety eight percent. That sounds excellent. But it catches zero copied answers, which was the whole point. With imbalanced data, accuracy hides failure. You need to look at how many of the rare cases the model actually finds, which is called recall." },
+    { h: "2 · Rebalancing the data", text: "One fix is to change the training data. Oversampling adds more rare examples. The simplest way repeats them. A method called SMOTE goes further, creating new, synthetic examples that sit between real rare examples. Undersampling does the opposite, and removes some of the common examples. Either way, only rebalance the training set. The validation and test sets must stay realistic, so you measure the real world." },
+    { h: "3 · Class weights", text: "Instead of changing the data, you can change the loss. Class weights make each mistake on the rare class count more, for example forty nine times more, so the model cannot afford to ignore it. Google's course suggests a related recipe, keep fewer of the common examples, then weight the remaining ones up, so the model still learns the true balance." },
+    { h: "4 · Thresholds and more data", text: "A model gives each answer a probability of being copied. If you flag only answers above fifty percent, you may miss many of them. Lowering the threshold catches more copied answers, but also raises more false alarms. The right point depends on what a miss costs and what a false alarm costs. And the best long term fix is simply collecting more real examples of the rare case." },
+    { h: "Why it matters for a PM", text: "For a PM, be suspicious whenever a rare event model reports a high accuracy. Ask instead, what share of the rare cases does it catch, and how many false alarms come with that? Decide together how many false alarms the team can handle. And build product flows that capture more rare examples, such as a report this answer button." },
+    { h: "How it connects", text: "In Loss Functions, we weighted the worse mistake. Class weights use the same idea for rare classes. We kept saying accuracy is not enough. Next, in Evaluation Metrics, we meet the metrics that tell the full story, precision, recall, F one, and the ROC curve." },
+  ]
+},
+{
+  n: 18, group: "How Models Learn", title: "Evaluation Metrics",
+  terms: ["Confusion matrix", "Accuracy", "Precision", "Recall", "F1 score", "ROC curve and AUC"],
+  visual: { title: "Which Mistakes Matter?", note: "Fill in a confusion matrix, move the threshold, and watch precision and recall trade places" },
+  sections: [
+    { h: "The big idea", text: "A single accuracy number hides which mistakes a model makes. Evaluation metrics split them apart, so you can see the kinds of errors, not just how many. Choosing the right metric is a product decision, because different mistakes cost users different things." },
+    { h: "1 · The confusion matrix", text: "Test the coach on two hundred answers, one hundred strong and one hundred weak. Every prediction lands in one of four boxes. True positive, the coach said strong and it was strong. False positive, it said strong but it was weak. False negative, it said weak but it was strong. And true negative, it said weak and it was weak. Accuracy is simply the share of predictions in the two true boxes." },
+    { h: "2 · Precision and recall", text: "Precision asks, when the coach says strong, how often is it right? Recall asks, of all the truly strong answers, how many did the coach find? Say the coach found eighty of the hundred strong answers, and wrongly praised fifteen weak ones. Recall is eighty percent. Precision is eighty out of ninety five, about eighty four percent. The F one score combines the two into one number, and is only high when both are." },
+    { h: "3 · The threshold trade off", text: "Precision and recall usually pull against each other. Raise the threshold, so the coach only says strong when it is very sure, and precision goes up, but recall falls, because it misses more strong answers. Lower the threshold, and the opposite happens. There is no free lunch. You pick the balance that suits the product." },
+    { h: "4 · ROC curves and AUC", text: "An ROC curve shows every possible threshold at once. It plots how many strong answers are caught against how many weak answers are wrongly praised. A perfect model hugs the top left corner. A coin flip follows the diagonal. The area under the curve, called AUC, sums it up. An AUC of zero point five is random, and one point zero is perfect. It also means the chance that a random strong answer gets a higher score than a random weak one. For very imbalanced data, precision recall curves are often more useful." },
+    { h: "Why it matters for a PM", text: "For a PM, choose the metric before the model is built, and tie it to the cost of mistakes. If false praise hurts candidates, prioritise precision. If missing good answers discourages them, prioritise recall. Ask for results broken down by user group too, because a good overall number can hide a group the model fails. And remember, these are offline metrics. User outcomes are the final test." },
+    { h: "How it connects", text: "In Class Imbalance, we saw why accuracy alone can fool you. Here we met the full toolkit. This completes How Models Learn. Next, we start the Deep Learning group with Neural Networks and Backpropagation, the engine behind modern AI." },
+  ]
+},
+{
+  n: 19, group: "Deep Learning", title: "Neural Networks & Backpropagation",
+  terms: ["Neuron", "Activation function", "Hidden layer", "Forward pass", "Backpropagation", "Deep learning"],
+  visual: { title: "Layers That Learn", note: "Run an answer through one neuron, then a whole network, and send the error back" },
+  sections: [
+    { h: "The big idea", text: "A neural network is many simple units, called neurons, arranged in layers. Each neuron does something small. Together, layer by layer, they can learn very complex patterns, straight from raw data like text, images or sound. This is deep learning, the engine behind modern AI, including the large language models in your AI course." },
+    { h: "1 · One neuron", text: "A single neuron is a tiny version of logistic regression. It takes some inputs, multiplies each by a weight, adds them up with a bias, and passes the result through an activation function. The activation decides how strongly the neuron fires. A common one, called ReLU, simply turns negative numbers into zero. For our coach, one neuron could take specific details, a stated result and filler words, and output how strong the answer looks." },
+    { h: "2 · Layers", text: "Now stack many neurons in layers. The input layer holds the features, or even raw words. Hidden layers combine them into new signals. One hidden neuron might learn to fire for, specific and states a result. Another might learn, long but vague. The output layer gives the final answer. With enough layers, the network learns its own features, so less hand built feature engineering is needed. Deep simply means many hidden layers." },
+    { h: "3 · The forward pass", text: "To make a prediction, data flows forward through the network, from the inputs, through each hidden layer, to the output. That is the forward pass. During training, we compare the output with the right answer, and the loss tells us how wrong it was. Say the network said sixty percent strong for an answer the coach rated strong. There is still room to improve." },
+    { h: "4 · Backpropagation", text: "Backpropagation is how the network learns from that mistake. It sends the error backwards, layer by layer, and works out how much each weight contributed to it. Weights that caused more of the error get a bigger share of the blame. Then gradient descent nudges every weight a little in the right direction. Repeat this over millions of examples, and the network gradually gets good." },
+    { h: "Why it matters for a PM", text: "For a PM, neural networks shine when the data is unstructured, like text, images or audio, and when there is a lot of it. They cost more to train and run, usually need special chips called GPUs, and are harder to explain. For data in tables, gradient boosting is often still better and cheaper. And today, most teams start from a pretrained network rather than training one from scratch." },
+    { h: "How it connects", text: "A neuron is a small logistic regression, and backpropagation is gradient descent applied to every layer at once. So this concept ties together much of what came before. Next, in Convolutional Networks, we see a special network design built for images, and how it learns to see." },
+  ]
+},
 { n: 20, group: "Deep Learning", title: "Convolutional Networks (Vision)", draft: true, terms: ["CNN", "Convolution", "Filters", "Image classification"],
   sections: [{ h: "The big idea", text: "Convolutional networks are built for images. Small filters slide across a picture and detect edges, then shapes, then whole objects. They power photo search, medical scans and quality checks on factory lines." }] },
 { n: 21, group: "Deep Learning", title: "Sequence Models (RNN, LSTM)", draft: true, terms: ["RNN", "LSTM", "Sequences", "Vanishing gradient"],
@@ -673,7 +709,7 @@ const CONCEPTS = [
 { n: 30, group: "Real-World ML", title: "MLOps", draft: true, terms: ["ML pipelines", "Feature store", "Model registry", "CI/CD for ML"],
   sections: [{ h: "The big idea", text: "MLOps is the engineering that keeps machine learning running reliably in production. It covers data pipelines, versioning of data and models, automated retraining, safe deployment and rollback. It turns a one-off experiment into a dependable product." }] }
 ];
-const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}], "5": [{"kind": "Course", "title": "Datasets: Dividing the original dataset (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets"}, {"kind": "Docs", "title": "Cross-validation: evaluating estimator performance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"}, {"kind": "Docs", "title": "Common pitfalls: data leakage (scikit-learn)", "url": "https://scikit-learn.org/stable/common_pitfalls.html"}, {"kind": "Course", "title": "Advanced Learning Algorithms: model evaluation (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/advanced-learning-algorithms"}], "6": [{"kind": "Course", "title": "Overfitting (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/overfitting"}, {"kind": "Course", "title": "Overfitting: Model complexity (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/model-complexity"}, {"kind": "Example", "title": "Underfitting vs. Overfitting, with charts (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html"}, {"kind": "Docs", "title": "Validation curves: spotting bias and variance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/learning_curve.html"}], "7": [{"kind": "Course", "title": "Linear regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"}, {"kind": "Course", "title": "Logistic regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression"}, {"kind": "Course", "title": "Calculating a probability with the sigmoid function (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/sigmoid-function"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "8": [{"kind": "Course", "title": "Decision trees (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/decision-trees"}, {"kind": "Course", "title": "Random forests (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/random-forests"}, {"kind": "Course", "title": "Decision Forests course introduction (Google)", "url": "https://developers.google.com/machine-learning/decision-forests"}, {"kind": "Docs", "title": "Ensembles: random forests and gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "9": [{"kind": "Course", "title": "Gradient Boosted Decision Trees (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/intro-to-gbdt"}, {"kind": "Course", "title": "Overfitting, regularization and early stopping in boosting (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/overfitting-gbdt"}, {"kind": "Docs", "title": "Introduction to Boosted Trees (XGBoost docs)", "url": "https://xgboost.readthedocs.io/en/stable/tutorials/model.html"}, {"kind": "Docs", "title": "Ensembles: gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "10": [{"kind": "Docs", "title": "Supervised learning guide: nearest neighbors, SVMs, naive Bayes (scikit-learn)", "url": "https://scikit-learn.org/stable/supervised_learning.html"}, {"kind": "Course", "title": "Classification: thresholds and confusion matrix (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification"}, {"kind": "Reference", "title": "Machine Learning Glossary (Google)", "url": "https://developers.google.com/machine-learning/glossary"}], "11": [{"kind": "Course", "title": "What is clustering? (Google Clustering course)", "url": "https://developers.google.com/machine-learning/clustering/overview"}, {"kind": "Course", "title": "What is k-means clustering? (Google)", "url": "https://developers.google.com/machine-learning/clustering/kmeans/overview"}, {"kind": "Docs", "title": "Novelty and outlier detection, incl. Isolation Forest (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/outlier_detection.html"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}], "12": [{"kind": "Docs", "title": "sklearn.decomposition: PCA and related methods (scikit-learn)", "url": "https://scikit-learn.org/stable/api/sklearn.decomposition.html"}, {"kind": "Docs", "title": "Manifold learning, incl. t-SNE (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/manifold.html"}, {"kind": "Article", "title": "How to Use t-SNE Effectively (Distill)", "url": "https://distill.pub/2016/misread-tsne/"}, {"kind": "Docs", "title": "How UMAP Works (UMAP docs)", "url": "https://umap-learn.readthedocs.io/en/latest/how_umap_works.html"}], "13": [{"kind": "Course", "title": "Linear regression: Loss (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/loss"}, {"kind": "Course", "title": "Logistic regression: Loss and regularization (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/loss-regularization"}, {"kind": "Reference", "title": "Machine Learning Glossary: ML Fundamentals (Google)", "url": "https://developers.google.com/machine-learning/glossary/fundamentals"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "14": [{"kind": "Course", "title": "Linear regression: Gradient descent (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent"}, {"kind": "Course", "title": "Hyperparameters: learning rate, batch size, epochs (Google)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/hyperparameters"}, {"kind": "Paper", "title": "Adam: A Method for Stochastic Optimization (Kingma & Ba)", "url": "https://arxiv.org/abs/1412.6980"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "15": [{"kind": "Course", "title": "Overfitting: L2 regularization (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/regularization"}, {"kind": "Course", "title": "Training neural networks: dropout and best practices (Google)", "url": "https://developers.google.com/machine-learning/crash-course/training-neural-networks/best-practices"}, {"kind": "Course", "title": "Overfitting: Interpreting loss curves (Google)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/interpreting-loss-curves"}, {"kind": "Reference", "title": "Machine Learning Glossary: ML Fundamentals (Google)", "url": "https://developers.google.com/machine-learning/glossary/fundamentals"}], "16": [{"kind": "Docs", "title": "Tuning the hyper-parameters of an estimator (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/grid_search.html"}, {"kind": "Example", "title": "Comparing randomized search and grid search (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_randomized_search.html"}, {"kind": "Guide", "title": "Deep Learning Tuning Playbook (Google Research)", "url": "https://github.com/google-research/tuning_playbook"}, {"kind": "Docs", "title": "Optuna: a hyperparameter optimization framework", "url": "https://optuna.readthedocs.io/"}]};
+const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}], "5": [{"kind": "Course", "title": "Datasets: Dividing the original dataset (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets"}, {"kind": "Docs", "title": "Cross-validation: evaluating estimator performance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"}, {"kind": "Docs", "title": "Common pitfalls: data leakage (scikit-learn)", "url": "https://scikit-learn.org/stable/common_pitfalls.html"}, {"kind": "Course", "title": "Advanced Learning Algorithms: model evaluation (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/advanced-learning-algorithms"}], "6": [{"kind": "Course", "title": "Overfitting (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/overfitting"}, {"kind": "Course", "title": "Overfitting: Model complexity (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/model-complexity"}, {"kind": "Example", "title": "Underfitting vs. Overfitting, with charts (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html"}, {"kind": "Docs", "title": "Validation curves: spotting bias and variance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/learning_curve.html"}], "7": [{"kind": "Course", "title": "Linear regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"}, {"kind": "Course", "title": "Logistic regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression"}, {"kind": "Course", "title": "Calculating a probability with the sigmoid function (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/sigmoid-function"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "8": [{"kind": "Course", "title": "Decision trees (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/decision-trees"}, {"kind": "Course", "title": "Random forests (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/random-forests"}, {"kind": "Course", "title": "Decision Forests course introduction (Google)", "url": "https://developers.google.com/machine-learning/decision-forests"}, {"kind": "Docs", "title": "Ensembles: random forests and gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "9": [{"kind": "Course", "title": "Gradient Boosted Decision Trees (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/intro-to-gbdt"}, {"kind": "Course", "title": "Overfitting, regularization and early stopping in boosting (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/overfitting-gbdt"}, {"kind": "Docs", "title": "Introduction to Boosted Trees (XGBoost docs)", "url": "https://xgboost.readthedocs.io/en/stable/tutorials/model.html"}, {"kind": "Docs", "title": "Ensembles: gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "10": [{"kind": "Docs", "title": "Supervised learning guide: nearest neighbors, SVMs, naive Bayes (scikit-learn)", "url": "https://scikit-learn.org/stable/supervised_learning.html"}, {"kind": "Course", "title": "Classification: thresholds and confusion matrix (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification"}, {"kind": "Reference", "title": "Machine Learning Glossary (Google)", "url": "https://developers.google.com/machine-learning/glossary"}], "11": [{"kind": "Course", "title": "What is clustering? (Google Clustering course)", "url": "https://developers.google.com/machine-learning/clustering/overview"}, {"kind": "Course", "title": "What is k-means clustering? (Google)", "url": "https://developers.google.com/machine-learning/clustering/kmeans/overview"}, {"kind": "Docs", "title": "Novelty and outlier detection, incl. Isolation Forest (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/outlier_detection.html"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}], "12": [{"kind": "Docs", "title": "sklearn.decomposition: PCA and related methods (scikit-learn)", "url": "https://scikit-learn.org/stable/api/sklearn.decomposition.html"}, {"kind": "Docs", "title": "Manifold learning, incl. t-SNE (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/manifold.html"}, {"kind": "Article", "title": "How to Use t-SNE Effectively (Distill)", "url": "https://distill.pub/2016/misread-tsne/"}, {"kind": "Docs", "title": "How UMAP Works (UMAP docs)", "url": "https://umap-learn.readthedocs.io/en/latest/how_umap_works.html"}], "13": [{"kind": "Course", "title": "Linear regression: Loss (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/loss"}, {"kind": "Course", "title": "Logistic regression: Loss and regularization (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/loss-regularization"}, {"kind": "Reference", "title": "Machine Learning Glossary: ML Fundamentals (Google)", "url": "https://developers.google.com/machine-learning/glossary/fundamentals"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "14": [{"kind": "Course", "title": "Linear regression: Gradient descent (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent"}, {"kind": "Course", "title": "Hyperparameters: learning rate, batch size, epochs (Google)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/hyperparameters"}, {"kind": "Paper", "title": "Adam: A Method for Stochastic Optimization (Kingma & Ba)", "url": "https://arxiv.org/abs/1412.6980"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "15": [{"kind": "Course", "title": "Overfitting: L2 regularization (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/regularization"}, {"kind": "Course", "title": "Training neural networks: dropout and best practices (Google)", "url": "https://developers.google.com/machine-learning/crash-course/training-neural-networks/best-practices"}, {"kind": "Course", "title": "Overfitting: Interpreting loss curves (Google)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/interpreting-loss-curves"}, {"kind": "Reference", "title": "Machine Learning Glossary: ML Fundamentals (Google)", "url": "https://developers.google.com/machine-learning/glossary/fundamentals"}], "16": [{"kind": "Docs", "title": "Tuning the hyper-parameters of an estimator (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/grid_search.html"}, {"kind": "Example", "title": "Comparing randomized search and grid search (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_randomized_search.html"}, {"kind": "Guide", "title": "Deep Learning Tuning Playbook (Google Research)", "url": "https://github.com/google-research/tuning_playbook"}, {"kind": "Docs", "title": "Optuna: a hyperparameter optimization framework", "url": "https://optuna.readthedocs.io/"}], "17": [{"kind": "Course", "title": "Datasets: Class-imbalanced datasets (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/imbalanced-datasets"}, {"kind": "Course", "title": "Accuracy, recall, precision: why accuracy misleads (Google)", "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall"}, {"kind": "Docs", "title": "Over-sampling, incl. SMOTE (imbalanced-learn)", "url": "https://imbalanced-learn.org/stable/over_sampling.html"}, {"kind": "Example", "title": "Precision-Recall curves (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html"}], "18": [{"kind": "Course", "title": "Accuracy, recall, precision and related metrics (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall"}, {"kind": "Course", "title": "Classification: ROC and AUC (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc"}, {"kind": "Reference", "title": "Machine Learning Glossary: Metrics (Google)", "url": "https://developers.google.com/machine-learning/glossary/metrics"}, {"kind": "Docs", "title": "Metrics and scoring (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/model_evaluation.html"}], "19": [{"kind": "Course", "title": "Neural networks (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/neural-networks"}, {"kind": "Course", "title": "Training using backpropagation (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/neural-networks/backpropagation"}, {"kind": "Video", "title": "But what is a Neural Network? (3Blue1Brown)", "url": "https://www.3blue1brown.com/lessons/neural-networks/"}, {"kind": "Video", "title": "What is backpropagation really doing? (3Blue1Brown)", "url": "https://www.3blue1brown.com/lessons/backpropagation/"}]};
 const ALLOWED_URLS = new Set(Object.values(RESOURCES).flat().map(r => r.url));
 function learnHtml(n) {
   const list = RESOURCES[n] || [];
@@ -2840,6 +2876,317 @@ const STEPS = [
 return { STEPS, picker: { label: "Search method:", step: 2, items: () => METHODS.map(m => ({ label: m.label, color: m.c })), get: () => mi, set: i => { mi = i; } } };
 })();
 VMETA[16] = {"title": "Turning the Knobs", "sub": "Tell parameters from hyperparameters, then compare grid, random and Bayesian search for the interview coach's settings on the same budget of training runs."};
+
+VISUALS[17] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+const rng = seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+const r0 = rng(31), RARE = new Set(); while (RARE.size < 20) RARE.add(Math.floor(r0() * 1000));
+function drawTrap() {
+  let s = svg(330);
+  s += lbl(20, 22, "1,000 ANSWERS · 20 COPIED FROM THE INTERNET");
+  for (let i = 0; i < 1000; i++) { const x = 24 + (i % 50) * 7.4, y = 36 + Math.floor(i / 50) * 9.6, rare = RARE.has(i); s += `<rect x="${x}" y="${y}" width="5.6" height="7" rx="1.2" style="fill:${rare ? W : "var(--muted)"}" fill-opacity="${rare ? 1 : .35}"/>`; }
+  const bx = 410;
+  s += rect(bx, 34, 215, 104, G, .1) + `<text x="${bx + 12}" y="58" font-size="13" font-weight="700" style="fill:${G}">Lazy model</text><text x="${bx + 12}" y="78" font-size="12">Always says “not copied”.</text><text x="${bx + 12}" y="106" class="mono" font-size="13">Accuracy: <tspan font-weight="700">98%</tspan></text><text x="${bx + 12}" y="126" class="mono" font-size="13">Copied caught: <tspan font-weight="700" style="fill:${W}">0 of 20</tspan></text>`;
+  s += rect(bx, 150, 215, 84, W, .08) + `<text x="${bx + 12}" y="174" font-size="12.5" font-weight="700" style="fill:${W}">Accuracy hides failure</text><text x="${bx + 12}" y="194" font-size="12">Look at recall: the share of</text><text x="${bx + 12}" y="210" font-size="12">rare cases actually found.</text>`;
+  s += `<text x="24" y="250" font-size="12"><tspan style="fill:${W}" font-weight="700">■</tspan> copied (20)   <tspan class="muted">■</tspan> original (980)</text>`;
+  s += `<text x="24" y="282" font-size="12.5">The model sees 49 normal answers for every copied one,</text><text x="24" y="300" font-size="12.5">so ignoring the rare case barely hurts its loss.</text>`;
+  return s + `</svg>`;
+}
+
+const MODES = [{ label: "Original", c: "var(--muted)", maj: 980, min: 20, note: "49 to 1. The rare class is easy to ignore." }, { label: "Oversample (SMOTE)", c: "var(--accent)", maj: 980, min: 980, note: "Synthetic copied examples fill the gap." }, { label: "Undersample", c: "var(--t2)", maj: 100, min: 20, note: "Fewer common examples. Faster, but wastes data." }];
+let mi = 0;
+const r1 = rng(8), REAL = Array.from({ length: 6 }, () => [430 + r1() * 170, 70 + r1() * 120]);
+function drawResample() {
+  const M = MODES[mi];
+  let s = svg(350);
+  s += lbl(20, 22, "TRAINING SET ONLY · " + M.label.toUpperCase());
+  const sc = 220 / 980;
+  [["original", M.maj, "var(--muted)"], ["copied", M.min, W]].forEach(([t, n, c], i) => {
+    const x = 60 + i * 150, h = n * sc;
+    s += `<rect x="${x}" y="${250 - h}" width="90" height="${Math.max(h, 2)}" rx="4" style="fill:${c}" fill-opacity="${i ? .8 : .45}"/><text x="${x + 45}" y="${244 - h}" text-anchor="middle" class="mono" font-size="13" font-weight="700">${n}</text><text x="${x + 45}" y="270" text-anchor="middle" font-size="12.5">${t}</text>`;
+  });
+  s += `<line x1="40" y1="250" x2="360" y2="250" style="stroke:var(--ink)"/>`;
+  s += rect(20, 284, 600, 36, M.c, .1) + `<text x="34" y="307" font-size="12.5"><tspan font-weight="700">${M.label}:</tspan> ${M.note}</text><text x="20" y="342" font-size="11.5" class="muted">Validation and test sets stay untouched, so scores reflect the real world.</text>`;
+  if (mi === 1) {
+    s += lbl(410, 50, "HOW SMOTE MAKES ONE");
+    const [a, b] = [REAL[0], REAL[1]];
+    REAL.forEach(([x, y]) => { s += `<circle cx="${x}" cy="${y}" r="6" style="fill:${W}"/>`; });
+    s += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" style="stroke:${A}" stroke-dasharray="4 3" stroke-width="1.5"/>`;
+    const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    s += `<circle cx="${m[0]}" cy="${m[1]}" r="6" style="fill:none;stroke:${A}" stroke-width="2.5"/>`;
+    s += `<text x="410" y="222" font-size="12">● real copied answers</text><text x="410" y="240" font-size="12"><tspan style="fill:${A}" font-weight="700">○</tspan> new one, between two neighbours</text>`;
+  } else if (mi === 2) {
+    s += rect(410, 60, 215, 110, B, .08) + `<text x="424" y="84" font-size="12.5" font-weight="700" style="fill:${B}">Keeps 100 of 980</text><text x="424" y="104" font-size="12">Quicker to train, but throws</text><text x="424" y="120" font-size="12">away most common examples.</text><text x="424" y="148" font-size="12">Google's tip: then upweight</text><text x="424" y="164" font-size="12">the ones you kept.</text>`;
+  } else {
+    s += rect(410, 60, 215, 80, "var(--line)") + `<text x="424" y="86" font-size="12.5">Pick a fix above to</text><text x="424" y="106" font-size="12.5">rebalance the training set.</text>`;
+  }
+  return s + `</svg>`;
+}
+
+function drawWeights() {
+  let s = svg(310);
+  s += lbl(20, 22, "CLASS WEIGHTS: CHANGE THE LOSS, NOT THE DATA");
+  const cx = 320, by = 200;
+  s += `<path d="M${cx - 16} ${by + 70} L${cx} ${by} L${cx + 16} ${by + 70} Z" style="fill:var(--muted)" fill-opacity=".4"/>`;
+  s += `<line x1="${cx - 220}" y1="${by - 10}" x2="${cx + 220}" y2="${by + 10}" style="stroke:var(--ink)" stroke-width="3"/>`;
+  s += rect(cx - 280, by - 100, 150, 80, "var(--muted)", .12) + `<text x="${cx - 205}" y="${by - 70}" text-anchor="middle" font-size="12.5" font-weight="700">1 missed original</text><text x="${cx - 205}" y="${by - 46}" text-anchor="middle" class="mono" font-size="13">weight × 1</text>`;
+  s += rect(cx + 130, by - 82, 150, 80, W, .15) + `<text x="${cx + 205}" y="${by - 52}" text-anchor="middle" font-size="12.5" font-weight="700" style="fill:${W}">1 missed copied</text><text x="${cx + 205}" y="${by - 28}" text-anchor="middle" class="mono" font-size="13" font-weight="700" style="fill:${W}">weight × 49</text>`;
+  s += `<text x="20" y="${by + 96}" font-size="12.5">Missing one copied answer now costs as much as missing 49 originals, so the model can't ignore them.</text>`;
+  return s + `</svg>`;
+}
+
+function drawThreshold() {
+  let s = svg(340);
+  s += lbl(20, 22, "EACH ANSWER'S PROBABILITY OF BEING COPIED");
+  const r = rng(44), X0 = 40, Wd = 560;
+  const pos = Array.from({ length: 20 }, () => Math.min(.97, .12 + r() * .85)), neg = Array.from({ length: 70 }, () => Math.pow(r(), 2.4) * .7);
+  const row = (vals, y, c) => vals.map(v => `<circle cx="${X0 + v * Wd}" cy="${y + (r() - .5) * 18}" r="4.5" style="fill:${c}" fill-opacity=".75"/>`).join("");
+  s += `<text x="20" y="62" font-size="12" style="fill:${W}" font-weight="700">copied</text>` + row(pos, 82, W);
+  s += `<text x="20" y="122" font-size="12" class="muted">original</text>` + row(neg, 142, "var(--muted)");
+  s += `<line x1="${X0}" y1="170" x2="${X0 + Wd}" y2="170" style="stroke:var(--ink)"/>`;
+  [0, .5, 1].forEach(v => { s += `<text x="${X0 + v * Wd}" y="186" text-anchor="middle" class="mono muted" font-size="10">${v}</text>`; });
+  const th = (t, c, lab) => { const tp = pos.filter(v => v >= t).length, fp = neg.filter(v => v >= t).length; return { tp, fp, svg: `<line x1="${X0 + t * Wd}" y1="44" x2="${X0 + t * Wd}" y2="170" style="stroke:${c}" stroke-width="2" stroke-dasharray="6 4"/><text x="${X0 + t * Wd + 5}" y="44" font-size="11.5" font-weight="700" style="fill:${c}">${lab}</text>` }; };
+  const hi = th(.5, B, "flag above 0.5"), lo = th(.2, A, "above 0.2");
+  s += hi.svg + lo.svg;
+  s += rect(20, 204, 295, 76, B, .08) + `<text x="34" y="228" font-size="13" font-weight="700" style="fill:${B}">Threshold 0.5</text><text x="34" y="250" font-size="12.5">Catches ${hi.tp} of 20 copied</text><text x="34" y="268" font-size="12.5">${hi.fp} false alarms</text>`;
+  s += rect(330, 204, 295, 76, A, .08) + `<text x="344" y="228" font-size="13" font-weight="700" style="fill:${A}">Threshold 0.2</text><text x="344" y="250" font-size="12.5">Catches ${lo.tp} of 20 copied</text><text x="344" y="268" font-size="12.5">${lo.fp} false alarms</text>`;
+  s += `<text x="20" y="306" font-size="12.5">Lower threshold: more caught, more false alarms. Pick it from what each mistake costs.</text>`;
+  s += `<text x="20" y="324" font-size="11" class="muted">Probabilities are illustrative; 70 of the 980 originals shown.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "The trap", title: "1 · The accuracy trap", q: "How can 98% accuracy be useless?",
+    points: ["20 of 1,000 answers are copied from the internet.", "A lazy model always says “not copied”.", "It's 98% accurate, and catches <b>zero</b> copied answers.", "With rare cases, check <b>recall</b>: how many did it actually find?"],
+    pm: "Whenever a model detects something rare, like fraud, churn or defects, ignore headline accuracy. Ask how many of the rare cases it catches.",
+    say: "Step one, the accuracy trap. Out of a thousand answers, only twenty are copied from the internet. They're the red squares. Now imagine a lazy model that always says, not copied. It's right nine hundred and eighty times, so its accuracy is ninety eight percent. Sounds great. But it catches zero copied answers, which was the whole point. With rare cases, accuracy hides failure.",
+    draw: drawTrap },
+  { stage: "Rebalance", title: "2 · Rebalancing the data", q: "Can we change the data so the rare case matters?",
+    points: ["<b>Oversample</b>: add more rare examples. <b>SMOTE</b> creates new ones between real neighbours.", "<b>Undersample</b>: keep fewer common examples.", "Pick a fix above the diagram to compare.", "Only rebalance the <b>training</b> set. Test data must stay realistic."],
+    pm: "If someone rebalanced the test set, the reported scores won't match real life. Ask which sets were rebalanced.",
+    say: "Step two, rebalancing the data. In the original training set, there are forty nine original answers for every copied one. Pick oversample. SMOTE creates new copied examples, each one placed between two real copied answers, until the classes are even. Now pick undersample. We keep only a hundred originals instead. Either way, rebalance only the training set. The test set must stay realistic.",
+    draw: drawResample },
+  { stage: "Weights", title: "3 · Class weights", q: "Can we fix it without changing the data?",
+    points: ["Change the <b>loss</b> instead of the data.", "Each mistake on a copied answer counts 49 times more.", "Now ignoring the rare class is expensive for the model.", "Same idea as the weighted loss in concept 13."],
+    pm: "Class weights are a cheap, standard fix. Ask the team whether they used them, or rebalanced the data, when the event you care about is rare.",
+    say: "Step three, class weights. Instead of changing the data, we change the loss. Missing one copied answer now costs forty nine times as much as missing an original one. So the model can't afford to ignore the rare class any more. It's the same idea as the weighted loss from concept thirteen.",
+    draw: drawWeights },
+  { stage: "Threshold", title: "4 · Thresholds and more data", q: "Where should we draw the line?",
+    points: ["The model gives each answer a probability of being copied.", "A threshold of 0.5 misses many copied answers.", "Lowering it to 0.2 catches more, with more false alarms.", "Long term, collect more real rare examples."],
+    pm: "Decide with the reviewers how many false alarms they can handle per day. That number sets the threshold more than any metric does.",
+    say: "Step four, thresholds. The model gives every answer a probability of being copied. If we only flag answers above zero point five, we miss quite a few copied ones. Lower the threshold to zero point two, and we catch most of them, but we also get more false alarms. The right line depends on what each mistake costs. And in the long run, the best fix is collecting more real examples of the rare case.",
+    draw: drawThreshold },
+];
+return { STEPS, picker: { label: "Fix:", step: 1, items: () => MODES.map(m => ({ label: m.label, color: m.c === "var(--muted)" ? "var(--ink)" : m.c })), get: () => mi, set: i => { mi = i; } } };
+})();
+VMETA[17] = {"title": "Finding the Needle", "sub": "Only 20 of the interview coach's 1,000 answers are copied. See why 98% accuracy can mean nothing, then rebalance the data, reweight the loss and pick a threshold."};
+
+VISUALS[18] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+
+/* 200 test answers: 100 strong, 100 weak (illustrative) */
+const TH = [{ label: "Threshold 0.3", t: .3, tp: 95, fn: 5, fp: 40, tn: 60 }, { label: "Threshold 0.5", t: .5, tp: 80, fn: 20, fp: 15, tn: 85 }, { label: "Threshold 0.8", t: .8, tp: 55, fn: 45, fp: 3, tn: 97 }];
+const pct = v => Math.round(v * 100) + "%";
+function matrix(x, y, m, hi) {
+  const cw = 130, ch = 70;
+  let s = `<text x="${x + cw}" y="${y - 30}" text-anchor="middle" font-size="12" class="muted">Coach predicted</text>`;
+  s += `<text x="${x + cw / 2}" y="${y - 10}" text-anchor="middle" font-size="12" font-weight="700">strong</text><text x="${x + cw * 1.5}" y="${y - 10}" text-anchor="middle" font-size="12" font-weight="700">weak</text>`;
+  s += `<text x="${x - 14}" y="${y + ch / 2 + 4}" text-anchor="end" font-size="12" font-weight="700">strong</text><text x="${x - 14}" y="${y + ch * 1.5 + 4}" text-anchor="end" font-size="12" font-weight="700">weak</text>`;
+  s += `<text x="${x - 74}" y="${y + ch}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 ${x - 74} ${y + ch})">Really was</text>`;
+  const cells = [["TP", "true positive", m.tp, A, 0, 0], ["FN", "false negative", m.fn, W, 1, 0], ["FP", "false positive", m.fp, W, 0, 1], ["TN", "true negative", m.tn, A, 1, 1]];
+  cells.forEach(([k, name, v, c, cx, cy]) => {
+    const on = !hi || hi.includes(k);
+    s += `<rect x="${x + cx * cw + 2}" y="${y + cy * ch + 2}" width="${cw - 4}" height="${ch - 4}" rx="6" style="fill:${c};stroke:${on && hi ? "var(--ink)" : c}" fill-opacity="${on ? .2 : .05}" stroke-width="${on && hi ? 2 : 1}"/>`;
+    s += `<text x="${x + cx * cw + cw / 2}" y="${y + cy * ch + 30}" text-anchor="middle" class="mono" font-size="20" font-weight="700" ${on ? "" : 'opacity=".35"'}>${v}</text><text x="${x + cx * cw + cw / 2}" y="${y + cy * ch + 50}" text-anchor="middle" font-size="11" class="muted">${name}</text>`;
+  });
+  return s;
+}
+function drawMatrix() {
+  const m = TH[1];
+  let s = svg(320) + matrix(130, 60, m);
+  const bx = 420;
+  s += lbl(bx, 40, "200 TEST ANSWERS");
+  s += `<text x="${bx}" y="64" font-size="12.5">100 really strong, 100 really weak.</text>`;
+  s += rect(bx, 80, 205, 74, A, .1) + `<text x="${bx + 12}" y="102" font-size="12.5"><tspan font-weight="700" style="fill:${A}">True</tspan> boxes: coach was right</text><text x="${bx + 12}" y="126" class="mono" font-size="12.5">Accuracy = (80+85)/200</text><text x="${bx + 12}" y="144" class="mono" font-size="13" font-weight="700">= 82.5%</text>`;
+  s += rect(bx, 166, 205, 70, W, .08) + `<text x="${bx + 12}" y="188" font-size="12.5"><tspan font-weight="700" style="fill:${W}">False</tspan> boxes: two different</text><text x="${bx + 12}" y="206" font-size="12.5">mistakes, with different</text><text x="${bx + 12}" y="224" font-size="12.5">costs for the candidate.</text>`;
+  s += `<text x="20" y="300" font-size="11" class="muted">Counts are illustrative, at a threshold of 0.5.</text>`;
+  return s + `</svg>`;
+}
+function drawPR() {
+  const m = TH[1];
+  let s = svg(330);
+  s += matrix(130, 60, m, ["TP", "FP"]).replace(/<text x="[^"]*" y="[^"]*" text-anchor="middle" font-size="12" class="muted" transform[^<]*<\/text>/, "");
+  const bx = 420;
+  s += rect(bx, 30, 205, 92, A, .1) + `<text x="${bx + 12}" y="54" font-size="13" font-weight="700" style="fill:${A}">Precision</text><text x="${bx + 12}" y="74" font-size="12">When it says strong, is it right?</text><text x="${bx + 12}" y="98" class="mono" font-size="12.5">TP/(TP+FP) = 80/95</text><text x="${bx + 12}" y="114" class="mono" font-size="13" font-weight="700">= ${pct(80 / 95)}</text>`;
+  s += rect(bx, 132, 205, 92, B, .1) + `<text x="${bx + 12}" y="156" font-size="13" font-weight="700" style="fill:${B}">Recall</text><text x="${bx + 12}" y="176" font-size="12">How many strong ones were found?</text><text x="${bx + 12}" y="200" class="mono" font-size="12.5">TP/(TP+FN) = 80/100</text><text x="${bx + 12}" y="216" class="mono" font-size="13" font-weight="700">= 80%</text>`;
+  const p = 80 / 95, r = .8, f1 = 2 * p * r / (p + r);
+  s += rect(bx, 234, 205, 62, P, .1) + `<text x="${bx + 12}" y="258" font-size="13" font-weight="700" style="fill:${P}">F1 = ${pct(f1)}</text><text x="${bx + 12}" y="280" font-size="12">High only when both are high.</text>`;
+  s += `<text x="20" y="250" font-size="12.5">Precision uses the</text><text x="20" y="268" font-size="12.5"><tspan font-weight="700">strong column</tspan> (outlined).</text><text x="20" y="292" font-size="12.5">Recall uses the</text><text x="20" y="310" font-size="12.5"><tspan font-weight="700">strong row</tspan>: TP and FN.</text>`;
+  return s + `</svg>`;
+}
+let ti = 1;
+function drawTrade() {
+  const m = TH[ti], p = m.tp / (m.tp + m.fp), r = m.tp / (m.tp + m.fn);
+  let s = svg(320) + matrix(130, 60, m);
+  const bx = 420;
+  s += lbl(bx, 40, m.label.toUpperCase());
+  [["Precision", p, A], ["Recall", r, B]].forEach(([t, v, c], i) => {
+    const y = 60 + i * 56;
+    s += `<text x="${bx}" y="${y}" font-size="13" font-weight="700" style="fill:${c}">${t}</text><text x="${bx + 205}" y="${y}" text-anchor="end" class="mono" font-size="13" font-weight="700">${pct(v)}</text><rect x="${bx}" y="${y + 8}" width="205" height="18" rx="4" style="fill:var(--line)"/><rect x="${bx}" y="${y + 8}" width="${v * 205}" height="18" rx="4" style="fill:${c}" fill-opacity=".7"/>`;
+  });
+  const msg = ti === 0 ? ["Says strong easily.", "Finds almost every strong answer,", "but praises 40 weak ones."] : ti === 1 ? ["A middle balance."] : ["Says strong only when very sure.", "Rarely wrong when it praises,", "but misses 45 strong answers."];
+  msg.forEach((t, i) => { s += `<text x="${bx}" y="${190 + i * 20}" font-size="12.5">${t}</text>`; });
+  s += `<text x="${bx}" y="270" font-size="11" class="muted">Pick a threshold above.</text>`;
+  return s + `</svg>`;
+}
+function drawROC() {
+  let s = svg(330);
+  const X0 = 70, Y0 = 280, S = 240, px = v => X0 + v * S, py = v => Y0 - v * S;
+  const pts = [[0, 0], [.03, .55], [.15, .8], [.4, .95], [1, 1]];
+  s += `<path d="M${px(0)} ${py(0)} L${pts.map(([x, y]) => `${px(x)} ${py(y)}`).join(" L")} L${px(1)} ${py(0)} Z" style="fill:${A}" fill-opacity=".12"/>`;
+  s += `<rect x="${X0}" y="${Y0 - S}" width="${S}" height="${S}" style="fill:none;stroke:var(--ink)"/>`;
+  s += `<line x1="${px(0)}" y1="${py(0)}" x2="${px(1)}" y2="${py(1)}" style="stroke:var(--muted)" stroke-dasharray="5 4"/><text x="${px(.62)}" y="${py(.5)}" font-size="11.5" class="muted" transform="rotate(-45 ${px(.62)} ${py(.5)})">coin flip (AUC 0.5)</text>`;
+  s += `<path d="M${pts.map(([x, y]) => `${px(x)} ${py(y)}`).join(" L")}" fill="none" style="stroke:${A}" stroke-width="2.5"/>`;
+  TH.forEach((m, i) => { const x = m.fp / 100, y = m.tp / 100; s += `<circle cx="${px(x)}" cy="${py(y)}" r="6" style="fill:${[W, A, B][i]}"/><text x="${px(x) + 9}" y="${py(y) + 15}" font-size="11" class="mono">${m.t}</text>`; });
+  s += `<text x="${X0 + S / 2}" y="${Y0 + 22}" text-anchor="middle" font-size="12" class="muted">weak answers wrongly praised →</text><text x="${X0 - 20}" y="${Y0 - S / 2}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 ${X0 - 20} ${Y0 - S / 2})">strong answers caught →</text>`;
+  s += `<text x="${px(.35)}" y="${py(.35)}" text-anchor="middle" font-size="16" font-weight="700" style="fill:${A}">AUC ≈ 0.89</text>`;
+  const bx = 370;
+  s += rect(bx, 40, 255, 104, A, .08) + `<text x="${bx + 12}" y="64" font-size="13" font-weight="700" style="fill:${A}">One curve, every threshold</text><text x="${bx + 12}" y="86" font-size="12">Dots are the 3 thresholds you tried.</text><text x="${bx + 12}" y="104" font-size="12">Top-left corner is perfect.</text><text x="${bx + 12}" y="122" font-size="12">The diagonal is guessing.</text>`;
+  s += rect(bx, 156, 255, 84, P, .08) + `<text x="${bx + 12}" y="180" font-size="13" font-weight="700" style="fill:${P}">AUC 0.89 means…</text><text x="${bx + 12}" y="200" font-size="12">an 89% chance a random strong answer</text><text x="${bx + 12}" y="218" font-size="12">scores higher than a random weak one.</text>`;
+  s += `<text x="${bx}" y="268" font-size="12" class="muted">For very rare positives, use a</text><text x="${bx}" y="284" font-size="12" class="muted">precision-recall curve instead.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Matrix", title: "1 · The confusion matrix", q: "What kinds of mistakes does the coach make?",
+    points: ["200 test answers: 100 really strong, 100 really weak.", "Each prediction lands in one of four boxes.", "<b>True positive / negative</b>: the coach was right.", "<b>False positive / negative</b>: two different mistakes."],
+    pm: "Ask for the confusion matrix, not just accuracy. The two kinds of mistakes usually have very different costs for users.",
+    say: "Step one, the confusion matrix. We test the coach on two hundred answers, a hundred strong and a hundred weak. Every prediction lands in one of four boxes. Eighty strong answers were correctly called strong. Twenty strong answers were wrongly called weak. Fifteen weak answers were wrongly praised. And eighty five weak answers were correctly called weak. Accuracy is the two true boxes, eighty two and a half percent.",
+    draw: drawMatrix },
+  { stage: "P & R", title: "2 · Precision and recall", q: "How do we measure each kind of mistake?",
+    points: ["<b>Precision</b>: when it says strong, how often is it right? 80 of 95, about 84%.", "<b>Recall</b>: of all truly strong answers, how many did it find? 80 of 100.", "<b>F1</b> combines both, and is only high when both are.", "Outlined boxes: the strong column, used for precision."],
+    pm: "Precision protects users from false praise. Recall protects them from being overlooked. Decide which matters more for your product before you build.",
+    say: "Step two, precision and recall. Precision asks, when the coach says strong, how often is it right? It said strong ninety five times, and eighty were right. That's about eighty four percent. Recall asks, of all the truly strong answers, how many did it find? Eighty of a hundred, so eighty percent. The F one score combines them, and it's only high when both are high.",
+    draw: drawPR },
+  { stage: "Trade-off", title: "3 · The threshold trade-off", q: "Can we have high precision and high recall?",
+    points: ["Low threshold (0.3): recall 95%, but precision drops to 70%.", "High threshold (0.8): precision 95%, but recall drops to 55%.", "Raising one usually lowers the other.", "Pick a threshold above to see the matrix change."],
+    pm: "The threshold is a product dial, not a technical detail. Choose it with the team based on which mistake hurts users more.",
+    say: "Step three, the threshold trade off. At zero point five, precision is eighty four and recall is eighty. Now pick zero point three. The coach says strong more easily. It finds ninety five of the hundred strong answers, but it praises forty weak ones, so precision drops to seventy. Now pick zero point eight. Precision rises to ninety five, but the coach misses forty five strong answers. You can't max out both.",
+    draw: drawTrade },
+  { stage: "ROC & AUC", title: "4 · ROC curves and AUC", q: "How do we compare models across all thresholds?",
+    points: ["An <b>ROC curve</b> plots strong answers caught against weak answers wrongly praised.", "Each threshold is one point. The three dots are the ones you tried.", "<b>AUC</b> is the shaded area: 0.5 is guessing, 1.0 is perfect.", "Here AUC ≈ 0.89."],
+    pm: "AUC is handy for comparing two models fairly, before anyone has chosen a threshold. For rare events, ask for a precision-recall curve too.",
+    say: "Step four, ROC curves and AUC. The ROC curve shows every threshold at once. Across the bottom, how many weak answers are wrongly praised. Up the side, how many strong answers are caught. The three dots are the thresholds we just tried. A perfect model hugs the top left corner, and a coin flip follows the diagonal. The shaded area is the AUC, here about zero point eight nine.",
+    draw: drawROC },
+];
+return { STEPS, picker: { label: "Threshold:", step: 2, items: () => TH.map(m => ({ label: String(m.t), color: "var(--t2)" })), get: () => ti, set: i => { ti = i; } } };
+})();
+VMETA[18] = {"title": "Which Mistakes Matter?", "sub": "Test the interview coach on 200 answers: fill in the confusion matrix, work out precision and recall, move the threshold, and read the ROC curve."};
+
+VISUALS[19] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker><marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--t3)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)", w = 1.5) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="${w}" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+const sig = z => 1 / (1 + Math.exp(-z));
+
+const WTS = [2.0, 1.5, -1.2], BIAS = -1.8, FN = ["specific details", "states a result", "filler words"];
+const ANS = [{ label: "Answer X", c: "var(--t2)", v: [0.8, 1, 0.1] }, { label: "Answer Y", c: "var(--t4)", v: [0.1, 0, 0.6] }, { label: "Answer Z", c: "var(--warm)", v: [0.3, 1, 0.3] }];
+let ai = 0;
+function drawNeuron() {
+  const a = ANS[ai], z = a.v.reduce((s, v, i) => s + v * WTS[i], BIAS), p = sig(z);
+  let s = svg(330);
+  const nx = 380, ny = 150;
+  a.v.forEach((v, i) => {
+    const y = 60 + i * 90;
+    s += rect(20, y - 24, 150, 48, a.c, .1) + `<text x="34" y="${y - 3}" font-size="12">${FN[i]}</text><text x="34" y="${y + 16}" class="mono" font-size="14" font-weight="700" style="fill:${a.c}">${v}</text>`;
+    s += arrow(172, y, nx - 46, ny + (i - 1) * 18, WTS[i] > 0 ? A : W, 1.5 + Math.abs(WTS[i]));
+    s += `<text x="${(172 + nx - 46) / 2}" y="${(y + ny + (i - 1) * 18) / 2 - 8}" text-anchor="middle" class="mono" font-size="12" font-weight="700" style="fill:${WTS[i] > 0 ? A : W}">× ${WTS[i]}</text>`;
+  });
+  s += `<circle cx="${nx}" cy="${ny}" r="44" style="fill:${A};stroke:${A}" fill-opacity=".12" stroke-width="2"/><text x="${nx}" y="${ny - 6}" text-anchor="middle" font-size="22" font-weight="700">Σ</text><text x="${nx}" y="${ny + 16}" text-anchor="middle" class="mono" font-size="11">bias ${BIAS}</text>`;
+  s += `<text x="${nx}" y="${ny + 66}" text-anchor="middle" class="mono" font-size="12">sum = ${z.toFixed(2)}</text>`;
+  s += arrow(nx + 46, ny, nx + 96, ny);
+  s += rect(nx + 100, ny - 34, 140, 68, a.c, .14, 2) + `<text x="${nx + 170}" y="${ny - 10}" text-anchor="middle" font-size="12">activation →</text><text x="${nx + 170}" y="${ny + 18}" text-anchor="middle" class="mono" font-size="17" font-weight="700" style="fill:${p >= .5 ? A : W}">${Math.round(p * 100)}% strong</text>`;
+  s += `<text x="20" y="306" font-size="12.5">Multiply each input by its weight, add the bias, then the activation squeezes it into an output.</text>`;
+  s += `<text x="20" y="324" font-size="11" class="muted">That's logistic regression again. Pick an answer above. Weights are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+const LAYERS = [{ n: 4, x: 110, names: ["details", "result", "structure", "filler"] }, { n: 4, x: 270 }, { n: 3, x: 430 }, { n: 1, x: 580 }];
+const posOf = (l, i) => [LAYERS[l].x, 160 + (i - (LAYERS[l].n - 1) / 2) * 62];
+function netBase(edgeStyle) {
+  let s = "";
+  for (let l = 0; l < 3; l++) for (let i = 0; i < LAYERS[l].n; i++) for (let j = 0; j < LAYERS[l + 1].n; j++) { const [x1, y1] = posOf(l, i), [x2, y2] = posOf(l + 1, j); s += edgeStyle(l, i, j, x1, y1, x2, y2); }
+  LAYERS.forEach((L, l) => { for (let i = 0; i < L.n; i++) { const [x, y] = posOf(l, i), c = l === 0 ? B : l === 3 ? A : P; s += `<circle cx="${x}" cy="${y}" r="17" style="fill:${c};stroke:${c}" fill-opacity=".2" stroke-width="1.6"/>`; } });
+  return s;
+}
+function drawLayers() {
+  let s = svg(340) + netBase((l, i, j, x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:var(--line)" stroke-width="1.1"/>`);
+  LAYERS[0].names.forEach((n, i) => { const [x, y] = posOf(0, i); s += `<text x="${x - 24}" y="${y + 4}" text-anchor="end" font-size="11.5">${n}</text>`; });
+  [["“specific + result”", 0], ["“long but vague”", 2]].forEach(([t, i]) => { const [x, y] = posOf(1, i); s += `<text x="${x}" y="${y - 24}" text-anchor="middle" font-size="11" font-weight="600" style="fill:${P}">${t}</text>`; });
+  const [ox, oy] = posOf(3, 0); s += `<text x="${ox}" y="${oy + 36}" text-anchor="middle" font-size="12" font-weight="700" style="fill:${A}">strong?</text>`;
+  [["input layer", 110, B], ["hidden layers", 350, P], ["output", 580, A]].forEach(([t, x, c]) => { s += `<text x="${x}" y="30" text-anchor="middle" class="mono" font-size="11" letter-spacing="1" style="fill:${c}">${t.toUpperCase()}</text>`; });
+  s += `<text x="20" y="318" font-size="12.5">Hidden neurons learn their own combinations. Nobody tells them what to look for.</text>`;
+  s += `<text x="20" y="334" font-size="11" class="muted">Labels on hidden neurons are examples of what they might learn.</text>`;
+  return s + `</svg>`;
+}
+function drawForward() {
+  let s = svg(340) + netBase((l, i, j, x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${A}" stroke-opacity=".45" stroke-width="1.4"/>`);
+  [[160, "→"], [335, "→"], [495, "→"]].forEach(([x]) => { s += arrow(x - 20, 300, x + 20, 300, A, 2.5); });
+  s += `<text x="335" y="324" text-anchor="middle" font-size="12" font-weight="700" style="fill:${A}">forward pass: inputs → prediction</text>`;
+  const [ox, oy] = posOf(3, 0);
+  s += rect(ox - 50, oy - 92, 100, 40, A, .15) + `<text x="${ox}" y="${oy - 66}" text-anchor="middle" class="mono" font-size="13" font-weight="700">60% strong</text>`;
+  s += rect(ox - 50, oy + 26, 100, 52, G, .12) + `<text x="${ox}" y="${oy + 46}" text-anchor="middle" font-size="11.5">coach said:</text><text x="${ox}" y="${oy + 66}" text-anchor="middle" class="mono" font-size="12.5" font-weight="700">strong</text>`;
+  s += `<text x="${ox}" y="${oy + 96}" text-anchor="middle" font-size="12" font-weight="700" style="fill:${W}">loss = 0.51</text>`;
+  return s + `</svg>`;
+}
+function drawBack() {
+  const blame = (l, i, j) => [[.9, .3, .7, .2], [.8, .4, .6, .3], [.9, .5, .4]][l][l === 2 ? i : i] * (l === 2 ? 1 : [.9, .5, .7, .4, .6][j] || .5);
+  let s = svg(340) + netBase((l, i, j, x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${W}" stroke-opacity="${.15 + blame(l, i, j) * .6}" stroke-width="${.8 + blame(l, i, j) * 3.2}"/>`);
+  [[495], [335], [160]].forEach(([x]) => { s += `<line x1="${x + 20}" y1="300" x2="${x - 20}" y2="300" style="stroke:${W}" stroke-width="2.5" marker-end="url(#ahr)"/>`; });
+  s += `<text x="335" y="324" text-anchor="middle" font-size="12" font-weight="700" style="fill:${W}">backpropagation: error flows back, layer by layer</text>`;
+  const [ox, oy] = posOf(3, 0);
+  s += rect(ox - 52, oy - 92, 104, 44, W, .12) + `<text x="${ox}" y="${oy - 74}" text-anchor="middle" class="mono" font-size="11.5" font-weight="700" style="fill:${W}">wanted 100%</text><text x="${ox}" y="${oy - 58}" text-anchor="middle" class="mono" font-size="11.5" font-weight="700" style="fill:${W}">got 60%</text>`;
+  s += `<text x="20" y="30" font-size="12.5">Thicker lines = weights that caused more of the error, so they change more.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Neuron", title: "1 · One neuron", q: "What does a single neuron do?",
+    points: ["Multiply each input by a <b>weight</b>, then add them up with a <b>bias</b>.", "Pass the sum through an <b>activation function</b>, which decides how strongly to fire.", "It's a tiny logistic regression.", "Pick an answer above to run it through the neuron."],
+    pm: "A neural network is built from these very simple parts. Its power comes from having thousands or billions of them, not from any single clever unit.",
+    say: "Step one, one neuron. Answer X comes in as three numbers. Specific details zero point eight, states a result one, filler words zero point one. The neuron multiplies each by its weight, adds the bias, and gets a sum. Then the activation squeezes that into an output, about seventy six percent strong. Now pick answer Y. Few details, no result, lots of filler. The output drops to around nine percent.",
+    draw: drawNeuron },
+  { stage: "Layers", title: "2 · Layers", q: "What happens when we stack neurons?",
+    points: ["The <b>input layer</b> holds the features, or raw words.", "<b>Hidden layers</b> combine them into new signals, like “specific + result”.", "The <b>output layer</b> gives the answer.", "Deep learning means many hidden layers. The network learns its own features."],
+    pm: "Because networks learn their own features, they handle raw text, images and audio well. That's why modern AI products are built on them.",
+    say: "Step two, layers. Now we stack neurons. The input layer holds the features. Hidden layers combine them into new signals. One hidden neuron might learn to fire for answers that are specific and state a result. Another might learn long but vague. Nobody tells them what to look for. They figure it out during training. The output layer gives the final answer. Deep learning just means many hidden layers.",
+    draw: drawLayers },
+  { stage: "Forward", title: "3 · The forward pass", q: "How does the network make a prediction?",
+    points: ["Data flows forward: inputs, hidden layers, output.", "This is the <b>forward pass</b>, the same at training and prediction time.", "The network says 60% strong. The coach said strong.", "The loss measures the gap."],
+    pm: "At prediction time only the forward pass runs. That's inference, and its cost per request is what drives your serving bill.",
+    say: "Step three, the forward pass. To make a prediction, the data flows forward. From the inputs, through each hidden layer, to the output. Here the network says sixty percent strong. But the coach rated this answer strong, so we wanted something close to a hundred percent. The loss measures that gap.",
+    draw: drawForward },
+  { stage: "Backprop", title: "4 · Backpropagation", q: "How does the network learn from its mistake?",
+    points: ["Send the error <b>backwards</b>, layer by layer.", "Work out how much each weight contributed. Thicker lines got more blame.", "Gradient descent nudges every weight a little.", "Repeat over millions of examples."],
+    pm: "Training means millions of these forward and backward passes, usually on GPUs. That's where the big training costs of deep learning come from.",
+    say: "Step four, backpropagation. Now the error flows backwards through the network, layer by layer. For each weight, the network works out how much it contributed to the mistake. The thicker red lines got more of the blame, so they'll change more. Then gradient descent nudges every weight a little. Repeat this over millions of examples, and the network gradually gets good.",
+    draw: drawBack },
+];
+return { STEPS, picker: { label: "Run an answer:", step: 0, items: () => ANS.map(a => ({ label: a.label, color: a.c })), get: () => ai, set: i => { ai = i; } } };
+})();
+VMETA[19] = {"title": "Layers That Learn", "sub": "Run an interview answer through one neuron, stack neurons into layers, follow the forward pass to a prediction, and send the error back with backpropagation."};
 
 
 const view = { mode: "lesson", n: 0, s: 0 };

@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Neural networks (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/neural-networks"},
+ {"kind": "Course", "title": "Training using backpropagation (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/neural-networks/backpropagation"},
+ {"kind": "Video", "title": "But what is a Neural Network? (3Blue1Brown)", "url": "https://www.3blue1brown.com/lessons/neural-networks/"},
+ {"kind": "Video", "title": "What is backpropagation really doing? (3Blue1Brown)", "url": "https://www.3blue1brown.com/lessons/backpropagation/"}
+]

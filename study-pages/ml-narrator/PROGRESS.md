@@ -27,8 +27,8 @@ Publish `index.html` to the live page URL (capabilities: db, dictation, download
 | 2 | 5 Train/Validation/Test Sets, 6 Overfitting & Underfitting, 7 Linear & Logistic Regression | Done |
 | 3 | 8 Decision Trees & Random Forests, 9 Gradient Boosting, 10 KNN, SVM & Naive Bayes | Done |
 | 4 | 11 Clustering & Anomaly Detection, 12 Dimensionality Reduction, 13 Loss Functions | Done |
-| 5 | 14 Gradient Descent & Optimizers, 15 Regularization, 16 Hyperparameter Tuning | Published, waiting for review |
-| 6 | 17–19 | Not started |
+| 5 | 14 Gradient Descent & Optimizers, 15 Regularization, 16 Hyperparameter Tuning | Done |
+| 6 | 17 Class Imbalance, 18 Evaluation Metrics, 19 Neural Networks & Backpropagation | Published, waiting for review |
 | 7 | 20–22 | Not started |
 | 8 | 23–25 | Not started |
 | 9 | 26–28 | Not started |
