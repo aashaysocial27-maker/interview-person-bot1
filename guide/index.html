@@ -242,6 +242,15 @@ tr:last-child td{border-bottom:none}
 }
 
 /* code block */
+.detail-head{display:flex;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--line)}
+.detail-head p{max-width:66ch;color:var(--muted)}
+.step-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.step-row:first-child{border-top:none;padding-top:0}
+.step-row:last-child{padding-bottom:0}
+.step-row p{font-size:15px}
+.eli5{display:block;font-size:13px;color:var(--muted);margin-top:4px}
+.analogy{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:15px}
+@media (max-width:640px){.step-row{grid-template-columns:1fr;gap:6px}}
 .code-block{min-width:0}
 .code-block pre{white-space:pre;font-size:12.5px}
 
@@ -954,6 +963,53 @@ function pydanticView(){
       <li><b>Never trust raw LLM JSON.</b> Validate it before it reaches a database, a report or another system.</li>
       <li><b>For a PM:</b> the Pydantic class is the spec for an extraction feature. Its fields are your requirements, and validation failures are a quality metric you can track.</li>
     </ul></div>
+  </div>
+  <div class="detail-head"><span class="eyebrow">Detailed context</span><h3>Walkthrough: describing the answer’s shape</h3>
+    <p>This code describes the exact shape you want the AI’s answer to have, a bit like a form with fixed boxes.</p></div>
+
+  <div class="card">
+    <div class="step-row"><div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre>from pydantic import BaseModel</pre></div><p>This loads Pydantic, a tool that checks data is in the right format. <span class="eli5">ELI5: hiring a strict checker who inspects every form.</span></p></div><div class="step-row"><div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre>from typing import Literal</pre></div><p>This loads Literal, which restricts a box to a few allowed words. <span class="eli5">ELI5: a dropdown menu instead of a free-text box.</span></p></div><div class="step-row"><div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre>class StockMove(BaseModel):</pre></div><p>This creates a blank form called StockMove. <span class="eli5">ELI5: a template called “Stock Move Report”.</span></p></div><div class="step-row"><div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre>    ticker: str</pre></div><p>This box must hold text, e.g. “NVDA”. <span class="eli5">ELI5: write the company’s short code here.</span></p></div><div class="step-row"><div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre>    start_price: float
+    end_price: float</pre></div><p>These boxes must hold numbers (decimals allowed), e.g. 120.50. <span class="eli5">ELI5: the price at the start and at the end.</span></p></div><div class="step-row"><div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre>    percent_change: float</pre></div><p>This box holds a number, e.g. 4.5. <span class="eli5">ELI5: how much the price moved, in %.</span></p></div><div class="step-row"><div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre>    trend: Literal[&quot;up&quot;, &quot;down&quot;, &quot;flat&quot;]</pre></div><p>This box can only be “up”, “down” or “flat”. <span class="eli5">ELI5: tick one of three boxes; nothing else is allowed.</span></p></div>
+  </div>
+
+  <div class="card">
+    <h3>Why this matters</h3>
+    <p>Normally an AI answers in free text, like “NVIDIA rose nicely from about 120 to 125…”. That’s hard for a program to use. With this form, the AI must reply like:</p>
+    <div class="code-block"><div class="nb-bar"><span class="mono">json</span><button class="nb-copy code-copy">Copy</button></div><pre>{&quot;ticker&quot;: &quot;NVDA&quot;, &quot;start_price&quot;: 120.5, &quot;end_price&quot;: 125.9, &quot;percent_change&quot;: 4.48, &quot;trend&quot;: &quot;up&quot;}</pre></div>
+    <p>Now your code can read the fields directly, <code>result.trend</code> or <code>result.end_price</code>, and put them in Excel, a dashboard or a database. This is called <b>structured output</b>.</p>
+  </div>
+
+  <div class="card">
+    <h3>Using it with Claude, as an example</h3>
+    <div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre>response = claude.messages.parse(
+    model=&quot;claude-sonnet-5-5&quot;,
+    max_tokens=500,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;NVIDIA went from $120.50 to $125.90 this week. Fill the report.&quot;}],
+    output_format=StockMove,          # &quot;answer using this form&quot;
+)
+result = response.parsed_output        # the filled-in form
+print(result.trend, result.percent_change)</pre></div>
+    <p>You pass the Pydantic model to <code>client.messages.parse()</code> as <code>output_format</code>. The SDK sends its schema to Claude, checks the response, and returns the filled-in model in <code>parsed_output</code>.</p>
+    <p class="analogy"><b>Procurement analogy:</b> it’s like making vendors submit quotes on your standard template instead of free-form emails. Every reply has the same fields, so you can compare them automatically.</p>
+  </div>
+
+  <div class="card">
+    <h3>Is it standard to use the Pydantic model?</h3>
+    <p>Yes. In Python, Pydantic is the most common way to define structured output.</p>
+    <p><b>Why it’s the usual choice:</b></p>
+    <div class="prose"><ul>
+      <li><b>The SDKs support it directly.</b> Gemini, OpenAI and Claude all accept a Pydantic model and give you back a filled-in object. Groq accepts its schema through <code>StockMove.model_json_schema()</code>.</li>
+      <li><b>It checks the data.</b> If the AI returns the wrong type, such as text where a number should be, Pydantic raises an error instead of letting bad data through.</li>
+      <li><b>It’s used beyond AI.</b> Web frameworks like FastAPI and agent frameworks like LangChain and PydanticAI use it too, so it’s worth learning once.</li>
+    </ul></div>
+    <p><b>The alternatives, used less often:</b></p>
+    <div class="tbl"><table><thead><tr><th>Option</th><th>When it’s used</th></tr></thead><tbody>
+      <tr><td>A raw JSON schema (a plain dictionary)</td><td>When there’s no SDK helper, or for other languages</td></tr>
+      <tr><td>Python dataclass / TypedDict</td><td>Simple cases; no automatic validation</td></tr>
+      <tr><td>Zod</td><td>The TypeScript/JavaScript equivalent of Pydantic</td></tr>
+    </tbody></table></div>
+    <p>Under the hood, all of these become a JSON schema, a standard description of the fields and their types. Pydantic is simply the easiest way to write one in Python.</p>
+    <p class="analogy"><b>For a PM,</b> think of the Pydantic model as the data contract between the AI and the rest of your system.</p>
   </div>`;
 }
 
