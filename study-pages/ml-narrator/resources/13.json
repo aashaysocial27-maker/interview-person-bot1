@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "Linear regression: Loss (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/loss"},
+ {"kind": "Course", "title": "Logistic regression: Loss and regularization (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/loss-regularization"},
+ {"kind": "Reference", "title": "Machine Learning Glossary: ML Fundamentals (Google)", "url": "https://developers.google.com/machine-learning/glossary/fundamentals"},
+ {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}
+]

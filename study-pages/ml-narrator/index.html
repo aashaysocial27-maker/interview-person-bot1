@@ -560,12 +560,48 @@ const CONCEPTS = [
     { h: "How it connects", text: "This completes the supervised models in our Classic Models group, from straight lines to trees to these three. Next, in Clustering and Anomaly Detection, we switch to unsupervised learning, where there are no labels at all, and the model must find groups and oddities on its own." },
   ]
 },
-{ n: 11, group: "Classic Models", title: "Clustering & Anomaly Detection", draft: true, terms: ["K-means", "Clusters", "Anomaly detection", "Outliers"],
-  sections: [{ h: "The big idea", text: "Clustering groups similar items together without any labels, such as grouping candidates by the kind of mistakes they make. Anomaly detection finds the odd ones out, like fraud or a machine about to fail. Both are unsupervised learning." }] },
-{ n: 12, group: "Classic Models", title: "Dimensionality Reduction", draft: true, terms: ["PCA", "t-SNE", "UMAP", "Curse of dimensionality"],
-  sections: [{ h: "The big idea", text: "Real data can have hundreds of features. Dimensionality reduction squeezes them into a few that keep most of the information. This makes models faster, and lets you plot complex data on a simple two dimensional chart." }] },
-{ n: 13, group: "How Models Learn", title: "Loss Functions", draft: true, terms: ["Loss", "Mean squared error", "Cross-entropy", "Objective"],
-  sections: [{ h: "The big idea", text: "A loss function is a single number that measures how wrong the model is. Training is simply the search for parameters that make this number as small as possible. Choosing the loss means choosing what the model cares about." }] },
+{
+  n: 11, group: "Classic Models", title: "Clustering & Anomaly Detection",
+  terms: ["Clustering", "K-means", "Centroid", "Elbow method", "Anomaly detection", "Isolation forest"],
+  visual: { title: "Finding Groups and Oddballs", note: "Watch k-means find groups step by step, then spot the sessions that don't fit" },
+  sections: [
+    { h: "The big idea", text: "So far our models learned from labels. Clustering and anomaly detection need no labels at all. Clustering finds groups of similar items. Anomaly detection finds the items that do not fit any group. Both are unsupervised learning, and both are great for exploring data you do not understand yet." },
+    { h: "1 · K-means clustering", text: "K-means is the most common clustering method. You choose how many groups you want, called k. The algorithm drops k centre points at random. Each answer joins its nearest centre. Then each centre moves to the middle of its answers. Repeat these two steps until nothing changes. Give it ten thousand unrated coach answers, and it might find groups like rambling answers, answers with no result, and answers that are far too short." },
+    { h: "2 · Choosing k and reading clusters", text: "There is no single right number of groups. A common trick is the elbow method. Try several values of k, and watch how tight the groups get. At first, each extra group helps a lot. Then the gains suddenly flatten, like a bent elbow. That bend is a good choice. Remember that the algorithm only finds groups. People must look inside each one, give it a name, and decide if it makes sense. Results can also change from run to run, so teams run it several times." },
+    { h: "3 · Anomaly detection", text: "Anomaly detection learns what normal looks like, then flags whatever sits far away from it. Banks use it for fraud. Factories use it to spot a machine that is about to fail, from unusual vibration or temperature. Our coach could use it to catch copied answers, or a script hammering the practice tool. One popular method, the isolation forest, uses random splits. Odd points are easy to isolate, so they need only a few splits." },
+    { h: "4 · Thresholds and alerts", text: "An anomaly detector gives each item a score, and you choose a threshold for raising an alert. Set it too low, and people drown in false alarms and start ignoring them. Set it too high, and real problems slip through. Also remember that unusual is not always bad. A burst of odd sessions might be a new kind of user you have never served before." },
+    { h: "Why it matters for a PM", text: "For a PM, clustering is a fast way to discover user segments and personas from real behaviour, rather than guesses. Anomaly detection powers fraud checks, quality monitoring and early warnings. In both cases, plan for a human in the loop. Someone must name the clusters and review the alerts. And once you have labelled what you found, you can train a supervised model to do it better." },
+    { h: "How it connects", text: "In Types of Learning, we met unsupervised learning in one picture. Here we saw how it works. Next, in Dimensionality Reduction, we meet another unsupervised tool, one that squeezes many features into a few, so we can see clusters on a simple chart and speed up our models." },
+  ]
+},
+{
+  n: 12, group: "Classic Models", title: "Dimensionality Reduction",
+  terms: ["Dimensions", "Curse of dimensionality", "PCA", "Principal component", "Explained variance", "t-SNE and UMAP"],
+  visual: { title: "Squeezing Many Features into Few", note: "Flatten two related features into one, then read an embedding map with care" },
+  sections: [
+    { h: "The big idea", text: "Real data can have hundreds or thousands of features. Dimensionality reduction squeezes them into a few new features that keep most of the useful information. Think of a world map. It flattens a round planet onto a page, and you lose a little, but it is far easier to use. Fewer features mean faster models, less noise, and data you can actually plot." },
+    { h: "1 · Too many features", text: "Imagine describing each coach answer with three hundred features, like counts of every important word, plus timing and structure scores. With so many dimensions, the data becomes spread thin, like a few people scattered across a huge stadium. Models need far more examples, run slower, and overfit more easily. And no human can picture three hundred dimensions. This is called the curse of dimensionality." },
+    { h: "2 · PCA", text: "Principal component analysis, or PCA, is the classic fix. Many features move together. For example, answers with more specific details also tend to mention more numbers. PCA finds the direction along which the data varies most, and calls it the first principal component. Then it finds the next most important direction, and so on. Often just a few components keep most of the information. Here, one new axis we could call concreteness replaces two old features." },
+    { h: "3 · Maps with t-SNE and UMAP", text: "PCA draws straight axes. Methods like t SNE and UMAP bend and fold the data so that items that were close together stay close together on a flat map. They are great for looking at embeddings, for example to see whether answers form natural groups. But read these maps with care. The size of a cluster, and the distance between clusters, can mean very little. Use them to explore, not to measure." },
+    { h: "4 · When to use it", text: "Use dimensionality reduction to speed up training, to remove noise, to compress large embeddings so they are cheaper to store and search, and to visualise high dimensional data. The trade off is explainability. A new feature like component one is a mix of many original features, so it is harder to explain to a user than plain answer length." },
+    { h: "Why it matters for a PM", text: "For a PM, those colourful cluster maps in AI demos are usually made with t SNE or UMAP. They are useful for spotting patterns, but do not make decisions from the distances on them. And when storage or search costs for embeddings grow, ask whether reducing their dimensions could cut the bill without hurting quality." },
+    { h: "How it connects", text: "In Clustering and Anomaly Detection, we found groups without labels. Dimensionality reduction lets us see those groups on a flat map. This completes the Classic Models group. Next, we start How Models Learn, with Loss Functions, the single number that tells a model how wrong it is." },
+  ]
+},
+{
+  n: 13, group: "How Models Learn", title: "Loss Functions",
+  terms: ["Loss", "Squared error", "Absolute error", "Cross-entropy (log loss)", "Weighted loss", "Objective"],
+  visual: { title: "Scoring Every Mistake", note: "See how different losses punish mistakes, and how confident wrong answers get hit hardest" },
+  sections: [
+    { h: "The big idea", text: "A loss function is a single number that says how wrong a model is. During training, the model's only goal is to make that number smaller. So choosing the loss means choosing what the model cares about. If the loss does not match what matters to your users, the model will get very good at the wrong thing." },
+    { h: "1 · What a loss is", text: "For every training example, the loss compares the model's prediction with the right answer and scores the gap. Then it averages those scores into one number. Lower is better. Think of it as the model's scorecard during practice. It is not the same as your business metric, like user satisfaction, but it should point in the same direction." },
+    { h: "2 · Losses for numbers", text: "When predicting a number, like a coach's score out of ten, the most common loss is squared error. Square each miss, then average. A miss of one point costs one, but a miss of four points costs sixteen. So big mistakes are punished heavily, and one wild outlier can dominate. Absolute error just averages the size of each miss, so it is calmer about outliers. The choice depends on whether a few big misses are worse than many small ones." },
+    { h: "3 · Losses for categories", text: "For yes or no predictions, like strong or weak, models use cross entropy, also called log loss. It looks at how much probability the model gave to the right answer. If the answer was strong and the model said ninety percent strong, the loss is tiny. If it said only ten percent strong, the loss is large. Being confidently wrong is punished hardest of all. That teaches the model to be honest about uncertainty." },
+    { h: "4 · Matching the loss to the product", text: "Not all mistakes cost the same. For our coach, telling a candidate a weak answer is strong could leave them unprepared for a real interview. That may be worse than the opposite mistake. A weighted loss can make one kind of mistake count more than the other. Be careful, though. The model optimises exactly what you measure, so if the loss rewards the wrong thing, you get the wrong behaviour, very efficiently." },
+    { h: "Why it matters for a PM", text: "For a PM, the loss is where product judgement meets the maths. You know which mistakes hurt users most. Say it clearly, for example, a false strong is three times worse than a false weak, and the team can build that into the loss or the threshold. Also check that the training loss and the metrics you report actually point the same way." },
+    { h: "How it connects", text: "In Linear and Logistic Regression, we added up squared errors to find the best line. That total was a loss. Here we saw the main kinds. Next, in Gradient Descent and Optimizers, we learn how a model actually lowers its loss, step by small step." },
+  ]
+},
 { n: 14, group: "How Models Learn", title: "Gradient Descent & Optimizers", draft: true, terms: ["Gradient", "Learning rate", "SGD", "Adam"],
   sections: [{ h: "The big idea", text: "Gradient descent is how a model improves. Picture walking downhill in fog, always taking a small step in the steepest downward direction. The learning rate sets the step size. Optimizers like Adam are smarter ways of taking those steps." }] },
 { n: 15, group: "How Models Learn", title: "Regularization", draft: true, terms: ["L1 and L2", "Dropout", "Early stopping", "Data augmentation"],
@@ -601,7 +637,7 @@ const CONCEPTS = [
 { n: 30, group: "Real-World ML", title: "MLOps", draft: true, terms: ["ML pipelines", "Feature store", "Model registry", "CI/CD for ML"],
   sections: [{ h: "The big idea", text: "MLOps is the engineering that keeps machine learning running reliably in production. It covers data pipelines, versioning of data and models, automated retraining, safe deployment and rollback. It turns a one-off experiment into a dependable product." }] }
 ];
-const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}], "5": [{"kind": "Course", "title": "Datasets: Dividing the original dataset (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets"}, {"kind": "Docs", "title": "Cross-validation: evaluating estimator performance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"}, {"kind": "Docs", "title": "Common pitfalls: data leakage (scikit-learn)", "url": "https://scikit-learn.org/stable/common_pitfalls.html"}, {"kind": "Course", "title": "Advanced Learning Algorithms: model evaluation (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/advanced-learning-algorithms"}], "6": [{"kind": "Course", "title": "Overfitting (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/overfitting"}, {"kind": "Course", "title": "Overfitting: Model complexity (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/model-complexity"}, {"kind": "Example", "title": "Underfitting vs. Overfitting, with charts (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html"}, {"kind": "Docs", "title": "Validation curves: spotting bias and variance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/learning_curve.html"}], "7": [{"kind": "Course", "title": "Linear regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"}, {"kind": "Course", "title": "Logistic regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression"}, {"kind": "Course", "title": "Calculating a probability with the sigmoid function (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/sigmoid-function"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "8": [{"kind": "Course", "title": "Decision trees (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/decision-trees"}, {"kind": "Course", "title": "Random forests (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/random-forests"}, {"kind": "Course", "title": "Decision Forests course introduction (Google)", "url": "https://developers.google.com/machine-learning/decision-forests"}, {"kind": "Docs", "title": "Ensembles: random forests and gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "9": [{"kind": "Course", "title": "Gradient Boosted Decision Trees (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/intro-to-gbdt"}, {"kind": "Course", "title": "Overfitting, regularization and early stopping in boosting (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/overfitting-gbdt"}, {"kind": "Docs", "title": "Introduction to Boosted Trees (XGBoost docs)", "url": "https://xgboost.readthedocs.io/en/stable/tutorials/model.html"}, {"kind": "Docs", "title": "Ensembles: gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "10": [{"kind": "Docs", "title": "Supervised learning guide: nearest neighbors, SVMs, naive Bayes (scikit-learn)", "url": "https://scikit-learn.org/stable/supervised_learning.html"}, {"kind": "Course", "title": "Classification: thresholds and confusion matrix (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification"}, {"kind": "Reference", "title": "Machine Learning Glossary (Google)", "url": "https://developers.google.com/machine-learning/glossary"}]};
+const RESOURCES = {"1": [{"kind": "Course", "title": "What is Machine Learning? (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/framing/video-lecture"}, {"kind": "Course", "title": "Machine Learning Crash Course (Google, free)", "url": "https://developers.google.com/machine-learning/crash-course"}, {"kind": "Guide", "title": "Introduction to ML Problem Framing: is ML the right tool? (Google)", "url": "https://developers.google.com/machine-learning/problem-framing"}, {"kind": "Guide", "title": "Rules of Machine Learning (Google), Rule #1: launch without ML", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"}, {"kind": "Course", "title": "Machine Learning Specialization (Andrew Ng, Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction"}], "2": [{"kind": "Course", "title": "What is Machine Learning? The four types (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml"}, {"kind": "Course", "title": "Supervised Learning (Google)", "url": "https://developers.google.com/machine-learning/intro-to-ml/supervised"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}, {"kind": "Docs", "title": "scikit-learn User Guide: supervised and unsupervised methods", "url": "https://scikit-learn.org/stable/user_guide.html"}], "3": [{"kind": "Course", "title": "Datasets: Labels, direct vs proxy (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/labels"}, {"kind": "Course", "title": "Datasets: Data characteristics and quality (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/data-characteristics"}, {"kind": "Article", "title": "Why it's time for data-centric AI, with Andrew Ng (MIT Sloan)", "url": "https://mitsloan.mit.edu/ideas-made-to-matter/why-its-time-data-centric-artificial-intelligence"}, {"kind": "Article", "title": "Data-centric AI development: the platform approach (DeepLearning.AI)", "url": "https://www.deeplearning.ai/the-batch/data-centric-ai-development-the-platform-approach"}], "4": [{"kind": "Course", "title": "Working with numerical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data"}, {"kind": "Course", "title": "Working with categorical data (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/categorical-data"}, {"kind": "Course", "title": "Qualities of good numerical features (Google)", "url": "https://developers.google.com/machine-learning/crash-course/numerical-data/qualities-of-good-numerical-features"}, {"kind": "Docs", "title": "Preprocessing data: scaling and encoding (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/preprocessing.html"}], "5": [{"kind": "Course", "title": "Datasets: Dividing the original dataset (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets"}, {"kind": "Docs", "title": "Cross-validation: evaluating estimator performance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/cross_validation.html"}, {"kind": "Docs", "title": "Common pitfalls: data leakage (scikit-learn)", "url": "https://scikit-learn.org/stable/common_pitfalls.html"}, {"kind": "Course", "title": "Advanced Learning Algorithms: model evaluation (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/advanced-learning-algorithms"}], "6": [{"kind": "Course", "title": "Overfitting (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/overfitting"}, {"kind": "Course", "title": "Overfitting: Model complexity (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/overfitting/model-complexity"}, {"kind": "Example", "title": "Underfitting vs. Overfitting, with charts (scikit-learn)", "url": "https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html"}, {"kind": "Docs", "title": "Validation curves: spotting bias and variance (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/learning_curve.html"}], "7": [{"kind": "Course", "title": "Linear regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"}, {"kind": "Course", "title": "Logistic regression (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression"}, {"kind": "Course", "title": "Calculating a probability with the sigmoid function (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/sigmoid-function"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}], "8": [{"kind": "Course", "title": "Decision trees (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/decision-trees"}, {"kind": "Course", "title": "Random forests (Google Decision Forests course)", "url": "https://developers.google.com/machine-learning/decision-forests/random-forests"}, {"kind": "Course", "title": "Decision Forests course introduction (Google)", "url": "https://developers.google.com/machine-learning/decision-forests"}, {"kind": "Docs", "title": "Ensembles: random forests and gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "9": [{"kind": "Course", "title": "Gradient Boosted Decision Trees (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/intro-to-gbdt"}, {"kind": "Course", "title": "Overfitting, regularization and early stopping in boosting (Google)", "url": "https://developers.google.com/machine-learning/decision-forests/overfitting-gbdt"}, {"kind": "Docs", "title": "Introduction to Boosted Trees (XGBoost docs)", "url": "https://xgboost.readthedocs.io/en/stable/tutorials/model.html"}, {"kind": "Docs", "title": "Ensembles: gradient boosting (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/ensemble.html"}], "10": [{"kind": "Docs", "title": "Supervised learning guide: nearest neighbors, SVMs, naive Bayes (scikit-learn)", "url": "https://scikit-learn.org/stable/supervised_learning.html"}, {"kind": "Course", "title": "Classification: thresholds and confusion matrix (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/classification"}, {"kind": "Reference", "title": "Machine Learning Glossary (Google)", "url": "https://developers.google.com/machine-learning/glossary"}], "11": [{"kind": "Course", "title": "What is clustering? (Google Clustering course)", "url": "https://developers.google.com/machine-learning/clustering/overview"}, {"kind": "Course", "title": "What is k-means clustering? (Google)", "url": "https://developers.google.com/machine-learning/clustering/kmeans/overview"}, {"kind": "Docs", "title": "Novelty and outlier detection, incl. Isolation Forest (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/outlier_detection.html"}, {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}], "12": [{"kind": "Docs", "title": "sklearn.decomposition: PCA and related methods (scikit-learn)", "url": "https://scikit-learn.org/stable/api/sklearn.decomposition.html"}, {"kind": "Docs", "title": "Manifold learning, incl. t-SNE (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/manifold.html"}, {"kind": "Article", "title": "How to Use t-SNE Effectively (Distill)", "url": "https://distill.pub/2016/misread-tsne/"}, {"kind": "Docs", "title": "How UMAP Works (UMAP docs)", "url": "https://umap-learn.readthedocs.io/en/latest/how_umap_works.html"}], "13": [{"kind": "Course", "title": "Linear regression: Loss (Google ML Crash Course)", "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/loss"}, {"kind": "Course", "title": "Logistic regression: Loss and regularization (Google)", "url": "https://developers.google.com/machine-learning/crash-course/logistic-regression/loss-regularization"}, {"kind": "Reference", "title": "Machine Learning Glossary: ML Fundamentals (Google)", "url": "https://developers.google.com/machine-learning/glossary/fundamentals"}, {"kind": "Course", "title": "Supervised Machine Learning: Regression and Classification (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/machine-learning"}]};
 const ALLOWED_URLS = new Set(Object.values(RESOURCES).flat().map(r => r.url));
 function learnHtml(n) {
   const list = RESOURCES[n] || [];
@@ -2106,6 +2142,329 @@ const STEPS = [
 return { STEPS, picker: { label: "Number of neighbours (k):", step: 0, items: () => KS.map(k => ({ label: "k = " + k, color: "var(--t2)" })), get: () => ki, set: i => { ki = i; } } };
 })();
 VMETA[10] = {"title": "Three Simple Ideas", "sub": "Three classic models applied to the interview coach: ask the nearest neighbours, draw the widest road between strong and weak answers, and count the words."};
+
+VISUALS[11] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+const rng = seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const X = v => 50 + v * 30, Y = v => 300 - v * 27;
+
+/* three blobs of unrated answers: x = length (0-10), y = specific details (0-10) */
+const r1 = rng(5), PTS = [];
+[[2.2, 2.4], [7.6, 3.0], [4.6, 7.6]].forEach(([cx, cy]) => { for (let i = 0; i < 16; i++) PTS.push([cx + (r1() - .5) * 3.2, cy + (r1() - .5) * 3.0]); });
+const COLS = [B, P, G], BLOBS = [[2.2, 2.4, "Too short"], [7.6, 3.0, "Rambling, no result"], [4.6, 7.6, "Specific, on point"]];
+const nameFor = q => BLOBS.reduce((b, z) => ((q[0] - z[0]) ** 2 + (q[1] - z[1]) ** 2 < (q[0] - b[0]) ** 2 + (q[1] - b[1]) ** 2 ? z : b))[2];
+/* precompute k-means iterations from fixed starting centres */
+const ITERS = [];
+(() => {
+  let c = [[1.2, 8.6], [9.2, 5.6], [4.4, 3.6]];
+  for (let it = 0; it < 6; it++) {
+    const asg = PTS.map(p => { let b = 0, bd = 1e9; c.forEach((q, k) => { const d = (p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2; if (d < bd) { bd = d; b = k; } }); return b; });
+    ITERS.push({ c: c.map(q => q.slice()), asg });
+    c = c.map((q, k) => { const m = PTS.filter((_, i) => asg[i] === k); return m.length ? [m.reduce((a, p) => a + p[0], 0) / m.length, m.reduce((a, p) => a + p[1], 0) / m.length] : q; });
+  }
+})();
+const VIEW = [{ label: "Start", it: -1 }, { label: "Round 1", it: 0 }, { label: "Round 2", it: 1 }, { label: "Done", it: 5 }];
+let vi = 0;
+function axes(xl, yl) {
+  let s = "";
+  for (let v = 0; v <= 10; v += 2) s += `<line x1="${X(v)}" y1="${Y(0)}" x2="${X(v)}" y2="${Y(10)}" style="stroke:var(--line)"/><line x1="${X(0)}" y1="${Y(v)}" x2="${X(10)}" y2="${Y(v)}" style="stroke:var(--line)"/>`;
+  return s + `<text x="${X(5)}" y="${Y(0) + 20}" text-anchor="middle" font-size="12" class="muted">${xl}</text><text x="20" y="${Y(5)}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 20 ${Y(5)})">${yl}</text>`;
+}
+function drawKMeans() {
+  const v = VIEW[vi], st = v.it < 0 ? { c: ITERS[0].c, asg: null } : ITERS[v.it];
+  let s = svg(340) + axes("Answer length →", "Specific details →");
+  PTS.forEach((p, i) => { const c = st.asg ? COLS[st.asg[i]] : "var(--muted)"; s += `<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="5" style="fill:${c}" fill-opacity=".8"/>`; });
+  st.c.forEach((q, k) => { s += `<path d="M${X(q[0]) - 9} ${Y(q[1]) - 9} L${X(q[0]) + 9} ${Y(q[1]) + 9} M${X(q[0]) + 9} ${Y(q[1]) - 9} L${X(q[0]) - 9} ${Y(q[1]) + 9}" style="stroke:${COLS[k]}" stroke-width="4"/><circle cx="${X(q[0])}" cy="${Y(q[1])}" r="13" style="fill:none;stroke:var(--ink)" stroke-width="1.3"/>`; });
+  if (v.label === "Done") st.c.forEach((q, k) => { s += `<text x="${X(q[0])}" y="${Y(q[1]) + 30}" text-anchor="middle" font-size="12" font-weight="700" style="fill:${COLS[k]}">${nameFor(q)}</text>`; });
+  const bx = 400;
+  s += lbl(bx, 40, `K-MEANS · K = 3 · ${v.label.toUpperCase()}`);
+  const msg = { "Start": ["Drop 3 centres (✕) at random.", "No answer belongs to a group yet."], "Round 1": ["Each answer joins its nearest centre.", "Then each centre moves to the middle", "of its answers."], "Round 2": ["Repeat: re-assign, then move.", "The groups settle down."], "Done": ["Nothing changes any more.", "A person names each group."] }[v.label];
+  msg.forEach((t, i) => { s += `<text x="${bx}" y="${70 + i * 20}" font-size="12.5">${t}</text>`; });
+  s += rect(bx, 150, 225, 70, A, .07) + `<text x="${bx + 12}" y="172" font-size="12.5" font-weight="700" style="fill:${A}">No labels used</text><text x="${bx + 12}" y="192" font-size="12">48 unrated answers, grouped only</text><text x="${bx + 12}" y="208" font-size="12">by how similar they are.</text>`;
+  s += `<text x="${bx}" y="256" font-size="11" class="muted">Step through the rounds above.</text><text x="${bx}" y="272" font-size="11" class="muted">Data is illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawElbow() {
+  let s = svg(320);
+  const vals = [100, 58, 22, 18, 15, 13], X0 = 80, Y0 = 250, sx = 80, sy = 2;
+  s += `<line x1="${X0 - 20}" y1="${Y0}" x2="${X0 + 5 * sx + 30}" y2="${Y0}" style="stroke:var(--ink)"/><line x1="${X0 - 20}" y1="${Y0}" x2="${X0 - 20}" y2="${Y0 - 210}" style="stroke:var(--ink)"/>`;
+  s += `<path d="${vals.map((v, i) => `${i ? "L" : "M"}${X0 + i * sx} ${Y0 - v * sy}`).join(" ")}" fill="none" style="stroke:${B}" stroke-width="2.5"/>`;
+  vals.forEach((v, i) => { const on = i === 2; s += `<circle cx="${X0 + i * sx}" cy="${Y0 - v * sy}" r="${on ? 9 : 5}" style="fill:${on ? A : B}"/><text x="${X0 + i * sx}" y="${Y0 + 20}" text-anchor="middle" class="mono" font-size="12">k=${i + 1}</text>`; });
+  s += `<text x="${X0 + 2 * sx + 14}" y="${Y0 - 22 * sy - 14}" font-size="13" font-weight="700" style="fill:${A}">the elbow: k = 3</text>`;
+  s += `<text x="${X0 + 3.4 * sx}" y="${Y0 - 130}" font-size="12" class="muted">after this, extra groups</text><text x="${X0 + 3.4 * sx}" y="${Y0 - 114}" font-size="12" class="muted">barely help</text>`;
+  s += `<text x="30" y="${Y0 - 105}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 30 ${Y0 - 105})">Spread inside groups →</text>`;
+  s += `<text x="20" y="300" font-size="12" class="muted">Then a person looks inside each group and names it. Numbers are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+/* anomaly: sessions per day vs answers per minute */
+const r2 = rng(17), NORMAL = Array.from({ length: 40 }, () => [3 + (r2() - .5) * 3.6 + 1, 3.2 + (r2() - .5) * 3.0]);
+const ODD = [[8.8, 8.6, "script: 40 answers a minute"], [9.2, 1.2, "47 sessions in one day"], [1.0, 8.4, "same answer pasted 30 times"]];
+function drawAnomaly() {
+  let s = svg(340) + axes("Sessions per day →", "Answers per minute →");
+  s += `<ellipse cx="${X(4)}" cy="${Y(3.2)}" rx="${2.6 * 30}" ry="${2.2 * 27}" style="fill:${A};stroke:${A}" fill-opacity=".08" stroke-dasharray="5 4" stroke-width="1.5"/>`;
+  s += `<text x="${X(4)}" y="${Y(6.0)}" text-anchor="middle" font-size="12" font-weight="700" style="fill:${A}">normal</text>`;
+  NORMAL.forEach(p => { s += `<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4.5" style="fill:var(--muted)" fill-opacity=".7"/>`; });
+  ODD.forEach(([x, y]) => { s += `<circle cx="${X(x)}" cy="${Y(y)}" r="7" style="fill:${W}"/><circle cx="${X(x)}" cy="${Y(y)}" r="13" style="fill:none;stroke:${W}" stroke-width="1.6"/>`; });
+  const bx = 400;
+  s += lbl(bx, 40, "FLAGGED: FAR FROM NORMAL");
+  ODD.forEach(([, , t], i) => { s += rect(bx, 52 + i * 46, 225, 38, W, .1) + `<text x="${bx + 12}" y="${76 + i * 46}" font-size="12">${t}</text>`; });
+  s += rect(bx, 200, 225, 76, P, .07) + `<text x="${bx + 12}" y="222" font-size="12.5" font-weight="700" style="fill:${P}">Isolation forest</text><text x="${bx + 12}" y="242" font-size="12">Odd points need only a few</text><text x="${bx + 12}" y="258" font-size="12">random splits to be cut off alone.</text>`;
+  s += `<text x="${bx}" y="298" font-size="11" class="muted">Data is illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawThreshold() {
+  let s = svg(330);
+  const bins = [2, 9, 20, 28, 22, 14, 8, 5, 3, 2, 1, 1], X0 = 60, bw = 44, Y0 = 220;
+  s += lbl(20, 22, "ANOMALY SCORE FOR 115 SESSIONS (HIGHER = ODDER)");
+  bins.forEach((n, i) => { s += `<rect x="${X0 + i * bw}" y="${Y0 - n * 5.5}" width="${bw - 4}" height="${n * 5.5}" rx="3" style="fill:${i >= 9 ? W : "var(--muted)"}" fill-opacity="${i >= 9 ? .8 : .45}"/>`; });
+  s += `<line x1="${X0}" y1="${Y0}" x2="${X0 + 12 * bw}" y2="${Y0}" style="stroke:var(--ink)"/>`;
+  const th = (i, t, c, y, end) => `<line x1="${X0 + i * bw - 2}" y1="40" x2="${X0 + i * bw - 2}" y2="${Y0 + 8}" style="stroke:${c}" stroke-width="2" stroke-dasharray="6 4"/><text x="${X0 + i * bw + (end ? -8 : 4)}" y="${y}" ${end ? 'text-anchor="end"' : ""} font-size="12" font-weight="700" style="fill:${c}">${t}</text>`;
+  s += th(6, "too low: 20 alerts a day", G, 52) + th(9, "balanced: 4 alerts", A, 72) + th(11, "too high:", P, 92) + `<text x="${X0 + 11 * bw + 4}" y="108" font-size="12" font-weight="700" style="fill:${P}">1 alert</text>`;
+  s += rect(20, 244, 290, 72, G, .08) + `<text x="34" y="266" font-size="12.5" font-weight="700" style="fill:${G}">Too many alerts</text><text x="34" y="286" font-size="12">People stop reading them,</text><text x="34" y="302" font-size="12">and real problems get missed.</text>`;
+  s += rect(330, 244, 295, 72, P, .08) + `<text x="344" y="266" font-size="12.5" font-weight="700" style="fill:${P}">Unusual is not always bad</text><text x="344" y="286" font-size="12">A burst of odd sessions may be a</text><text x="344" y="302" font-size="12">new kind of user. Review, then decide.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "K-means", title: "1 · K-means clustering", q: "How does a model find groups with no labels?",
+    points: ["Choose k, the number of groups. Here k = 3.", "Drop k centres at random.", "Each answer joins its <b>nearest centre</b>, then each centre moves to the <b>middle</b> of its answers.", "Repeat until nothing changes. Step through the rounds above."],
+    pm: "Clustering turns a pile of unlabelled behaviour into candidate segments in minutes. It's a great first step before you write personas or label data.",
+    say: "Step one, k means clustering. We have forty eight unrated answers, and we ask for three groups. The algorithm drops three centres at random. Now step to round one. Each answer joins its nearest centre, and then each centre moves to the middle of its answers. Round two, repeat. The groups settle. When nothing changes, we're done, and a person names each group, like too short, or rambling with no result.",
+    draw: drawKMeans },
+  { stage: "Choose k", title: "2 · Choosing k and reading clusters", q: "How many groups should we ask for?",
+    points: ["Try several values of k and measure how tight the groups are.", "Each extra group helps, until the gains suddenly flatten: the <b>elbow</b>.", "The algorithm only finds groups. People name them and check they make sense.", "Results can change between runs, so teams run it several times."],
+    pm: "Treat clusters as a hypothesis, not a fact. Read real examples from each group before building a feature around it.",
+    say: "Step two, choosing k. There's no single right number of groups. So we try several, and measure how tight the groups are. Going from one group to two helps a lot. Two to three helps a lot too. But after three, the line flattens. That bend is called the elbow, and it's a good choice. Then a person looks inside each group and decides what it means.",
+    draw: drawElbow },
+  { stage: "Anomalies", title: "3 · Anomaly detection", q: "How do we spot the odd ones out?",
+    points: ["Learn what <b>normal</b> looks like, then flag what sits far from it.", "Here: a script answering 40 times a minute, 47 sessions in a day, one answer pasted 30 times.", "Banks use this for fraud; factories for machines about to fail.", "An <b>isolation forest</b> finds odd points because they're easy to cut off alone."],
+    pm: "Anomaly detection needs no labelled examples of fraud or failure, which is perfect when bad events are rare and you don't know what they'll look like.",
+    say: "Step three, anomaly detection. The model learns what normal sessions look like, the cloud in the middle. Then it flags anything far away. A script answering forty questions a minute. Forty seven sessions in one day. The same answer pasted thirty times. Banks use the same idea for fraud, and factories use it to spot a machine that's about to fail.",
+    draw: drawAnomaly },
+  { stage: "Thresholds", title: "4 · Thresholds and alerts", q: "When should an oddity raise an alert?",
+    points: ["Every session gets an <b>anomaly score</b>. You choose the threshold.", "Too low: a flood of false alarms that people learn to ignore.", "Too high: real problems slip through.", "Unusual isn't always bad. Review alerts before acting."],
+    pm: "Pick the threshold with the people who handle the alerts. A daily number they can actually review beats a perfect score nobody reads.",
+    say: "Step four, thresholds and alerts. Each session gets an anomaly score, and you decide where to draw the line. Too low, and you get twenty alerts a day. People stop reading them. Too high, and you catch only one, and real problems slip through. And remember, unusual isn't always bad. A burst of odd sessions might be a brand new kind of user.",
+    draw: drawThreshold },
+];
+return { STEPS, picker: { label: "Show:", step: 0, items: () => VIEW.map(v => ({ label: v.label, color: "var(--t2)" })), get: () => vi, set: i => { vi = i; } } };
+})();
+VMETA[11] = {"title": "Finding Groups and Oddballs", "sub": "Watch k-means sort unrated interview answers into groups, pick how many groups to ask for, then spot the sessions that don't fit and decide when to raise an alert."};
+
+VISUALS[12] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)", w = 1.5) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="${w}" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+const rng = seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+function drawMany() {
+  let s = svg(330);
+  s += lbl(20, 22, "EACH ANSWER DESCRIBED BY 300 FEATURES");
+  const heads = ["length", "details", "numbers", "“result”", "“team”", "“um”", "structure", "…", "f300"];
+  heads.forEach((h, i) => { s += `<text x="${30 + i * 66}" y="50" font-size="11" class="mono muted">${h}</text>`; });
+  const r = rng(3);
+  for (let row = 0; row < 4; row++) heads.forEach((h, i) => { s += `<text x="${30 + i * 66}" y="${76 + row * 22}" class="mono" font-size="12">${h === "…" ? "…" : (r() * 9).toFixed(1)}</text>`; });
+  s += arrow(320, 168, 320, 196);
+  const items = [["Spread thin", "data scattered across a huge space"], ["Slow and hungry", "needs far more examples to learn"], ["Overfits easily", "finds patterns in noise"], ["Impossible to picture", "nobody can see 300 dimensions"]];
+  items.forEach(([t, d], i) => { const x = 20 + (i % 2) * 305, y = 204 + Math.floor(i / 2) * 58; s += rect(x, y, 295, 50, W, .07) + `<text x="${x + 14}" y="${y + 21}" font-size="13" font-weight="700" style="fill:${W}">${t}</text><text x="${x + 14}" y="${y + 39}" font-size="12">${d}</text>`; });
+  return s + `</svg>`;
+}
+
+/* correlated features: specific details vs numbers mentioned */
+const r2 = rng(9), PTS = Array.from({ length: 34 }, () => { const t = (r2() - .5) * 8.4, n = (r2() - .5) * 1.6; return [5 + t * .8 - n * .6, 5 + t * .6 + n * .8]; });
+const MODES = [{ label: "Original 2 features", c: "var(--t2)" }, { label: "Squeeze onto 1 axis", c: "var(--accent)" }];
+let mi = 0;
+function drawPCA() {
+  const X = v => 50 + v * 30, Y = v => 300 - v * 27, ux = .8, uy = .6;
+  let s = svg(340);
+  for (let v = 0; v <= 10; v += 2) s += `<line x1="${X(v)}" y1="${Y(0)}" x2="${X(v)}" y2="${Y(10)}" style="stroke:var(--line)"/><line x1="${X(0)}" y1="${Y(v)}" x2="${X(10)}" y2="${Y(v)}" style="stroke:var(--line)"/>`;
+  s += `<text x="${X(5)}" y="${Y(0) + 20}" text-anchor="middle" font-size="12" class="muted">Specific details →</text><text x="20" y="${Y(5)}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 20 ${Y(5)})">Numbers mentioned →</text>`;
+  s += `<line x1="${X(5 - 5 * ux)}" y1="${Y(5 - 5 * uy)}" x2="${X(5 + 5 * ux)}" y2="${Y(5 + 5 * uy)}" style="stroke:${A}" stroke-width="${mi ? 3 : 1.5}" ${mi ? "" : 'stroke-dasharray="6 4"'}/>`;
+  s += arrow(X(5), Y(5), X(5 - 1.2 * uy), Y(5 + 1.2 * ux), P, 2);
+  s += `<text x="${X(5 + 4.6 * ux)}" y="${Y(5 + 4.6 * uy) - 10}" text-anchor="end" font-size="12" font-weight="700" style="fill:${A}">component 1: “concreteness”</text>`;
+  s += `<text x="${X(5 - 1.2 * uy) - 6}" y="${Y(5 + 1.2 * ux) - 4}" text-anchor="end" font-size="11.5" font-weight="600" style="fill:${P}">component 2</text>`;
+  PTS.forEach(([x, y]) => {
+    const t = (x - 5) * ux + (y - 5) * uy, px = 5 + t * ux, py = 5 + t * uy;
+    if (mi) s += `<line x1="${X(x)}" y1="${Y(y)}" x2="${X(px)}" y2="${Y(py)}" style="stroke:var(--muted)" stroke-width="1" stroke-dasharray="2 2"/><circle cx="${X(px)}" cy="${Y(py)}" r="4.5" style="fill:${A}"/>`;
+    s += `<circle cx="${X(x)}" cy="${Y(y)}" r="4.5" style="fill:${B}" fill-opacity="${mi ? .25 : .8}"/>`;
+  });
+  const bx = 400;
+  s += lbl(bx, 40, "HOW MUCH INFORMATION EACH KEEPS");
+  [["Component 1", 88, A], ["Component 2", 12, P]].forEach(([t, v, c], i) => {
+    const y = 56 + i * 48;
+    s += `<text x="${bx}" y="${y}" font-size="12.5">${t}</text><text x="${bx + 225}" y="${y}" text-anchor="end" class="mono" font-size="12.5" font-weight="700">${v}%</text><rect x="${bx}" y="${y + 8}" width="225" height="16" rx="3" style="fill:var(--line)"/><rect x="${bx}" y="${y + 8}" width="${v * 2.25}" height="16" rx="3" style="fill:${c}" fill-opacity=".7"/>`;
+  });
+  s += `<text x="${bx}" y="172" font-size="12.5">${mi ? "Each answer is now one number:" : "The two features move together,"}</text><text x="${bx}" y="190" font-size="12.5">${mi ? "its position along component 1." : "so one direction explains most of it."}</text>`;
+  s += `<text x="${bx}" y="218" font-size="12.5">${mi ? "2 features became 1, keeping 88%." : "Pick “Squeeze onto 1 axis” above."}</text>`;
+  s += `<text x="${bx}" y="250" font-size="12" class="muted">With 300 features, a few dozen</text><text x="${bx}" y="266" font-size="12" class="muted">components often keep most of it.</text>`;
+  s += `<text x="${bx}" y="298" font-size="11" class="muted">Data and percentages are illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawMap() {
+  let s = svg(340);
+  const r = rng(21), groups = [[120, 110, B, "Too short", 18, 30], [250, 230, P, "Rambling", 36, 40], [330, 90, A, "Specific, on point", 14, 26], [150, 250, G, "Strong but long", 10, 22]];
+  s += rect(20, 20, 380, 300, "var(--line)");
+  s += lbl(34, 40, "2-D MAP OF 120 ANSWER EMBEDDINGS");
+  groups.forEach(([cx, cy, c, name, n, sp]) => {
+    for (let i = 0; i < n; i++) { const a = r() * 6.28, d = r() * sp; s += `<circle cx="${cx + Math.cos(a) * d}" cy="${cy + Math.sin(a) * d}" r="4" style="fill:${c}" fill-opacity=".8"/>`; }
+    s += `<text x="${cx}" y="${cy - sp - 8}" text-anchor="middle" font-size="12" font-weight="700" style="fill:${c}">${name}</text>`;
+  });
+  const bx = 420;
+  s += rect(bx, 20, 205, 110, A, .08) + `<text x="${bx + 12}" y="44" font-size="13" font-weight="700" style="fill:${A}">Good for</text><text x="${bx + 12}" y="66" font-size="12">Spotting natural groups</text><text x="${bx + 12}" y="84" font-size="12">Finding odd, mislabelled items</text><text x="${bx + 12}" y="102" font-size="12">Exploring embeddings quickly</text>`;
+  s += rect(bx, 142, 205, 130, W, .08) + `<text x="${bx + 12}" y="166" font-size="13" font-weight="700" style="fill:${W}">Read with care</text><text x="${bx + 12}" y="188" font-size="12">Cluster size can mean little.</text><text x="${bx + 12}" y="206" font-size="12">Distance between clusters</text><text x="${bx + 12}" y="222" font-size="12">can mean little.</text><text x="${bx + 12}" y="244" font-size="12">Settings change the picture.</text>`;
+  s += `<text x="${bx}" y="300" font-size="11" class="muted">Made with t-SNE or UMAP.</text><text x="${bx}" y="316" font-size="11" class="muted">Illustrative.</text>`;
+  return s + `</svg>`;
+}
+
+function drawWhen() {
+  let s = svg(310);
+  const uses = [["Faster training", "fewer features to process", A], ["Less noise", "drop directions that carry little", A], ["Cheaper embeddings", "smaller vectors to store and search", A], ["See the data", "plot thousands of dimensions in 2-D", A]];
+  uses.forEach(([t, d, c], i) => { const x = 20 + (i % 2) * 305, y = 16 + Math.floor(i / 2) * 64; s += rect(x, y, 295, 54, c, .08) + `<text x="${x + 14}" y="${y + 23}" font-size="13" font-weight="700" style="fill:${c}">✓ ${t}</text><text x="${x + 14}" y="${y + 42}" font-size="12">${d}</text>`; });
+  s += rect(20, 152, 600, 70, W, .07) + `<text x="34" y="176" font-size="13" font-weight="700" style="fill:${W}">The trade-off: explainability</text><text x="34" y="198" font-size="12.5">“Component 1 is high” is harder to explain to a user than “your answer was long”.</text>`;
+  s += rect(20, 236, 600, 56, "var(--line)") + `<text x="34" y="259" font-size="12.5"><tspan font-weight="700">PCA</tspan>: straight axes, fast, good for compressing features.</text><text x="34" y="279" font-size="12.5"><tspan font-weight="700">t-SNE / UMAP</tspan>: bendy maps, best for looking at groups.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "Too many", title: "1 · Too many features", q: "Why would more features ever be a problem?",
+    points: ["Each answer could have 300 features: word counts, timing, structure.", "With so many dimensions, the data is <b>spread thin</b>.", "Models need more examples, run slower and overfit more easily.", "This is the <b>curse of dimensionality</b>."],
+    pm: "More features isn't free. Each one adds cost, data needs and overfitting risk. Ask which features actually earn their place.",
+    say: "Step one, too many features. Imagine describing each answer with three hundred features. Counts of important words, timing, structure scores, and so on. With that many dimensions, the data gets spread thin, like a few people in a huge stadium. Models need far more examples, run slower, and overfit more easily. And no one can picture three hundred dimensions. That's called the curse of dimensionality.",
+    draw: drawMany },
+  { stage: "PCA", title: "2 · PCA", q: "How do we keep the information but drop the extra features?",
+    points: ["Specific details and numbers mentioned move together.", "PCA finds the direction of most spread: <b>component 1</b>.", "Squeeze each answer onto that axis: two features become one.", "Here component 1 keeps about 88% of the information. Try it above."],
+    pm: "PCA is a cheap, well-understood way to shrink inputs. If a model is slow or costly because of huge feature sets, it's one of the first things to try.",
+    say: "Step two, PCA. Look at these two features, specific details and numbers mentioned. They move together. PCA finds the direction along which the data spreads the most, the green line. That's component one. We could call it concreteness. Now pick squeeze onto one axis. Each answer drops onto the line, so two features become one number, and we keep about eighty eight percent of the information.",
+    draw: drawPCA },
+  { stage: "Maps", title: "3 · Maps with t-SNE and UMAP", q: "How do we look at high-dimensional data?",
+    points: ["t-SNE and UMAP fold data onto a flat map, keeping neighbours close.", "Great for spotting groups and odd items in embeddings.", "But <b>cluster sizes</b> and <b>distances between clusters</b> can mean little.", "Different settings can produce quite different pictures."],
+    pm: "Those beautiful cluster maps in AI demos are for exploring, not measuring. Don't make decisions based on how far apart two blobs look.",
+    say: "Step three, maps with t SNE and UMAP. These methods fold high dimensional data onto a flat map, keeping neighbours close together. Here, a hundred and twenty answer embeddings form four groups. That's great for exploring. But read these maps with care. The size of a cluster, and the distance between clusters, can mean very little. And different settings can produce quite different pictures.",
+    draw: drawMap },
+  { stage: "When", title: "4 · When to use it", q: "When is dimensionality reduction worth it?",
+    points: ["Faster training and less noise.", "Smaller, cheaper embeddings to store and search.", "Plotting data you otherwise couldn't see.", "Trade-off: new components are harder to explain."],
+    pm: "If embedding storage or vector search costs climb, ask whether smaller vectors would do. It's often a quick win.",
+    say: "Step four, when to use it. Dimensionality reduction speeds up training, removes noise, makes embeddings smaller and cheaper to store and search, and lets you see data you otherwise couldn't. The trade off is explainability. Telling a user that component one is high is much harder than saying their answer was too long.",
+    draw: drawWhen },
+];
+return { STEPS, picker: { label: "View:", step: 1, items: () => MODES.map(m => ({ label: m.label, color: m.c })), get: () => mi, set: i => { mi = i; } } };
+})();
+VMETA[12] = {"title": "Squeezing Many Features into Few", "sub": "See why hundreds of features hurt, flatten two related features of an interview answer into one with PCA, and learn how to read embedding maps without being fooled."};
+
+VISUALS[13] = (() => {
+const A = "var(--accent)", W = "var(--t3)", B = "var(--t2)", P = "var(--t4)", G = "var(--warm)";
+const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>`;
+const svg = h => `<svg viewBox="0 0 640 ${h}" role="img">${DEFS}`;
+const arrow = (x1, y1, x2, y2, col = "var(--muted)") => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${col}" stroke-width="1.5" marker-end="url(#ah)"/>`;
+const lbl = (x, y, t, a = "start") => `<text x="${x}" y="${y}" text-anchor="${a}" class="mono muted" font-size="11" letter-spacing="1">${t}</text>`;
+const rect = (x, y, w, h, c = "var(--line)", fo = 0, sw = 1.3) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" style="fill:${fo ? c : "var(--surface)"};stroke:${c}" ${fo ? `fill-opacity="${fo}"` : ""} stroke-width="${sw}"/>`;
+
+const ROWS = [["Answer 1", 8, 7], ["Answer 2", 3, 4], ["Answer 3", 6, 6], ["Answer 4", 9, 5]];
+function drawWhat() {
+  let s = svg(320);
+  s += lbl(20, 22, "PREDICTED VS REAL COACH SCORE");
+  const cx = [30, 170, 290, 400, 520];
+  ["ANSWER", "REAL", "PREDICTED", "MISS", "MISS²"].forEach((h, i) => { s += `<text x="${cx[i]}" y="50" class="mono muted" font-size="11">${h}</text>`; });
+  let tot = 0;
+  ROWS.forEach(([n, r, p], i) => {
+    const y = 60 + i * 38, m = p - r; tot += m * m;
+    s += rect(20, y, 600, 30) + `<text x="${cx[0]}" y="${y + 20}" font-size="13">${n}</text><text x="${cx[1]}" y="${y + 20}" class="mono" font-size="13">${r}</text><text x="${cx[2]}" y="${y + 20}" class="mono" font-size="13">${p}</text>`;
+    s += `<text x="${cx[3]}" y="${y + 20}" class="mono" font-size="13" style="fill:${m ? W : A}">${m > 0 ? "+" : ""}${m}</text><text x="${cx[4]}" y="${y + 20}" class="mono" font-size="13" font-weight="700" style="fill:${m * m > 4 ? W : "var(--ink)"}">${m * m}</text>`;
+  });
+  s += arrow(540, 214, 540, 238);
+  s += rect(330, 242, 290, 56, A, .12, 2) + `<text x="344" y="266" font-size="13">Average = (1+1+0+16) ÷ 4</text><text x="344" y="288" font-size="15" font-weight="700" style="fill:${A}">Loss = ${(tot / 4).toFixed(1)}</text>`;
+  s += `<text x="20" y="266" font-size="12.5">One number for the whole batch.</text><text x="20" y="286" font-size="12.5">Training tries to make it smaller.</text>`;
+  return s + `</svg>`;
+}
+
+function drawNumbers() {
+  let s = svg(330);
+  const X0 = 70, Y0 = 250, sx = 50, sy = 12;
+  s += `<line x1="${X0 - 10}" y1="${Y0}" x2="${X0 + 5 * sx + 10}" y2="${Y0}" style="stroke:var(--ink)"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y0 - 17 * sy}" style="stroke:var(--ink)"/>`;
+  for (let m = 0; m <= 5; m++) s += `<text x="${X0 + m * sx}" y="${Y0 + 16}" text-anchor="middle" class="mono muted" font-size="10">${m}</text>`;
+  [0, 4, 8, 12, 16].forEach(v => { s += `<text x="${X0 - 8}" y="${Y0 - v * sy + 4}" text-anchor="end" class="mono muted" font-size="10">${v}</text>`; });
+  s += `<text x="${X0 + 2.5 * sx}" y="${Y0 + 34}" text-anchor="middle" font-size="12" class="muted">Size of the miss (points)</text><text x="30" y="${Y0 - 8 * sy}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 30 ${Y0 - 8 * sy})">Penalty →</text>`;
+  const pts = f => Array.from({ length: 41 }, (_, i) => { const m = i / 10; return `${i ? "L" : "M"}${X0 + m * sx} ${Y0 - Math.min(f(m), 17) * sy}`; }).join(" ");
+  s += `<path d="${pts(m => m * m)}" fill="none" style="stroke:${W}" stroke-width="2.5"/><path d="${pts(m => m)}" fill="none" style="stroke:${B}" stroke-width="2.5"/>`;
+  s += `<text x="${X0 + 4.1 * sx}" y="${Y0 - 16.5 * sy}" font-size="12.5" font-weight="700" style="fill:${W}">squared: 4 → 16</text><text x="${X0 + 4.1 * sx}" y="${Y0 - 4 * sy - 10}" font-size="12.5" font-weight="700" style="fill:${B}">absolute: 4 → 4</text>`;
+  const bx = 380;
+  s += lbl(bx, 40, "ONE WILD OUTLIER");
+  s += `<text x="${bx}" y="64" font-size="12.5">Misses: 1, 1, 0 and one of 4</text>`;
+  s += rect(bx, 78, 245, 58, W, .1) + `<text x="${bx + 12}" y="100" font-size="12.5" font-weight="700" style="fill:${W}">Squared error: 4.5</text><text x="${bx + 12}" y="120" font-size="12">the one big miss is 89% of it</text>`;
+  s += rect(bx, 146, 245, 58, B, .1) + `<text x="${bx + 12}" y="168" font-size="12.5" font-weight="700" style="fill:${B}">Absolute error: 1.5</text><text x="${bx + 12}" y="188" font-size="12">every miss counts evenly</text>`;
+  s += `<text x="${bx}" y="234" font-size="12.5">Squared: big misses are worst.</text><text x="${bx}" y="254" font-size="12.5">Absolute: calmer about outliers.</text>`;
+  return s + `</svg>`;
+}
+
+const CONF = [{ label: "95% strong", p: .95, c: "var(--accent)" }, { label: "60% strong", p: .6, c: "var(--warm)" }, { label: "10% strong", p: .1, c: "var(--t3)" }];
+let ci = 0;
+function drawLog() {
+  const X0 = 70, Y0 = 260, Wd = 300, Ht = 210, mx = 3.2, px = p => X0 + p * Wd, py = l => Y0 - Math.min(l, mx) / mx * Ht;
+  let s = svg(330);
+  s += `<line x1="${X0}" y1="${Y0}" x2="${X0 + Wd}" y2="${Y0}" style="stroke:var(--ink)"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y0 - Ht}" style="stroke:var(--ink)"/>`;
+  [0, .5, 1].forEach(p => { s += `<text x="${px(p)}" y="${Y0 + 16}" text-anchor="middle" class="mono muted" font-size="10">${p}</text>`; });
+  [0, 1, 2, 3].forEach(l => { s += `<text x="${X0 - 8}" y="${py(l) + 4}" text-anchor="end" class="mono muted" font-size="10">${l}</text>`; });
+  s += `<text x="${X0 + Wd / 2}" y="${Y0 + 34}" text-anchor="middle" font-size="12" class="muted">Probability the model gave to “strong”</text><text x="32" y="${Y0 - Ht / 2}" text-anchor="middle" font-size="12" class="muted" transform="rotate(-90 32 ${Y0 - Ht / 2})">Loss →</text>`;
+  s += `<path d="${Array.from({ length: 96 }, (_, i) => { const p = .04 + i / 100; return `${i ? "L" : "M"}${px(p)} ${py(-Math.log(p))}`; }).join(" ")}" fill="none" style="stroke:var(--ink)" stroke-width="2.2"/>`;
+  const c = CONF[ci], l = -Math.log(c.p);
+  s += `<line x1="${px(c.p)}" y1="${Y0}" x2="${px(c.p)}" y2="${py(l)}" style="stroke:${c.c}" stroke-dasharray="4 3"/><circle cx="${px(c.p)}" cy="${py(l)}" r="8" style="fill:${c.c}"/>`;
+  const bx = 400;
+  s += lbl(bx, 40, "THE REAL ANSWER WAS STRONG");
+  s += rect(bx, 52, 225, 74, c.c, .12) + `<text x="${bx + 12}" y="76" font-size="13">Model said: <tspan font-weight="700">${c.label}</tspan></text><text x="${bx + 12}" y="104" font-size="18" font-weight="700" style="fill:${c.c}">Loss = ${l.toFixed(2)}</text>`;
+  s += `<text x="${bx}" y="152" font-size="12.5">${ci === 0 ? "Confident and right: tiny loss." : ci === 1 ? "Right, but unsure: some loss." : "Confidently wrong: big loss."}</text>`;
+  s += `<text x="${bx}" y="182" font-size="12.5">The curve shoots up as confidence</text><text x="${bx}" y="200" font-size="12.5">in the right answer falls.</text>`;
+  s += `<text x="${bx}" y="230" font-size="12.5">This teaches the model to be</text><text x="${bx}" y="248" font-size="12.5">honest about uncertainty.</text>`;
+  s += `<text x="${bx}" y="282" font-size="11" class="muted">Pick a confidence above.</text>`;
+  return s + `</svg>`;
+}
+
+function drawWeighted() {
+  let s = svg(330);
+  s += lbl(20, 22, "TWO KINDS OF MISTAKE, TWO DIFFERENT COSTS");
+  s += rect(20, 34, 295, 112, W, .08) + `<text x="34" y="60" font-size="14" font-weight="700" style="fill:${W}">False “strong”</text><text x="34" y="82" font-size="12.5">A weak answer is praised.</text><text x="34" y="100" font-size="12.5">The candidate walks in unprepared.</text><text x="34" y="128" class="mono" font-size="13" font-weight="700" style="fill:${W}">cost × 3</text>`;
+  s += rect(330, 34, 295, 112, B, .08) + `<text x="344" y="60" font-size="14" font-weight="700" style="fill:${B}">False “weak”</text><text x="344" y="82" font-size="12.5">A strong answer is criticised.</text><text x="344" y="100" font-size="12.5">Annoying, but they practise more.</text><text x="344" y="128" class="mono" font-size="13" font-weight="700" style="fill:${B}">cost × 1</text>`;
+  s += arrow(320, 152, 320, 176);
+  s += rect(20, 180, 605, 56, A, .1) + `<text x="34" y="204" font-size="13"><tspan font-weight="700" style="fill:${A}">Weighted loss:</tspan> false “strong” counts 3 times as much during training,</text><text x="34" y="224" font-size="13">so the coach becomes more careful before praising an answer.</text>`;
+  s += rect(20, 248, 605, 66, G, .08) + `<text x="34" y="272" font-size="13" font-weight="700" style="fill:${G}">Watch out</text><text x="34" y="294" font-size="12.5">The model optimises exactly what you measure. Reward the wrong thing, get the wrong behaviour.</text>`;
+  return s + `</svg>`;
+}
+
+const STEPS = [
+  { stage: "What is loss", title: "1 · What a loss is", q: "How does a model know how wrong it is?",
+    points: ["Compare each prediction with the real answer.", "Score each miss, here by squaring it.", "Average all the scores into <b>one number</b>: the loss.", "Training has one goal: make that number smaller."],
+    pm: "The loss is the model's scorecard during practice. Make sure it points the same way as the metric you'll report to the business.",
+    say: "Step one, what a loss is. For each answer, we compare the model's predicted score with the coach's real score. Answer four was predicted at five, but the real score was nine, a miss of four. We square each miss and average them. Here the loss is four point five. That single number is the model's scorecard, and training has one goal, to make it smaller.",
+    draw: drawWhat },
+  { stage: "For numbers", title: "2 · Losses for numbers", q: "Should a big miss count extra?",
+    points: ["<b>Squared error</b>: a miss of 4 costs 16. Big misses dominate.", "<b>Absolute error</b>: a miss of 4 costs 4. Every miss counts evenly.", "With one wild outlier, squared error is 89% that one miss.", "Choose based on whether a few big misses are worse than many small ones."],
+    pm: "If one terrible prediction is worse than several slightly-off ones, squared error fits. If outliers in the data are noise, absolute error is calmer.",
+    say: "Step two, losses for numbers. With squared error, a miss of one costs one, but a miss of four costs sixteen. So big mistakes dominate. With absolute error, a miss of four just costs four. In our example, one wild miss makes up eighty nine percent of the squared error. So the question is, are a few big misses worse than many small ones? The answer picks the loss.",
+    draw: drawNumbers },
+  { stage: "For categories", title: "3 · Losses for categories", q: "How do we score a yes or no prediction?",
+    points: ["<b>Cross-entropy</b>, or log loss, looks at the probability given to the right answer.", "95% on the right answer: tiny loss.", "10% on the right answer: big loss. Confidently wrong is punished hardest.", "Pick a confidence above to see it."],
+    pm: "Because of this loss, well-trained classifiers give useful confidence scores. That's what lets you show “not sure” cases differently in the product.",
+    say: "Step three, losses for categories. The real answer was strong. If the model said ninety five percent strong, the loss is tiny, about zero point zero five. Now pick sixty percent. Right, but unsure, so there's some loss. Now pick ten percent. The model was confidently wrong, and the loss jumps to about two point three. Cross entropy punishes confident mistakes hardest, which teaches the model to be honest about uncertainty.",
+    draw: drawLog },
+  { stage: "Weighted", title: "4 · Matching the loss to the product", q: "What if some mistakes hurt users more than others?",
+    points: ["A false “strong” may send a candidate in unprepared.", "A false “weak” is annoying but less harmful.", "A <b>weighted loss</b> makes the worse mistake count more.", "The model optimises exactly what you measure."],
+    pm: "Tell the team which mistake is worse, and by roughly how much. “A false strong is about 3 times worse” is the kind of input only a PM can give.",
+    say: "Step four, matching the loss to the product. Not all mistakes cost the same. If the coach praises a weak answer, the candidate may walk into a real interview unprepared. If it criticises a strong answer, that's annoying, but they just practise more. So we can weight the loss, making a false strong count three times as much. And remember, the model will optimise exactly what you measure.",
+    draw: drawWeighted },
+];
+return { STEPS, picker: { label: "Model's confidence:", step: 2, items: () => CONF.map(c => ({ label: c.label, color: c.c })), get: () => ci, set: i => { ci = i; } } };
+})();
+VMETA[13] = {"title": "Scoring Every Mistake", "sub": "Turn the interview coach's mistakes into one number, compare losses for scores and for strong-or-weak predictions, and weight the mistakes that hurt users most."};
 
 
 const view = { mode: "lesson", n: 0, s: 0 };

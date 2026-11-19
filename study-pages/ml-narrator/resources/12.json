@@ -1,0 +1,6 @@
+[
+ {"kind": "Docs", "title": "sklearn.decomposition: PCA and related methods (scikit-learn)", "url": "https://scikit-learn.org/stable/api/sklearn.decomposition.html"},
+ {"kind": "Docs", "title": "Manifold learning, incl. t-SNE (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/manifold.html"},
+ {"kind": "Article", "title": "How to Use t-SNE Effectively (Distill)", "url": "https://distill.pub/2016/misread-tsne/"},
+ {"kind": "Docs", "title": "How UMAP Works (UMAP docs)", "url": "https://umap-learn.readthedocs.io/en/latest/how_umap_works.html"}
+]

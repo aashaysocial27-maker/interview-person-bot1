@@ -1,0 +1,6 @@
+[
+ {"kind": "Course", "title": "What is clustering? (Google Clustering course)", "url": "https://developers.google.com/machine-learning/clustering/overview"},
+ {"kind": "Course", "title": "What is k-means clustering? (Google)", "url": "https://developers.google.com/machine-learning/clustering/kmeans/overview"},
+ {"kind": "Docs", "title": "Novelty and outlier detection, incl. Isolation Forest (scikit-learn)", "url": "https://scikit-learn.org/stable/modules/outlier_detection.html"},
+ {"kind": "Course", "title": "Unsupervised Learning, Recommenders, Reinforcement Learning (Andrew Ng, Coursera)", "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning"}
+]
