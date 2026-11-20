@@ -246,6 +246,10 @@ tr:last-child td{border-bottom:none}
 .json-try:focus{outline:2px solid var(--accent);outline-offset:0}
 .json-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
+/* image attachment */
+.img-attach{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.img-attach img{display:block;width:100%;height:auto}
+
 /* header link */
 .title-row{display:flex;align-items:center;justify-content:flex-start;gap:10px 18px;flex-wrap:wrap}
 .head-link{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ok);color:var(--ok);background:var(--ok-soft);border-radius:10px;padding:8px 16px;font:600 15px var(--display);text-decoration:none}
@@ -771,7 +775,8 @@ const CONCEPTS = [
   { id: "temperature", label: "Temperature" },
   { id: "sdk", label: "SDK" },
   { id: "json", label: "JSON" },
-  { id: "pydantic", label: "Pydantic" }
+  { id: "pydantic", label: "Pydantic" },
+  { id: "backend", label: "Backend Concept" }
 ];
 let concept = store.get("fieldnotes-concept", "temperature");
 
@@ -788,7 +793,7 @@ function renderConcepts(){
   let h = `<div class="section"><div><span class="eyebrow">Learning Concepts</span><h2>Ideas behind the code</h2></div>
     <div class="subtabs" role="tablist">${CONCEPTS.map(c =>
       `<button class="subtab" role="tab" aria-selected="${c.id === concept}" data-c="${c.id}">${c.label}</button>`).join("")}</div>
-    <div class="concept-body">${concept === "sdk" ? sdkView() : concept === "pydantic" ? pydanticView() : concept === "json" ? jsonView() : temperatureView()}</div></div>`;
+    <div class="concept-body">${concept === "sdk" ? sdkView() : concept === "pydantic" ? pydanticView() : concept === "json" ? jsonView() : concept === "backend" ? backendView() : temperatureView()}</div></div>`;
   if (nb) h += notebookView(nb);
   $("#main").innerHTML = h;
   document.querySelectorAll("[data-c]").forEach(b => b.onclick = () => {
@@ -939,6 +944,25 @@ function startMolecules(){
 }
 
 const JSON_SAMPLE = "{\n \"color\" : \"Purple\",\n \"id\" : \"210\",\n \"composition\" : {\n\t\"R\" : 70,\n\t\"G\" : 39,\n\t\"B\" : 89\n }\n}";
+
+function backendView(){
+  const src = "assets/persona-chat-how-it-works.webp";
+  return `
+  <div class="prose">
+    <h3>Backend Concept</h3>
+    <p>How the Persona Chat app works and what each tool does, explained as a restaurant: the dining room you see, the kitchen that runs the app, and the AI companies as suppliers.</p>
+  </div>
+  <div class="card">
+    <div class="attach-head">
+      <svg viewBox="0 0 32 40" width="34" height="42" aria-hidden="true"><path d="M3 2h18l8 8v28H3z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/><path d="M21 2v8h8" fill="none" stroke="var(--accent)" stroke-width="2"/><text x="16" y="30" text-anchor="middle" font-size="8" font-family="IBM Plex Mono,monospace" fill="var(--accent)">webp</text></svg>
+      <div class="attach-meta"><b>persona-chat-how-it-works.webp</b><span>Image attachment · 291 KB</span></div>
+    </div>
+    <a class="img-attach" href="${src}" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab">
+      <img src="${src}" alt="Persona Chat, how it works and what each tool does, drawn as a restaurant. Dining room (what you see): React 19, Tailwind CSS 4, lucide-react and react-markdown with remark-gfm around a chat window. Kitchen (the app's server): Next.js 16, TypeScript and App Router. Suppliers (AI companies): @google/genai for Gemini, @anthropic-ai/sdk for Claude, and openai for OpenAI and Groq. A side table explains each tool in plain words with a restaurant comparison." loading="lazy" width="1536" height="1024">
+    </a>
+    <div class="attach-actions"><a class="btn" href="${src}" target="_blank" rel="noopener">Open full size</a></div>
+  </div>`;
+}
 
 function jsonView(){
   return `
