@@ -250,6 +250,10 @@ tr:last-child td{border-bottom:none}
 .img-attach{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 .img-attach img{display:block;width:100%;height:auto}
 
+/* notebook quotes inside lessons */
+.pq{max-width:66ch;display:flex;flex-direction:column;gap:6px}
+.nb-quote{margin:4px 0 0;font-size:12.5px;white-space:pre-wrap;border-left:3px solid var(--accent)}
+
 /* header link */
 .title-row{display:flex;align-items:center;justify-content:flex-start;gap:10px 18px;flex-wrap:wrap}
 .head-link{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ok);color:var(--ok);background:var(--ok-soft);border-radius:10px;padding:8px 16px;font:600 15px var(--display);text-decoration:none}
@@ -533,6 +537,171 @@ const SESSIONS = [
       },
       {"file": "System_Prompt_Chatbot.ipynb", "path": "guide/System_Prompt_Chatbot.ipynb", "kb": 51, "cells": 19, "code": 14, "outputs": true, "sections": ["2. System Prompt", "OPEN AI", "Antropic Claud", "Groq", "Here's what system prompts teach you"]}
     ]
+  },
+  {
+    "id": "tool-calling",
+    "label": "Tool Calling & Structured Outputs",
+    "title": "Tool Calling and Structured Outputs",
+    "intro": "Notes: how tool calling turns a chatbot into an AI agent, and how structured outputs make its answers usable.",
+    "lessons": [
+      {
+        "title": "Chatbot vs AI agent",
+        "body": [
+          "<b>Traditional chatbot:<\/b> a head and brain.",
+          "<b>AI agent:<\/b> a head and brain with hands and legs, and all the tools.",
+          "AI agents are chatbots, but more capable: autonomous chatbots with hands and legs. To make a chatbot autonomous, you can't just work with the brain or head. It needs hands, legs and tools to perform tasks."
+        ],
+        "diagram": {
+          "label": "Same brain, different reach",
+          "v": true,
+          "cols": [
+            [
+              {
+                "t": "LLM + API",
+                "s": "head and brain only",
+                "k": "ghost"
+              },
+              {
+                "t": "LLM + tool calling",
+                "s": "head and brain with hands and legs",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "Chatbot",
+                "s": "can only write text"
+              },
+              {
+                "t": "AI agent",
+                "s": "can act: search, fetch data, use apps",
+                "k": "ok"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "title": "Tool calling gives the AI hands and legs.",
+        "body": [
+          "Tool calling is giving hands and legs to the AI.",
+          "<ul class=\"plain-list\"><li><b>LLM + tool = AI agent<\/b><\/li><li>AI + Google Search<\/li><li>AI model (LLM) + yfinance tool + search capability = AI agent<\/li><li><b>LLM + API = chatbot<\/b>; <b>LLM + tool calling = AI agent<\/b><\/li><\/ul>"
+        ],
+        "diagram": {
+          "label": "How a tool call fits in",
+          "cols": [
+            [
+              {
+                "t": "Your question",
+                "s": "“Compare Nvidia and Google”",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "LLM decides",
+                "s": "which tool, with which inputs"
+              }
+            ],
+            [
+              {
+                "t": "Tool runs",
+                "s": "Google Search · yfinance · your API"
+              }
+            ],
+            [
+              {
+                "t": "Answer",
+                "s": "built from live data",
+                "k": "ok"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "title": "Why we need it: LLMs have no live data.",
+        "body": [
+          "An LLM doesn't have access to real or live data.",
+          "Every LLM has a cut-off date (its training date). Anything that happened after the cut-off is unknown to it, so if you ask about today or yesterday, it will fumble.",
+          "From your notebook, Gemini without tools:<pre class=\"nb-quote\">I do not have access to real-time financial market data or live news feeds, so I cannot provide the exact movement of Nvidia&#x27;s (NVDA) stock price…<\/pre>"
+        ]
+      },
+      {
+        "title": "Observability: did the tool call work?",
+        "body": [
+          "Observability means checking whether the tool call worked correctly. If it ran but the result failed, you need to know <b>where<\/b> it failed, <b>for whom<\/b> it failed and <b>why<\/b> it's failing.",
+          "From your notebook, the tool prints a line every time the model calls it, which is the simplest form of observability:<pre class=\"nb-quote\">Tool called! NVDA, last 5 hours\nTool called! GOOGL, last 5 hours<\/pre>"
+        ]
+      },
+      {
+        "title": "Tools cost money.",
+        "body": [
+          "Claude can create and use 20 tools as well, and every tool has a cost: the tool descriptions, the tool results and the extra turns are all tokens.",
+          "<ul class=\"plain-list\"><li><b>1 token ≈ 0.75 words<\/b><\/li><li><b>100,000 tokens ≈ 75,000 words<\/b><\/li><\/ul>"
+        ]
+      },
+      {
+        "title": "Structured outputs",
+        "body": [
+          "The output of an LLM is a bunch of text, so it can't be stored in a database as it is. Databases store fields, not paragraphs.",
+          "Use Python's <b>Pydantic<\/b> library to structure the LLM's output.",
+          "It's important because structured output is easy to store in a database, SQL queries can be managed, and it's easy to keep the loops running (your code can act on each field)."
+        ],
+        "diagram": {
+          "label": "From text to a database row",
+          "cols": [
+            [
+              {
+                "t": "LLM output",
+                "s": "a paragraph of text",
+                "k": "ghost"
+              }
+            ],
+            [
+              {
+                "t": "Pydantic class",
+                "s": "StockMove: ticker, prices, % change, trend",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "JSON fields",
+                "s": "\"trend\": \"down\""
+              }
+            ],
+            [
+              {
+                "t": "Database / alert",
+                "s": "SQL, dashboards, loops",
+                "k": "ok"
+              }
+            ]
+          ]
+        },
+        "after": [
+          "From your notebook, the structured result your code acted on:<pre class=\"nb-quote\">{\n  &quot;ticker&quot;: &quot;NVDA&quot;,\n  &quot;start_price&quot;: 148.37,\n  &quot;end_price&quot;: 146.0,\n  &quot;percent_change&quot;: -1.6,\n  &quot;trend&quot;: &quot;down&quot;\n}\nAlert: NVDA fell -1.6%<\/pre>"
+        ]
+      }
+    ],
+    "notebooks": [
+      {
+        "file": "AI_Agent_concept_Tool_Calling_and_Structured_ops_1.ipynb",
+        "path": "guide/AI_Agent_concept_Tool_Calling_and_Structured_ops_1.ipynb",
+        "kb": 255,
+        "cells": 41,
+        "code": 23,
+        "outputs": true,
+        "sections": [
+          "Step 0: install the SDKs and connect",
+          "3. Tool Calling: what an LLM can't do",
+          "3.1 Built-in tool: Google Search (Gemini, OpenAI, Claude, Groq)",
+          "3.2 Your own tool: a stock price tracker (yfinance)",
+          "4. Structured Outputs (Gemini, OpenAI, Claude, Groq)"
+        ]
+      }
+    ]
   }
 ];
 
@@ -611,10 +780,10 @@ function lessonCard(l, i, key){
       <button class="lesson-head" aria-expanded="false" aria-controls="lb-${uid}">
         <span class="num">${i + 1}</span><h3>${l.title}</h3>${chev}</button>
       <div class="lesson-body" id="lb-${uid}" hidden>
-        ${l.body.map(p => p.startsWith("<ul") ? p : `<p>${p}</p>`).join("")}
+        ${l.body.map(p => p.startsWith("<ul") ? p : p.includes("<pre") ? `<div class="pq">${p}</div>` : `<p>${p}</p>`).join("")}
         ${l.diagram ? diagram(l.diagram) : ""}
         ${l.widget ? widget(l.widget, current) : ""}
-        ${(l.after || []).map(p => `<p>${p}</p>`).join("")}
+        ${(l.after || []).map(p => p.includes("<pre") ? `<div class="pq">${p}</div>` : `<p>${p}</p>`).join("")}
         <button class="done-toggle" data-key="${key}">${isDone ? "✓ Understood" : "Mark as understood"}</button>
       </div></article>`;
 }
