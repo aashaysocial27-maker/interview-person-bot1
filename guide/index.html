@@ -702,6 +702,123 @@ const SESSIONS = [
         ]
       }
     ]
+  },
+  {
+    "id": "mcp",
+    "label": "MCP",
+    "title": "MCP (Model Context Protocol)",
+    "intro": "MCP: Model Context Protocol, a standard way to connect an AI to your applications.",
+    "lessons": [
+      {
+        "title": "From AI agent to MCP",
+        "body": [
+          "<b>LLM + tools (API, search) = AI agent.<\/b>",
+          "But we work with many applications. For example, I do every task in Notion, so I want the AI to connect directly to Notion and do work on my behalf.",
+          "MCP is for when we want to connect applications."
+        ],
+        "diagram": {
+          "label": "An AI connected to your apps",
+          "cols": [
+            [
+              {
+                "t": "LLM",
+                "s": "the brain",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "MCP",
+                "s": "one standard connection"
+              }
+            ],
+            [
+              {
+                "t": "Notion",
+                "s": "add, get, find tasks"
+              },
+              {
+                "t": "Other apps",
+                "s": "Gmail, Slack, GitHub…"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "title": "An app's MCP is a package of its tools.",
+        "body": [
+          "An MCP-connected application has a lot of tools, so you define which tools you need to connect.",
+          "For example, Notion has tools to add tasks, get tasks, find tasks and more. MCP is the combination of all the tools an application supports.",
+          "The LLM doesn't care whether the tools arrive one by one or as a package. It just needs access."
+        ]
+      },
+      {
+        "title": "Code vs MCP: standardisation",
+        "body": [
+          "If you connect an app with code, you have to write the code for every tool you need. With MCP, it's connected with a click of a button.",
+          "If every developer writes their own code to access an app, each version is different and nothing is standard. MCP gives it a standard."
+        ],
+        "diagram": {
+          "label": "Build once, use from any AI",
+          "cols": [
+            [
+              {
+                "t": "App",
+                "s": "builds its tools once",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "MCP server",
+                "s": "shares all the tools"
+              }
+            ],
+            [
+              {
+                "t": "Any AI",
+                "s": "connects as an MCP client",
+                "k": "ok"
+              }
+            ]
+          ]
+        },
+        "after": [
+          "From your notebook, connecting Notion by hand:<pre class=\"nb-quote\">It works. But look at what it took: 4 functions and ~60 lines to manage one to-do list.<\/pre>",
+          "And using a ready-made MCP server (DeepWiki):<pre class=\"nb-quote\">We wrote zero tool code. Gemini found DeepWiki&#x27;s tools, picked the right one and used it.<\/pre>"
+        ]
+      },
+      {
+        "title": "Not every app offers an MCP yet.",
+        "body": [
+          "Many apps don't provide a standard MCP of their own yet, and developers aren't building many either."
+        ]
+      },
+      {
+        "title": "Validate before you connect.",
+        "body": [
+          "Validate an MCP before adding it to GPT or any other AI.",
+          "<ul class=\"plain-list\"><li>Use the <b>official<\/b> MCP (for example, Notion's own), not one made by an unknown developer.<\/li><li>If you download an open-source MCP, <b>audit it<\/b> before you use it.<\/li><\/ul>",
+          "An MCP acts on your behalf with your access, so a bad one can read or change your data."
+        ]
+      }
+    ],
+    "notebooks": [
+      {
+        "file": "MCP.ipynb",
+        "path": "guide/MCP.ipynb",
+        "kb": 87,
+        "cells": 39,
+        "code": 24,
+        "outputs": true,
+        "sections": [
+          "5.1 Connecting an app by hand: Notion (Gemini, OpenAI, Claude, Groq)",
+          "5.2 What is MCP?",
+          "5.3 Ready-made MCP: DeepWiki (fastmcp, OpenAI, Claude, Groq)"
+        ]
+      }
+    ]
   }
 ];
 
