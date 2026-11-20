@@ -69,6 +69,35 @@ function drawUses() {
   return s + `</svg>`;
 }
 
+const MODELS = [
+  ["Gemini Embedding / Embedding 2", "Google", "API", "text, images, audio, PDFs together", A],
+  ["text-embedding-3 large / small", "OpenAI", "API", "common default; small is cheap", A],
+  ["Voyage 4", "Voyage (MongoDB)", "API", "quality per dollar; long input", A],
+  ["Embed v4", "Cohere", "API", "enterprise multilingual doc search", A],
+  ["Qwen3-Embedding 8B / 4B / 0.6B", "Alibaba", "Open", "top open model; Apache 2.0", B],
+  ["QZhou-Embedding", "Kingsoft", "Open", "top of open English table; Apache 2.0", B],
+  ["Harrier-OSS v1 27B", "Microsoft", "Open", "top multilingual score; large to run", B],
+  ["BGE-M3", "BAAI", "Open", "100+ languages; dense + keyword", B],
+  ["NV-Embed-v2", "NVIDIA", "Open", "strong, but non-commercial licence", B],
+  ["EmbeddingGemma", "Google", "Open", "small enough for phones and laptops", B],
+];
+function drawModels() {
+  let s = svg(380);
+  s += lbl(20, 18, "10 LEADING EMBEDDING MODELS · LATE 2026 · A SHORTLIST, NOT A RANKING");
+  const cx = [20, 232, 352, 410];
+  ["MODEL", "MAKER", "TYPE", "BEST FOR"].forEach((h, i) => { s += `<text x="${cx[i] + 6}" y="42" class="mono muted" font-size="10.5" letter-spacing="1">${h}</text>`; });
+  MODELS.forEach(([m, mk, t, b, c], i) => {
+    const y = 50 + i * 26;
+    if (i === 4) s += `<line x1="20" y1="${y - 2}" x2="625" y2="${y - 2}" style="stroke:var(--ink)" stroke-width="1"/>`;
+    s += `<rect x="20" y="${y}" width="605" height="23" rx="4" style="fill:${i % 2 ? "var(--bg)" : "var(--surface)"}"/>`;
+    s += `<text x="${cx[0] + 6}" y="${y + 16}" font-size="11.5" font-weight="700">${m}</text><text x="${cx[1] + 6}" y="${y + 16}" font-size="11">${mk}</text>`;
+    s += `<rect x="${cx[2] + 4}" y="${y + 4}" width="44" height="15" rx="7" style="fill:${c}" fill-opacity=".18"/><text x="${cx[2] + 26}" y="${y + 15}" text-anchor="middle" font-size="10" font-weight="700" style="fill:${c}">${t}</text>`;
+    s += `<text x="${cx[3] + 6}" y="${y + 16}" font-size="11">${b}</text>`;
+  });
+  s += rect(20, 318, 605, 54, G, .08) + `<text x="34" y="340" font-size="12.5"><tspan font-weight="700" style="fill:${G}">Test on your own data.</tspan> Scores differ across leaderboards and change every few months.</text><text x="34" y="360" font-size="12.5">Switching later means re-embedding everything you stored, so record the model version.</text>`;
+  return s + `</svg>`;
+}
+
 const STEPS = [
   { stage: "Pretrained", title: "1 · Pretrained models", q: "Why train from scratch when someone already has?",
     points: ["Big models are trained once on huge, general data.", "They learn general skills: grammar and meaning, or edges and shapes.", "Those skills transfer to new tasks.", "You only teach the last step, with far fewer examples."],
@@ -90,6 +119,11 @@ const STEPS = [
     pm: "Many AI features are “pretrained model + embeddings + a little glue”. Before approving one, check the model's licence and what biases it may carry.",
     say: "Step four, what embeddings enable. Once answers are embeddings, lots of features become simple. Search by meaning. Recommend similar practice questions. Catch copied answers even when they're reworded. Or train a cheap classifier on top. Embeddings are also the heart of RAG, which you met in your AI course. Before you build, check the licence, possible biases, and whether the model knows your domain.",
     draw: drawUses },
+  { stage: "Which model?", title: "5 · Choosing an embedding model", q: "Which embedding model should we use?",
+    points: ["<b>Paid APIs</b>: Gemini Embedding, OpenAI text-embedding-3, Voyage 4, Cohere Embed v4.", "<b>Open models</b> you can run yourself: Qwen3-Embedding, QZhou, Harrier, BGE-M3, NV-Embed-v2.", "<b>EmbeddingGemma</b> is small enough for phones and laptops.", "Scores differ across leaderboards, so test 2–3 on your own data."],
+    pm: "Fastest start: a paid API. Data must stay in-house: Qwen3-Embedding 4B or BGE-M3. Images or PDFs too: Gemini Embedding 2. Whatever you pick, record the version, because switching means re-embedding everything.",
+    say: "Step five, choosing an embedding model. The main paid services are Google's Gemini Embedding, OpenAI's text embedding three, Voyage four and Cohere Embed four. The strongest open models you can run yourself include Qwen3 Embedding, QZhou, Microsoft's Harrier, BGE M3 and NVIDIA's NV Embed. EmbeddingGemma is small enough for a phone. Leaderboards disagree and change every few months, so test two or three models on a hundred real coach questions. And remember, switching later means re embedding everything you stored.",
+    draw: drawModels },
 ];
 return { STEPS, picker: { label: "Way to reuse:", step: 1, items: () => WAYS.map(w => ({ label: w.label, color: w.c })), get: () => wi, set: i => { wi = i; } } };
 })();
