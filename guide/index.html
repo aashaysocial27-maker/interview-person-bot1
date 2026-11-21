@@ -192,7 +192,7 @@ tr:last-child td{border-bottom:none}
 /* learning concepts */
 .tab.concept{border-color:var(--accent);color:var(--accent)}
 .tab.concept[aria-selected="true"]{color:var(--accent-fg)}
-.subtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);background:var(--bg)}
+.subtabs{display:flex;flex-wrap:wrap;gap:0 4px;border-bottom:1px solid var(--line);background:var(--bg)}
 .subtab{background:none;border:none;border-bottom:2px solid transparent;padding:10px 14px;font:600 15px var(--display);color:var(--muted);margin-bottom:-1px}
 .subtab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
 .concept-body{display:flex;flex-direction:column;gap:22px}
@@ -274,6 +274,42 @@ tr:last-child td{border-bottom:none}
   .cos-results li{grid-template-columns:minmax(0,1fr) 44px;gap:4px 10px}
   .cr-bar{grid-column:1/-1;grid-row:2}
   .cr-tag{grid-column:1/-1;text-align:left}
+}
+
+/* rag approaches */
+.ways{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.way{background:var(--surface);border:2px solid var(--fg);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.way.w1{box-shadow:5px 5px 0 #e8a23a}
+.way.w2{box-shadow:5px 5px 0 var(--accent)}
+.way-n{font:700 15px var(--display)}
+.way p{font-size:14px;color:var(--muted)}
+.way ul{margin:4px 0 0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:4px}
+.rag-steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.rag-step{border:1px solid var(--line);border-radius:8px;padding:10px 8px;display:flex;flex-direction:column;gap:3px;background:var(--surface);min-width:0;font-size:13px}
+.rag-step b{font-size:13px}
+.rs-n{font:600 11px var(--mono);color:var(--muted)}
+.rs-who{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.04em}
+.rag-step small{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.rag-step.you{border-color:var(--accent);background:var(--accent-soft)}
+.rag-step.you .rs-who{color:var(--accent)}
+.rag-step.p{border-color:var(--ok);background:var(--ok-soft)}
+.rag-step.p .rs-who{color:var(--ok)}
+.rag-step.skip{border-style:dashed;opacity:.6}
+.rag-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.rag-legend span{display:flex;align-items:center;gap:6px}
+.lg{width:12px;height:12px;border-radius:3px;border:1px solid var(--line);display:inline-block}
+.lg.you{background:var(--accent-soft);border-color:var(--accent)}
+.lg.p{background:var(--ok-soft);border-color:var(--ok)}
+.lg.skip{border-style:dashed}
+.code-det{border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0;max-width:100%}
+.code-det summary{cursor:pointer;font-weight:600;font-size:14px}
+.code-det[open] summary{margin-bottom:10px}
+table.cmp td,table.cmp th{vertical-align:top;font-size:13px}
+table.cmp td:first-child{min-width:150px}
+table.cmp{min-width:820px}
+@media (max-width:760px){
+  .ways{grid-template-columns:1fr}
+  .rag-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 /* image attachment */
@@ -1093,6 +1129,7 @@ const CONCEPTS = [
   { id: "json", label: "JSON" },
   { id: "pydantic", label: "Pydantic" },
   { id: "cosine", label: "Cosine Similarity" },
+  { id: "rag", label: "RAG Approaches" },
   { id: "backend", label: "Backend Concept" }
 ];
 let concept = store.get("fieldnotes-concept", "temperature");
@@ -1110,7 +1147,7 @@ function renderConcepts(){
   let h = `<div class="section"><div><span class="eyebrow">Learning Concepts</span><h2>Ideas behind the code</h2></div>
     <div class="subtabs" role="tablist">${CONCEPTS.map(c =>
       `<button class="subtab" role="tab" aria-selected="${c.id === concept}" data-c="${c.id}">${c.label}</button>`).join("")}</div>
-    <div class="concept-body">${concept === "sdk" ? sdkView() : concept === "pydantic" ? pydanticView() : concept === "json" ? jsonView() : concept === "backend" ? backendView() : concept === "cosine" ? cosineView() : temperatureView()}</div></div>`;
+    <div class="concept-body">${concept === "sdk" ? sdkView() : concept === "pydantic" ? pydanticView() : concept === "json" ? jsonView() : concept === "backend" ? backendView() : concept === "cosine" ? cosineView() : concept === "rag" ? ragView() : temperatureView()}</div></div>`;
   if (nb) h += notebookView(nb);
   $("#main").innerHTML = h;
   document.querySelectorAll("[data-c]").forEach(b => b.onclick = () => {
@@ -1119,6 +1156,7 @@ function renderConcepts(){
   if (concept === "temperature") bindTemperature();
   if (concept === "json") bindJson();
   if (concept === "cosine") bindCosine();
+  if (concept === "rag") bindRag();
   document.querySelectorAll(".code-copy").forEach(b => b.onclick = async () => {
     const pre = b.closest(".code-block").querySelector("pre");
     try { await navigator.clipboard.writeText(pre.textContent); b.textContent = "Copied"; }
@@ -1384,6 +1422,158 @@ function bindCosine(){
     drawSearch();
   });
   k.oninput = drawSearch; drawSearch();
+}
+
+const RAG_STEPS = ["Load files", "Chunk", "Embed", "Store vectors", "Search", "Generate answer"];
+const RAG_MODES = {"gemini": ["Gemini File Search", "Gemini", [["you", "one upload call"], ["p", "automatic"], ["p", "automatic"], ["p", "File Search store"], ["p", "automatic"], ["p", "with citations"]]], "openai": ["OpenAI File Search", "OpenAI", [["you", "upload to a vector store"], ["p", "automatic"], ["p", "automatic"], ["p", "vector store"], ["p", "file_search tool"], ["p", "with citations"]]], "langgraph": ["LangChain + LangGraph", "", [["you", "pypdf or a loader"], ["you", "text splitter"], ["you", "any embedding model"], ["you", "any vector DB"], ["you", "similarity_search"], ["you", "your graph: retry, check, route"]]], "diy": ["DIY (no framework)", "", [["you", "your code"], ["you", "your code"], ["you", "embedding API"], ["you", "Chroma, pgvector…"], ["you", "cosine similarity"], ["you", "LLM call"]]], "long": ["Long context (no retrieval)", "The model", [["you", "read the files"], ["skip", "not needed"], ["skip", "not needed"], ["skip", "not needed"], ["skip", "model reads it all"], ["p", "whole document in the prompt"]]]};
+let ragMode = "gemini";
+
+function ragView(){
+  return `
+  <div class="prose">
+    <h3>RAG approaches</h3>
+    <p><b>RAG (retrieval-augmented generation)</b> lets an LLM answer from your own documents: find the relevant parts with cosine similarity search, then give them to the model as context. There are two main ways to build it, plus a few others worth knowing.</p>
+  </div>
+
+  <div class="ways">
+    <div class="way w1"><span class="way-n">Way 1 · Gemini File Search</span><p>Gemini does every step for you. Upload a file, ask questions.</p>
+      <ul><li><b>Pros:</b> working in minutes; no vector database to run; answers come with citations.</li>
+      <li><b>Cons:</b> less control over chunking and search; your files live in Google's store; tied to Gemini.</li></ul></div>
+    <div class="way w2"><span class="way-n">Way 2 · Build it with LangGraph</span><p>You build each step yourself, for full control.</p>
+      <ul><li><b>Pros:</b> any model and vector database; you tune every step; add checks, retries and routing.</li>
+      <li><b>Cons:</b> more code and maintenance; you run the vector database; you own the quality.</li></ul></div>
+  </div>
+
+  <div class="card">
+    <h3>Who does each step?</h3>
+    <p class="fig-cap">Every RAG system runs the same six steps. Pick an approach to see who does what.</p>
+    <div class="swap" role="radiogroup" aria-label="RAG approach">${Object.entries(RAG_MODES).map(([k, m]) => `<button class="chip" role="radio" aria-checked="${k === ragMode}" aria-pressed="${k === ragMode}" data-rag="${k}">${esc(m[0])}</button>`).join("")}</div>
+    <div class="rag-steps" id="ragSteps"></div>
+    <div class="rag-legend"><span><i class="lg you"></i>You do it</span><span><i class="lg p"></i>The provider does it</span><span><i class="lg skip"></i>Skipped</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Starter code</h3>
+    <p class="fig-cap">Both use a sample file named <code>supplier_contract.pdf</code>; upload your own to Colab and change the name. I checked both against the current libraries; the LangGraph one ran end to end with a stand-in model.</p>
+    <details class="code-det" open><summary>Way 1 · Gemini File Search (about 20 lines)</summary><div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre># pip install -q -U google-genai
+import time
+from google import genai
+from google.genai import types
+from google.colab import userdata
+
+client = genai.Client(api_key=userdata.get(&quot;GEMINI_API_KEY&quot;))
+
+# 1. Create a store and upload a file (Gemini chunks, embeds and indexes it)
+store = client.file_search_stores.create(config={&quot;display_name&quot;: &quot;supplier-contracts&quot;})
+op = client.file_search_stores.upload_to_file_search_store(
+    file=&quot;supplier_contract.pdf&quot;,
+    file_search_store_name=store.name,
+    config={&quot;display_name&quot;: &quot;supplier_contract&quot;},
+)
+while not op.done:                 # indexing runs in the background
+    time.sleep(5)
+    op = client.operations.get(op)
+
+# 2. Ask questions: Gemini searches the store, then answers
+response = client.models.generate_content(
+    model=&quot;gemini-3.8-flash&quot;,
+    contents=&quot;What is the late payment penalty?&quot;,
+    config=types.GenerateContentConfig(
+        tools=[types.Tool(file_search=types.FileSearch(file_search_store_names=[store.name]))]
+    ),
+)
+print(response.text)
+print(response.candidates[0].grounding_metadata.grounding_chunks)   # which parts of the file it used</pre></div></details>
+    <details class="code-det"><summary>Way 2 · LangChain + LangGraph (about 40 lines)</summary><div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre># pip install -q langgraph langchain-core langchain-text-splitters langchain-google-genai pypdf
+import os
+from typing import TypedDict
+from google.colab import userdata
+from pypdf import PdfReader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
+from langgraph.graph import StateGraph, START, END
+
+os.environ[&quot;GOOGLE_API_KEY&quot;] = userdata.get(&quot;GEMINI_API_KEY&quot;)
+
+# 1. Load and chunk
+text = &quot;\n&quot;.join(page.extract_text() for page in PdfReader(&quot;supplier_contract.pdf&quot;).pages)
+chunks = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150).create_documents([text])
+
+# 2. Embed and store
+store = InMemoryVectorStore.from_documents(chunks, GoogleGenerativeAIEmbeddings(model=&quot;gemini-embedding-001&quot;))
+llm = ChatGoogleGenerativeAI(model=&quot;gemini-3.8-flash&quot;)
+
+# 3. The graph: retrieve -&gt; generate
+class State(TypedDict):
+    question: str
+    context: list
+    answer: str
+
+def retrieve(state: State):
+    return {&quot;context&quot;: store.similarity_search(state[&quot;question&quot;], k=4)}   # cosine similarity search
+
+def generate(state: State):
+    context = &quot;\n\n&quot;.join(doc.page_content for doc in state[&quot;context&quot;])
+    reply = llm.invoke(f&quot;Answer only from this context. If it isn&#x27;t there, say so.\n\n{context}\n\nQuestion: {state[&#x27;question&#x27;]}&quot;)
+    return {&quot;answer&quot;: reply.content}
+
+graph = StateGraph(State)
+graph.add_node(&quot;retrieve&quot;, retrieve)
+graph.add_node(&quot;generate&quot;, generate)
+graph.add_edge(START, &quot;retrieve&quot;)
+graph.add_edge(&quot;retrieve&quot;, &quot;generate&quot;)
+graph.add_edge(&quot;generate&quot;, END)
+rag = graph.compile()
+
+print(rag.invoke({&quot;question&quot;: &quot;What is the late payment penalty?&quot;})[&quot;answer&quot;])</pre></div></details>
+  </div>
+
+  <div class="card">
+    <h3>Other ways</h3>
+    <dl class="kv">
+      <dt>OpenAI File Search</dt><dd>The same idea as Way 1 on OpenAI: upload files to a vector store, then turn on the <code>file_search</code> tool in the Responses API.</dd>
+      <dt>LlamaIndex</dt><dd>A framework like LangChain, focused on indexing and retrieval. A standard RAG pipeline takes very few lines.</dd>
+      <dt>DIY</dt><dd>An embedding API plus a vector database (Chroma, pgvector, Pinecone) and your own code, no framework. The most work, and you understand every step: it's the Cosine Similarity demo for real.</dd>
+      <dt>Cloud-managed RAG</dt><dd>Vertex AI RAG Engine, Amazon Bedrock Knowledge Bases or Azure AI Search. Managed like Way 1, but inside your company's cloud, with its security and connectors to SharePoint, S3 or Drive.</dd>
+      <dt>Long context, no retrieval</dt><dd>Put the whole document in the prompt; Gemini and Claude handle very long inputs. Simplest for a few documents, but every question pays for the full document.</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h3>Compare them</h3>
+    <div class="tbl"><table class="cmp"><thead><tr><th>Approach</th><th>Setup effort</th><th>Control</th><th>Where your data lives</th><th>Cost model</th><th>Best for</th></tr></thead><tbody>
+      <tr><td><b>Gemini File Search (Way 1)</b></td><td>Very low</td><td>Low: Gemini picks chunking and search; you can set chunk size, top_k and filters</td><td>Google's File Search store</td><td>Pay to index files at upload; storage and query-time embeddings were free at launch</td><td>Prototypes, quick internal Q&amp;A over PDFs</td></tr><tr><td><b>OpenAI File Search</b></td><td>Very low</td><td>Low to medium: chunk size and metadata filters</td><td>OpenAI vector store</td><td>Storage per GB per day, plus a fee per search call</td><td>Teams already building on OpenAI</td></tr><tr><td><b>LangChain + LangGraph (Way 2)</b></td><td>Medium to high</td><td>Full: any model, any vector DB, your own steps; LangGraph adds loops, checks and retries</td><td>Wherever you choose</td><td>Model and vector DB usage only, plus your build time</td><td>Production apps, custom logic, agentic RAG</td></tr><tr><td><b>LlamaIndex</b></td><td>Medium</td><td>High: framework focused on indexing and retrieval</td><td>Wherever you choose</td><td>Model and vector DB usage only</td><td>Document-heavy apps; standard pipelines in few lines</td></tr><tr><td><b>DIY (embeddings + vector DB)</b></td><td>High</td><td>Full: you write every step</td><td>Wherever you choose</td><td>Model and vector DB usage; the most engineering time</td><td>Learning, or very specific needs</td></tr><tr><td><b>Cloud-managed RAG</b></td><td>Medium (cloud setup)</td><td>Medium</td><td>Your company's cloud account</td><td>Cloud service pricing</td><td>Enterprises, compliance, data in SharePoint, S3 or Drive</td></tr><tr><td><b>Long context (no retrieval)</b></td><td>None</td><td>Low</td><td>Sent with every request</td><td>You pay for the whole document on every question</td><td>1–3 documents, quick checks</td></tr>
+    </tbody></table></div>
+    <p class="fig-cap"><small>Prices and limits change often; check each provider's current pricing page before you commit.</small></p>
+  </div>
+
+  <div class="card">
+    <h3>How to choose</h3>
+    <div class="prose"><ul>
+      <li><b>Want it working today over a few PDFs?</b> Way 1, Gemini File Search.</li>
+      <li><b>Need to choose the model, vector database or chunking, or add steps like "check the answer, retry"?</b> Way 2, LangGraph.</li>
+      <li><b>Data must stay in your company's cloud?</b> Cloud-managed RAG.</li>
+      <li><b>Only one to three documents?</b> Long context; skip retrieval.</li>
+    </ul></div>
+    <p class="analogy"><b>My suggestion for your build:</b> start with Way 1 to prove the value on real procurement contracts, then move to Way 2 when you need control, such as clause-level chunking, a model other than Gemini, or a step that checks every answer cites a clause. For a PM, this is <b>buy vs build</b>: Way 1 is faster but ties your documents to one vendor; Way 2 costs engineering time but keeps you provider-agnostic.</p>
+  </div>`;
+}
+
+function bindRag(){
+  const box = $("#ragSteps"); if (!box) return;
+  const draw = () => {
+    const m = RAG_MODES[ragMode];
+    box.innerHTML = RAG_STEPS.map((s, i) => { const [who, note] = m[2][i];
+      const label = who === "you" ? "You" : who === "skip" ? "Skipped" : m[1];
+      return `<div class="rag-step ${who}"><span class="rs-n">${i + 1}</span><b>${esc(s)}</b><span class="rs-who">${esc(label)}</span><small>${esc(note)}</small></div>`; }).join("");
+  };
+  document.querySelectorAll("[data-rag]").forEach(b => b.onclick = () => {
+    ragMode = b.dataset.rag;
+    document.querySelectorAll("[data-rag]").forEach(x => { const on = x === b; x.setAttribute("aria-pressed", on); x.setAttribute("aria-checked", on); });
+    draw();
+  });
+  draw();
 }
 
 function backendView(){
