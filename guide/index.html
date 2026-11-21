@@ -312,6 +312,72 @@ table.cmp{min-width:820px}
   .rag-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
+/* rag topic widgets */
+.emb-pick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.emb-s{display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px;min-width:0}
+.emb-s b{font-size:14px}
+.emb-s code{font-size:11.5px;align-self:flex-start}
+.emb-s .mono{font-size:11px;color:var(--muted)}
+.emb-s[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.emb-out{display:flex;flex-direction:column;gap:6px}
+.emb-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(60px,1fr) 46px 110px;gap:10px;align-items:center;font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.emb-row.hi{border-color:var(--ok);background:var(--ok-soft)}
+.emb-row.hi .cr-bar i{background:var(--ok)}
+.emb-row small{font-size:12px;color:var(--muted)}
+.pipe-phases{display:grid;grid-template-columns:4fr 5fr;gap:6px;font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.06em}
+.pipe-phases .ph0{color:var(--accent)} .pipe-phases .ph1{color:var(--ok)}
+.pipe{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px}
+.pipe-st{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px;min-width:0;overflow-wrap:anywhere}
+.pipe-st .mono{font-size:10px;color:var(--muted);font-weight:400}
+.pipe-st.ph0{border-top:3px solid var(--accent)} .pipe-st.ph1{border-top:3px solid var(--ok)}
+.pipe-st.done{opacity:.65}
+.pipe-st.on{background:var(--fg);color:var(--bg);border-color:var(--fg);opacity:1}
+.pipe-st.on .mono{color:var(--bg)}
+.pipe-detail{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px}
+.pd-n{display:flex;flex-direction:column;align-items:center;min-width:96px}
+.pd-n b{font:600 30px var(--mono);color:var(--accent);font-variant-numeric:tabular-nums}
+.pd-n span{font-size:12px;color:var(--muted);text-align:center}
+.pipe-detail p{font-size:15px;margin-top:4px}
+.pipe-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chunk-ctl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:14px;color:var(--muted)}
+.chunk-ctl b{color:var(--fg);font-family:var(--mono)}
+.chunk-ctl input{accent-color:var(--accent)}
+.chunks{display:flex;flex-direction:column;gap:6px}
+.chunk{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;background:var(--surface);padding:8px 10px;min-width:0}
+.chunk:nth-child(even){border-left-color:var(--ok)}
+.chunk.cut{border-left-color:var(--bad)}
+.chunk-h{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-bottom:4px}
+.cut-tag{font:600 10px var(--mono);text-transform:uppercase;color:var(--bad)}
+.chunk-t{font:12.5px/1.5 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}
+.chunk-t mark{background:var(--accent-soft);color:var(--accent);border-radius:3px}
+.msg b.bad{color:var(--bad)} .msg b.good{color:var(--ok)}
+.tk-c{font:600 10px var(--mono);text-transform:uppercase;padding:1px 5px;border-radius:4px;margin-left:4px;white-space:nowrap}
+.tk-c.answer{background:var(--ok-soft);color:var(--ok)} .tk-c.related{background:var(--accent-soft);color:var(--accent)} .tk-c.noise{background:var(--sunk);color:var(--muted)}
+.tk-stats{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--muted);align-items:center}
+.tk-stats b{color:var(--fg);font-family:var(--mono)}
+.tk-verdict{flex-basis:100%;font-size:14px;padding:8px 10px;border-radius:8px}
+.tk-verdict.ok{background:var(--ok-soft);color:var(--ok)} .tk-verdict.warn{background:var(--bad-soft);color:var(--bad)}
+.agent-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ag{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:baseline;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);opacity:.25;transition:opacity .25s}
+.ag.shown{opacity:1}
+.ag.now{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.ag-k{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.ag.grade .ag-k,.ag.check .ag-k,.ag.plan .ag-k{color:var(--accent)}
+.ag.answer .ag-k{color:var(--ok)}
+.pm-line{display:block;background:var(--accent-soft);border-radius:8px;padding:10px 12px}
+@media (max-width:640px){
+  .emb-pick{grid-template-columns:1fr}
+  .emb-row{grid-template-columns:minmax(0,1fr) 46px;gap:4px 10px}
+  .emb-row .cr-bar{grid-column:1/-1;grid-row:2}
+  .emb-row small{grid-column:1/-1}
+  .pipe{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .pipe-phases{display:none}
+  .pipe-detail{grid-template-columns:1fr}
+  .chunk-ctl{grid-template-columns:1fr}
+  .ag{grid-template-columns:1fr;gap:2px}
+}
+@media (prefers-reduced-motion:reduce){.ag{transition:none}}
+
 /* image attachment */
 .img-attach{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 .img-attach img{display:block;width:100%;height:auto}
@@ -885,6 +951,281 @@ const SESSIONS = [
         ]
       }
     ]
+  },
+  {
+    "id": "rag",
+    "label": "RAG",
+    "title": "RAG (Retrieval-Augmented Generation)",
+    "intro": "RAG: give the LLM your company's own data, so it answers from your documents instead of guessing.",
+    "lessons": [
+      {
+        "title": "What is RAG?",
+        "body": [
+          "RAG stands for <b>Retrieval-Augmented Generation<\/b>.",
+          "<b>Prompt + LLM → response.<\/b> An LLM has a cut-off date, so its data is limited and old.",
+          "<b>Prompt + LLM + tools → response.<\/b> Tools such as internet search help, but company-specific documents still aren't on the internet, so the AI can't reach them.",
+          "Hence <b>RAG: prompt + LLM + custom data (company-specific data) = response.<\/b> Adding your company's own data to what the LLM reads is the technique called RAG.",
+          "For example, say there are 1,000 documents the LLM was never trained on. With RAG, you can give those 1,000 documents to the LLM."
+        ],
+        "diagram": {
+          "label": "Three stages of what an LLM can know",
+          "cols": [
+            [
+              {
+                "t": "Prompt + LLM",
+                "s": "cut-off date: old, limited data",
+                "k": "ghost"
+              }
+            ],
+            [
+              {
+                "t": "+ Tools",
+                "s": "internet search; company docs still out of reach"
+              }
+            ],
+            [
+              {
+                "t": "+ Your data = RAG",
+                "s": "answers from company documents",
+                "k": "ok"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "title": "Example: an HR chatbot",
+        "body": [
+          "Every company has its own policies, so the LLM doesn't know, for example, your company's leave policy.",
+          "An HR chatbot looks into the HR policy, fetches the relevant part and gives it to the user."
+        ],
+        "diagram": {
+          "label": "HR chatbot with RAG",
+          "cols": [
+            [
+              {
+                "t": "Employee asks",
+                "s": "“What is the leave policy?”",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "Search HR policy",
+                "s": "company documents"
+              }
+            ],
+            [
+              {
+                "t": "Leave policy section",
+                "s": "the relevant part only"
+              }
+            ],
+            [
+              {
+                "t": "LLM answers",
+                "s": "from your policy, not a guess",
+                "k": "ok"
+              }
+            ]
+          ]
+        },
+        "after": [
+          "From your notebook:<pre class=\"nb-quote\">Every company has documents the LLM has never seen: policies, price lists, FAQs. Ask about them, and the LLM guesses.<\/pre>"
+        ]
+      },
+      {
+        "title": "Two ways to build it",
+        "body": [
+          "RAG also comes as a package: one or two lines of code. There are two types:",
+          "<ul class=\"plain-list\"><li><b>Gemini File Search:<\/b> Gemini does all the steps for you. Good for testing.<\/li><li><b>LangGraph:<\/b> you build each step yourself, for full control. Good for large systems. LangChain, LangGraph and other libraries can be used.<\/li><\/ul>",
+          "<a class=\"btn ghost\" href=\"#learning-concepts\" data-goto-concept=\"rag\">Compare all the ways in Learning Concepts → RAG Approaches<\/a>"
+        ]
+      },
+      {
+        "title": "How does an LLM understand English? Embeddings",
+        "body": [
+          "Before looking at what happens to an uploaded file, understand how an LLM “understands” English. Take three sentences:",
+          "<ul class=\"plain-list\"><li>1. I went for a run<\/li><li>2. Sprinting is great<\/li><li>3. Smoking is injurious<\/li><\/ul>",
+          "By looks alone, 2 and 3 seem similar: both start with S, both have an -ing word and an adjective. As humans, asked which statements are related, we'd say 1 and 2. So how do we make a machine see that 1 and 2 are similar, and not 2 and 3?",
+          "An AI model is a pattern-matching machine, and this is where <b>embeddings<\/b> come in. An embedding model converts text into numbers (a vector), and there are many embedding models available. The AI looks at everything as embeddings."
+        ],
+        "widget": "embedPairs",
+        "after": [
+          "The AI compares the vectors: a dot product, scaled by the vectors' lengths, which is cosine similarity. The closer the score is to 1, the more similar the meaning. <b>Our goal is to convert everything into embeddings.<\/b>",
+          "From your notebook, real Gemini embeddings (3,072 numbers per text) scored one question against three sentences:<pre class=\"nb-quote\">Question: &quot;Can I get my money back?&quot;\n0.78 You can get a full refund within 7 days of joining.\n0.52 The Indiranagar branch has a steam room.\n0.49 Book group c…<\/pre>"
+        ]
+      },
+      {
+        "title": "What happens to a PDF when you upload it",
+        "body": [
+          "A PDF is very long, so first it has to be converted into embeddings. Then every question is matched against them. Step through both halves:"
+        ],
+        "widget": "ragPipeline",
+        "after": [
+          "In short: <b>query vector<\/b> = your prompt; <b>file<\/b> = 1,000 vectors; <b>cosine similarity search<\/b> finds the top matches, and the AI looks at them to give the output."
+        ]
+      },
+      {
+        "title": "The long way: build each step yourself",
+        "body": [
+          "Way 1 is the File Search API: it runs with a few lines of code. The long method uses LangChain or LangGraph, and the process is:"
+        ],
+        "diagram": {
+          "label": "The LangChain / LangGraph process",
+          "cols": [
+            [
+              {
+                "t": "Chunking",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "Embedding"
+              }
+            ],
+            [
+              {
+                "t": "Vector store"
+              }
+            ],
+            [
+              {
+                "t": "Connect the query"
+              }
+            ],
+            [
+              {
+                "t": "Ask a question",
+                "k": "ok"
+              }
+            ]
+          ]
+        },
+        "after": [
+          "Here you have <b>granular control<\/b>: you can change whatever you want. The four big decisions are below: chunking strategy, embedding model, vector store, and how many results to use."
+        ]
+      },
+      {
+        "title": "Decision 1: chunking strategy",
+        "body": [
+          "<b>Chunking<\/b> is how you cut a document into pieces before embedding them. It decides what search can return: one chunk is the smallest thing it can find.",
+          "<ul class=\"plain-list\"><li><b>Fixed size:<\/b> cut every N characters (for example 1,000). Simple, but can cut a rule in half.<\/li><li><b>Recursive:<\/b> cut at paragraphs first, then sentences, so pieces stay readable. A good default.<\/li><li><b>By structure:<\/b> one chunk per heading, section or contract clause. Usually best for policies, FAQs and contracts.<\/li><li><b>Semantic:<\/b> cut where the meaning changes, using embeddings. Smarter, slower and costlier.<\/li><\/ul>",
+          "<b>Overlap<\/b> repeats the end of one chunk at the start of the next, so a sentence on the boundary isn't lost. <b>Size<\/b> is a trade-off: chunks that are too big bury the answer in noise; chunks that are too small lose context."
+        ],
+        "widget": "chunker",
+        "after": [
+          "From your notebook:<pre class=\"nb-quote\">Way A (fixed size, 400 characters): The refund rule is cut in the middle. Half of it sits in the next chunk.\nWay B (by heading): Each chunk is one full section, so every rule stays together.<\/pre>"
+        ]
+      },
+      {
+        "title": "Decision 2: which embedding model",
+        "body": [
+          "The embedding model decides what “similar” means, so it sets the ceiling on search quality.",
+          "<div class=\"tbl\"><table><thead><tr><th>Model<\/th><th>Notes<\/th><\/tr><\/thead><tbody><tr><td><b>Gemini<\/b> <code>gemini-embedding-001<\/code><\/td><td>3,072 numbers per text, as in your notebook. Strong across many languages.<\/td><\/tr><tr><td><b>OpenAI<\/b> <code>text-embedding-3-small<\/code> / <code>-large<\/code><\/td><td>Small is cheap and good; large is more accurate.<\/td><\/tr><tr><td><b>Open-source<\/b> (BGE, E5, sentence-transformers)<\/td><td>Free, and runs on your own machine, so documents never leave the company.<\/td><\/tr><tr><td><b>Cohere Embed<\/b>, <b>Voyage AI<\/b><\/td><td>Specialist providers. Claude has no embedding model of its own; Anthropic recommends Voyage.<\/td><\/tr><\/tbody><\/table><\/div>",
+          "<b>What to weigh:<\/b> quality on your kind of text, language support, the number of dimensions (more numbers means more storage), price, and where your data is allowed to go.",
+          "<b>Golden rule:<\/b> embed documents and questions with the <b>same<\/b> model. Switching models later means re-embedding every document."
+        ]
+      },
+      {
+        "title": "Decision 3: which vector store",
+        "body": [
+          "The vector store keeps every chunk with its vector and finds the closest ones fast.",
+          "<div class=\"tbl\"><table><thead><tr><th>Store<\/th><th>When to use it<\/th><\/tr><\/thead><tbody><tr><td><b>In-memory<\/b><\/td><td>Quick prototypes. Everything is lost when the program stops.<\/td><\/tr><tr><td><b>Chroma<\/b><\/td><td>Free and local; the one your notebook uses. Great for learning and small apps.<\/td><\/tr><tr><td><b>FAISS<\/b><\/td><td>A very fast search library, with no server to run.<\/td><\/tr><tr><td><b>pgvector<\/b><\/td><td>If the company already uses PostgreSQL: vectors live next to your normal data.<\/td><\/tr><tr><td><b>Pinecone, Qdrant, Weaviate, Milvus<\/b><\/td><td>Managed or self-hosted vector databases that scale to millions of chunks.<\/td><\/tr><tr><td><b>Cloud<\/b> (Vertex AI Vector Search, Azure AI Search, OpenSearch)<\/td><td>When data must stay in your company's cloud.<\/td><\/tr><\/tbody><\/table><\/div>",
+          "<b>What to weigh:<\/b> how many chunks you'll store, <b>metadata filters<\/b> (for example “only HR documents” or “only India policies”), hosting and compliance, cost, and what your team already knows."
+        ]
+      },
+      {
+        "title": "Decision 4: how many results (top-k)",
+        "body": [
+          "After search ranks every chunk, you choose how many to give the model: <b>top 3<\/b>, <b>top 5<\/b> or more.",
+          "<ul class=\"plain-list\"><li><b>Too few<\/b> (k = 1): cheap and precise, but the answer can miss a rule that sits in a second chunk.<\/li><li><b>Too many<\/b> (k = 10): more cost and slower, and extra noise can distract the model.<\/li><li><b>Similarity threshold:<\/b> also drop chunks scoring below a cut-off, so weak matches never reach the model.<\/li><li><b>Reranking:<\/b> fetch 20, let a reranker re-read them with the question, keep the best 5. Your notebook's “Going further” covers this.<\/li><\/ul>"
+        ],
+        "widget": "topk",
+        "after": [
+          "<b>Rule of thumb:<\/b> start with top 3–5 and chunks of 500–1,000 characters. Raise k if answers miss information; lower it if they ramble or cost too much. Test with 20–30 real questions."
+        ]
+      },
+      {
+        "title": "Agentic RAG",
+        "body": [
+          "<b>If you give File Search to the model as a tool, it's already a simple agentic RAG<\/b> (Gemini RAG): the model decides whether to search.",
+          "Agentic RAG is RAG where an AI agent decides how to retrieve, instead of following one fixed lookup.",
+          "<b>Normal RAG<\/b> is a straight line that runs the same way every time: question → search once → top-k chunks → LLM answers. It works well for simple questions, but it searches once and answers with whatever it found, even if it's the wrong material.",
+          "<b>Agentic RAG<\/b> puts an LLM “agent” in charge of the retrieval loop. Before, during and after searching, it makes decisions:",
+          "<ul class=\"plain-list\"><li><b>Do I need to search at all?<\/b> “Hi” or “summarise what you just said” needs no lookup.<\/li><li><b>Where should I search?<\/b> It picks among tools: the contracts store, the supplier database, web search, or an SQL query.<\/li><li><b>What should I search for?<\/b> It can rewrite a vague question, or split one into parts. For example, “Compare penalties in Acme vs Zenith contracts” becomes two separate searches.<\/li><li><b>Is what I found good enough?<\/b> It grades the retrieved chunks. If they're off-topic, it rewrites the query and searches again.<\/li><li><b>Is my answer supported?<\/b> It checks that the answer is backed by the sources, and retries if not.<\/li><\/ul>"
+        ],
+        "widget": "agentic",
+        "after": [
+          "<b>How it connects to what you've learned<\/b><ul class=\"plain-list\"><li>It's <b>tool calling<\/b> (Topic 3) applied to retrieval: each search source is a tool, and the agent chooses which to call.<\/li><li><b>LangGraph<\/b> (Way 2) is the usual way to build it. The loops, “grade” steps and branches are exactly what a graph is good at. Gemini with File Search as a tool decides <i>whether<\/i> to search, but doesn't grade results or retry by itself; for that you build the loop.<\/li><li><b>MCP<\/b> can plug in more sources, such as Notion or Drive, for the agent to search.<\/li><\/ul>",
+          "<b>Trade-offs<\/b><div class=\"tbl\"><table><thead><tr><th><\/th><th>Normal RAG<\/th><th>Agentic RAG<\/th><\/tr><\/thead><tbody><tr><td>Answer quality on hard questions<\/td><td>Can miss<\/td><td>Better: retries, multi-step<\/td><\/tr><tr><td>Speed<\/td><td>Fast (1 LLM call + 1 search)<\/td><td>Slower (several calls)<\/td><\/tr><tr><td>Cost<\/td><td>Low, predictable<\/td><td>Higher, varies per question<\/td><\/tr><tr><td>Debugging<\/td><td>Simple<\/td><td>Harder: needs observability on each step<\/td><\/tr><\/tbody><\/table><\/div>",
+          "<span class=\"pm-line\"><b>PM angle:<\/b> start with normal RAG. Add agentic steps only where real questions fail, for example comparisons across contracts, multi-part questions, or data spread over several systems. Each extra step adds latency and cost, so set limits such as “maximum 3 retries” and track which step fixed the answer.<\/span>"
+        ]
+      },
+      {
+        "title": "Conclusion: it's all about turning data into numbers",
+        "body": [
+          "The strategy is how you provide numbers to the AI model so it can understand. <b>AI understands only numbers (embeddings)<\/b>, so every source goes through the same path:"
+        ],
+        "diagram": {
+          "label": "Any source becomes vectors",
+          "cols": [
+            [
+              {
+                "t": "PDF",
+                "s": "chunk it"
+              },
+              {
+                "t": "SharePoint",
+                "s": "scrape the text with a connector tool"
+              },
+              {
+                "t": "SQL database",
+                "s": "export rows, chunk them"
+              }
+            ],
+            [
+              {
+                "t": "Embedding model",
+                "s": "text → vectors",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "Vector database",
+                "s": "ready for search",
+                "k": "ok"
+              }
+            ]
+          ]
+        },
+        "after": [
+          "For everything there are <b>connectors<\/b>: how to convert a PDF into a vector database, how to convert an SQL database into a vector store, and so on. Ask Claude for the code to plug it in."
+        ]
+      }
+    ],
+    "notebooks": [
+      {
+        "file": "RAG.ipynb",
+        "path": "guide/RAG.ipynb",
+        "kb": 134,
+        "cells": 80,
+        "code": 42,
+        "outputs": true,
+        "sections": [
+          "6. What is RAG? (SkyFit Gym example)",
+          "6.1 Way 1: Gemini File Search",
+          "OpenAI: file input and vector store",
+          "Claude: Files API",
+          "Which approach is best? Whole document vs vector database",
+          "6.2 Way 2: LangGraph (chunking, embeddings, Chroma, graph)",
+          "Going further: reranking",
+          "Recap"
+        ]
+      }
+    ]
   }
 ];
 
@@ -957,16 +1298,22 @@ function render(){
   progress();
 }
 
+function paraHtml(p){
+  if (p.startsWith("<ul") || p.startsWith("<div") || p.startsWith("<a ")) return p.startsWith("<a ") ? `<p>${p}</p>` : p;
+  if (/<(pre|ul|div|table)/.test(p)) return `<div class="pq">${p}</div>`;
+  return `<p>${p}</p>`;
+}
+
 function lessonCard(l, i, key){
   const isDone = !!done[key], uid = key.replace(/[^a-z0-9]/gi, "-");
   return `<article class="lesson ${isDone ? "done" : ""}" data-i="${i}">
       <button class="lesson-head" aria-expanded="false" aria-controls="lb-${uid}">
         <span class="num">${i + 1}</span><h3>${l.title}</h3>${chev}</button>
       <div class="lesson-body" id="lb-${uid}" hidden>
-        ${l.body.map(p => p.startsWith("<ul") ? p : p.includes("<pre") ? `<div class="pq">${p}</div>` : `<p>${p}</p>`).join("")}
+        ${l.body.map(paraHtml).join("")}
         ${l.diagram ? diagram(l.diagram) : ""}
         ${l.widget ? widget(l.widget, current) : ""}
-        ${(l.after || []).map(p => p.includes("<pre") ? `<div class="pq">${p}</div>` : `<p>${p}</p>`).join("")}
+        ${(l.after || []).map(paraHtml).join("")}
         <button class="done-toggle" data-key="${key}">${isDone ? "✓ Understood" : "Mark as understood"}</button>
       </div></article>`;
 }
@@ -1889,7 +2236,151 @@ function startView(st){
   </section>`;
 }
 
+/* ============================================================
+   RAG TOPIC WIDGETS
+   ============================================================ */
+const EMB = [["I went for a run", [2.9, 1.4, 0.2]], ["Sprinting is great", [3.0, 1.3, 0.1]], ["Smoking is injurious", [0.3, -2.5, 2.0]]];
+let embSel = 0;
+const PIPE = [
+  { ph: 0, t: "PDF", n: "100", u: "pages", d: "Your PDF is long: 100 pages. The AI can't search text as it is; it needs numbers." },
+  { ph: 0, t: "Chunk", n: "1,000", u: "text chunks", d: "Cut every page into about 10 chunks: 1 page → 10 chunks, so 100 pages → 1,000 chunks." },
+  { ph: 0, t: "Embed", n: "1,000", u: "vectors", d: "Every chunk passes through the embedding model and becomes a vector: 1,000 text chunks → 1,000 vectors." },
+  { ph: 0, t: "Store", n: "1", u: "vector database", d: "The vectors are stored in a database. Because it holds vectors, it's called a vector database." },
+  { ph: 1, t: "Question", n: "1", u: "user query", d: "The user asks: “What is the cancellation policy?” The AI can only use the user's query as input." },
+  { ph: 1, t: "Query → vector", n: "1", u: "query vector", d: "The query is converted into a vector with the same embedding model. Now there are 1,000 vectors in the database and 1 from the user." },
+  { ph: 1, t: "Compare", n: "1,000", u: "similarity scores", d: "The query vector is compared with all 1,000 vectors. Each comparison gives a score: close to 0 means least similar, 1 means most similar." },
+  { ph: 1, t: "Rank top-k", n: "5", u: "best chunks kept", d: "The scores are ranked, and based on your requirement you pull out the top 5 (or top 3, or top 10) most similar chunks." },
+  { ph: 1, t: "LLM answers", n: "1", u: "grounded answer", d: "The top 5 chunks are given to the AI model as extra input, together with the question, and it answers the user from them." }
+];
+let pipeAt = 0;
+const HR_DOC = "## Annual leave\nFull-time employees get 24 days of paid annual leave per year. Leave is credited monthly, 2 days at a time.\n## Carry forward\nUp to 10 unused days can be carried into the next year. Any days above 10 lapse on 31 March.\n## Sick leave\nEmployees get 12 days of paid sick leave. A doctor's note is needed for more than 2 days in a row.\n## Applying for leave\nApply in the HR portal at least 7 days ahead for planned leave. Your manager approves or rejects within 2 working days.";
+let chunkMode = "fixed";
+const TK = [
+  ["Up to 10 unused days can be carried into the next year.", 0.89, "answer"],
+  ["Any days above 10 lapse on 31 March.", 0.83, "answer"],
+  ["Full-time employees get 24 days of paid annual leave per year.", 0.71, "related"],
+  ["Leave is credited monthly, 2 days at a time.", 0.64, "related"],
+  ["Apply in the HR portal at least 7 days ahead for planned leave.", 0.52, "noise"],
+  ["Employees get 12 days of paid sick leave.", 0.47, "noise"],
+  ["Your manager approves or rejects within 2 working days.", 0.41, "noise"],
+  ["The Pune office canteen opens at 8 am.", 0.12, "noise"]
+];
+const AGENT = {
+  normal: { sum: "1 LLM call · 1 search · misses the Zenith penalty", bad: true, steps: [
+    ["search", "Search once with the whole question: “Compare late-payment penalties in the Acme and Zenith contracts”"],
+    ["result", "Top 3 chunks: two from Acme, one about Zenith's delivery terms (off-topic)"],
+    ["answer", "LLM answers with what it got: Acme's 2% per week is right, Zenith's penalty is “not found”"] ] },
+  agentic: { sum: "4 LLM calls · 3 searches · both penalties found and cited", bad: false, steps: [
+    ["plan", "Plan: this compares two contracts, so split it into two searches"],
+    ["search", "Search contracts store: “Acme late payment penalty”"],
+    ["search", "Search contracts store: “Zenith late payment penalty”"],
+    ["grade", "Grade results: Acme chunks are on-topic; Zenith chunks are about delivery, so not good enough"],
+    ["search", "Rewrite and retry: “Zenith overdue invoice fee” finds the right clause"],
+    ["answer", "Answer: Acme charges 2% per week; Zenith charges 1.5% per month"],
+    ["check", "Check it's grounded: both figures appear in the retrieved clauses, so reply"] ] }
+};
+let agentMode = "normal", agentAt = -1;
+
+function ragWidget(kind){
+  if (kind === "embedPairs") return `<div class="widget"><span class="eyebrow">Pick a sentence to compare it with the others</span>
+    <div class="emb-pick">${EMB.map((e, i) => `<button class="emb-s" data-emb="${i}" aria-pressed="${i === embSel}"><span class="mono">V${i + 1}</span><b>${esc(e[0])}</b><code>[${e[1].join(", ")}]</code></button>`).join("")}</div>
+    <div id="embOut" class="emb-out"></div>
+    <p class="fig-cap"><small>Your notes used 0.9, 0.2 and 0.03 as rough illustrations. With these exact vectors, cosine scores are 1.00, −0.20 and −0.21. Scores run from −1 to 1; with real text embeddings they usually sit between 0 and 1. The conclusion is the same: 1 and 2 are similar.</small></p></div>`;
+  if (kind === "ragPipeline") return `<div class="widget"><div class="pipe-phases"><span class="ph0">Once, when you upload</span><span class="ph1">Every time someone asks</span></div>
+    <div class="pipe" id="pipe">${PIPE.map((s, i) => `<button class="pipe-st ph${s.ph}" data-pipe="${i}"><span class="mono">${i + 1}</span>${esc(s.t)}</button>`).join("")}</div>
+    <div class="pipe-detail" id="pipeDetail" aria-live="polite"></div>
+    <div class="pipe-nav"><button class="btn ghost" id="pipeBack">← Back</button><button class="btn" id="pipeNext">Next step →</button></div></div>`;
+  if (kind === "chunker") return `<div class="widget"><span class="eyebrow">Chunk a sample HR leave policy</span>
+    <div class="swap" role="radiogroup" aria-label="Chunking strategy"><button class="chip" data-chunk="fixed" aria-pressed="true">Fixed size</button><button class="chip" data-chunk="heading" aria-pressed="false">By heading</button></div>
+    <div class="chunk-ctl" id="chunkCtl">
+      <label for="chSize">Chunk size <b id="chSizeV">180</b> characters</label><input type="range" id="chSize" min="100" max="500" step="10" value="180">
+      <label for="chOv">Overlap <b id="chOvV">0</b> characters</label><input type="range" id="chOv" min="0" max="80" step="10" value="0">
+    </div>
+    <p class="msg" id="chunkSum"></p>
+    <div class="chunks" id="chunks"></div></div>`;
+  if (kind === "topk") return `<div class="widget"><span class="eyebrow">Question: “How many leave days can I carry forward?”</span>
+    <div class="cos-k"><label for="tkK">Top-k</label><input type="range" id="tkK" min="1" max="8" value="3"><b id="tkKV">3</b></div>
+    <ol class="cos-results tk" id="tkList"></ol>
+    <div class="tk-stats" id="tkStats"></div>
+    <p class="fig-cap"><small>Illustrative scores; assumes about 250 tokens per chunk.</small></p></div>`;
+  if (kind === "agentic") return `<div class="widget"><span class="eyebrow">Question: “Compare late-payment penalties in the Acme and Zenith contracts”</span>
+    <div class="swap" role="radiogroup" aria-label="RAG type"><button class="chip" data-agent="normal" aria-pressed="true">Normal RAG</button><button class="chip" data-agent="agentic" aria-pressed="false">Agentic RAG</button></div>
+    <ol class="agent-steps" id="agentSteps"></ol>
+    <div class="pipe-nav"><button class="btn" id="agentNext">Step through →</button><button class="btn ghost" id="agentAll">Show all</button><span class="msg" id="agentSum"></span></div>
+    <p class="fig-cap"><small>A made-up example; the contract figures are illustrative.</small></p></div>`;
+  return "";
+}
+
+function bindRagTopic(){
+  if ($("#embOut")){
+    const draw = () => {
+      document.querySelectorAll("[data-emb]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.emb === embSel));
+      const me = EMB[embSel];
+      $("#embOut").innerHTML = EMB.map((e, i) => i === embSel ? "" : (() => { const s = cosSim(me[1], e[1]);
+        return `<div class="emb-row ${s > 0.8 ? "hi" : ""}"><span>V${embSel + 1} vs V${i + 1}: <b>${esc(e[0])}</b></span><span class="cr-bar"><i style="width:${Math.max(0, s) * 100}%"></i></span><b class="mono">${s.toFixed(2)}</b><small>${s > 0.8 ? "similar meaning" : "different meaning"}</small></div>`; })()).join("");
+    };
+    document.querySelectorAll("[data-emb]").forEach(b => b.onclick = () => { embSel = +b.dataset.emb; draw(); });
+    draw();
+  }
+  if ($("#pipe")){
+    const draw = () => {
+      const s = PIPE[pipeAt];
+      document.querySelectorAll("[data-pipe]").forEach(b => { const i = +b.dataset.pipe; b.classList.toggle("on", i === pipeAt); b.classList.toggle("done", i < pipeAt); });
+      $("#pipeDetail").innerHTML = `<div class="pd-n"><b>${s.n}</b><span>${esc(s.u)}</span></div><div><span class="eyebrow">Step ${pipeAt + 1} of ${PIPE.length} · ${s.ph ? "every time someone asks" : "once, when you upload"}</span><p>${esc(s.d)}</p></div>`;
+      $("#pipeBack").disabled = pipeAt === 0; $("#pipeNext").textContent = pipeAt === PIPE.length - 1 ? "Start again ↺" : "Next step →";
+    };
+    document.querySelectorAll("[data-pipe]").forEach(b => b.onclick = () => { pipeAt = +b.dataset.pipe; draw(); });
+    $("#pipeBack").onclick = () => { if (pipeAt > 0){ pipeAt--; draw(); } };
+    $("#pipeNext").onclick = () => { pipeAt = pipeAt === PIPE.length - 1 ? 0 : pipeAt + 1; draw(); };
+    draw();
+  }
+  if ($("#chunks")){
+    const size = $("#chSize"), ov = $("#chOv");
+    const draw = () => {
+      document.querySelectorAll("[data-chunk]").forEach(b => b.setAttribute("aria-pressed", b.dataset.chunk === chunkMode));
+      $("#chunkCtl").hidden = chunkMode !== "fixed";
+      let parts = [];
+      if (chunkMode === "heading") parts = HR_DOC.split(/\n(?=## )/).map(t => ({ t, o: 0 }));
+      else { const n = +size.value, o = Math.min(+ov.value, n - 20);
+        for (let i = 0; i < HR_DOC.length; i += n - o){ parts.push({ t: HR_DOC.slice(i, i + n), o: i === 0 ? 0 : o }); if (i + n >= HR_DOC.length) break; } }
+      $("#chSizeV").textContent = size.value; $("#chOvV").textContent = ov.value;
+      let cuts = 0;
+      $("#chunks").innerHTML = parts.map((c, i) => { const last = i === parts.length - 1, cut = !last && !/[.\n]\s*$/.test(c.t); if (cut) cuts++;
+        return `<div class="chunk ${cut ? "cut" : ""}"><div class="chunk-h"><span class="mono">Chunk ${i + 1} · ${c.t.length} chars</span>${cut ? '<span class="cut-tag">cut mid-sentence</span>' : ""}</div><div class="chunk-t">${c.o ? `<mark>${esc(c.t.slice(0, c.o))}</mark>` : ""}${esc(c.t.slice(c.o))}</div></div>`; }).join("");
+      $("#chunkSum").innerHTML = `<b>${parts.length}</b> chunks · <b class="${cuts ? "bad" : "good"}">${cuts}</b> cut mid-sentence` + (chunkMode === "fixed" && +ov.value ? " · highlighted text is the overlap repeated from the chunk before" : "") + (chunkMode === "heading" ? " · each chunk is one full section" : "");
+    };
+    document.querySelectorAll("[data-chunk]").forEach(b => b.onclick = () => { chunkMode = b.dataset.chunk; draw(); });
+    size.oninput = draw; ov.oninput = draw; draw();
+  }
+  if ($("#tkList")){
+    const k = $("#tkK");
+    const draw = () => {
+      const kk = +k.value; $("#tkKV").textContent = kk;
+      $("#tkList").innerHTML = TK.map(([t, s, c], i) => `<li class="${i < kk ? "hit" : ""}"><span class="cr-t">${esc(t)} <span class="tk-c ${c}">${c}</span></span><span class="cr-bar"><i style="width:${s * 100}%"></i></span><b>${s.toFixed(2)}</b>${i < kk ? '<span class="cr-tag">to LLM</span>' : ""}</li>`).join("");
+      const sent = TK.slice(0, kk), ans = sent.filter(x => x[2] === "answer").length, noise = sent.filter(x => x[2] === "noise").length;
+      const verdict = kk === 1 ? "Misses the “lapse on 31 March” rule: half an answer." : kk <= 4 ? "Sweet spot: both answer chunks plus useful context." : "Extra noise: more cost, slower, and the model may get distracted.";
+      $("#tkStats").innerHTML = `<span><b>${ans}/2</b> answer chunks</span><span><b>${noise}</b> noise chunks</span><span><b>~${(kk * 250).toLocaleString()}</b> extra tokens per question</span><p class="tk-verdict ${kk === 1 || kk > 4 ? "warn" : "ok"}">${verdict}</p>`;
+    };
+    k.oninput = draw; draw();
+  }
+  if ($("#agentSteps")){
+    const draw = () => {
+      const m = AGENT[agentMode];
+      document.querySelectorAll("[data-agent]").forEach(b => b.setAttribute("aria-pressed", b.dataset.agent === agentMode));
+      $("#agentSteps").innerHTML = m.steps.map(([kind, t], i) => `<li class="ag ${kind} ${agentAt === -1 || i <= agentAt ? "shown" : ""} ${i === agentAt ? "now" : ""}"><span class="ag-k">${kind}</span><span>${esc(t)}</span></li>`).join("");
+      const done = agentAt === -1 || agentAt >= m.steps.length - 1;
+      $("#agentSum").innerHTML = done ? `<b class="${m.bad ? "bad" : "good"}">${esc(m.sum)}</b>` : "";
+      $("#agentNext").textContent = done ? "Step through →" : "Next step →";
+    };
+    document.querySelectorAll("[data-agent]").forEach(b => b.onclick = () => { agentMode = b.dataset.agent; agentAt = -1; draw(); });
+    $("#agentNext").onclick = () => { const n = AGENT[agentMode].steps.length; agentAt = (agentAt === -1 || agentAt >= n - 1) ? 0 : agentAt + 1; draw(); };
+    $("#agentAll").onclick = () => { agentAt = -1; draw(); };
+    draw();
+  }
+}
+
 function widget(kind, s){
+  const rw = ragWidget(kind); if (rw) return rw;
   if (kind === "steps") return `<div class="widget"><span class="eyebrow">Click through the four steps</span>
     <div class="steps">${["authenticate","choose a model","send messages","read the response"].map((t,i)=>
       `<button class="step${i===0?" on":""}" data-step="${i}"><small>step ${i+1}</small>${t}</button>`).join("")}</div>
@@ -1960,6 +2451,8 @@ function bind(){
     t.oninput = upd; upd(); }
 
   if ($("#quiz")) quiz(current.errors);
+  bindRagTopic();
+  document.querySelectorAll("[data-goto-concept]").forEach(a => a.onclick = () => { concept = a.dataset.gotoConcept; store.set("fieldnotes-concept", concept); });
 }
 
 function toggle(el, force){
