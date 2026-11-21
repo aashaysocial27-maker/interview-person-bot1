@@ -409,6 +409,43 @@ table.cmp{min-width:820px}
   .gs-q .chip{text-align:left}
 }
 
+/* architecture widgets */
+.arch-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:12px;align-items:start}
+.arch-stack{display:flex;flex-direction:column;gap:4px}
+.arch-l{display:grid;grid-template-columns:22px 1fr;column-gap:8px;align-items:baseline;text-align:left;border:1px solid var(--line);border-left:4px solid var(--accent);background:var(--surface);border-radius:6px;padding:8px 10px;font-size:14px;min-width:0}
+.arch-l small{grid-column:2;font-size:12px;color:var(--muted)}
+.arch-l .mono{font-size:11px;color:var(--muted)}
+.arch-l:nth-child(2){border-left-color:var(--bad)} .arch-l:nth-child(3){border-left-color:#8a63d2} .arch-l:nth-child(4){border-left-color:var(--ok)} .arch-l:nth-child(5){border-left-color:#d08a1e} .arch-l:nth-child(6){border-left-color:var(--muted)}
+.arch-l[aria-selected="true"],.arch-l.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.arch-l[aria-selected="true"] small,.arch-l[aria-selected="true"] .mono,.arch-l.on .mono{color:var(--bg);opacity:.75}
+.arch-stack.small .arch-l{padding:6px 10px;transition:background .2s}
+.arch-detail{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.arch-detail h4{margin:0;font:600 17px var(--display)}
+.arch-detail p{font-size:14px}
+.cfg-q{display:flex;flex-direction:column;gap:10px}
+.cfg-q fieldset{border:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.cfg-q legend{font-weight:600;font-size:14px;margin-bottom:6px}
+.cfg-out{background:var(--surface);border:1px solid var(--accent);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.cfg-out .kv{font-size:14px}
+.cost-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:8px 14px;align-items:center;font-size:14px}
+.cost-grid label{color:var(--muted)}
+.cost-grid label b{color:var(--fg);font-family:var(--mono)}
+.cost-grid small{font-size:12px}
+.cost-grid input[type=number]{font:inherit;font-family:var(--mono);font-size:14px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;min-width:0}
+.cost-grid input[type=range]{accent-color:var(--accent)}
+.cost-grid .pair{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.cost-out{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.cost-big{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.cost-big span{font-size:12px;color:var(--muted)}
+.cost-big b{font:600 20px var(--mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.cost-big.good{border-color:var(--ok);background:var(--ok-soft)} .cost-big.good b{color:var(--ok)}
+@media (max-width:640px){
+  .arch-wrap{grid-template-columns:1fr}
+  .cost-grid{grid-template-columns:1fr;gap:4px}
+  .cost-grid input,.cost-grid .pair{margin-bottom:8px}
+  .cost-out{grid-template-columns:1fr 1fr}
+}
+
 /* image attachment */
 .img-attach{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 .img-attach img{display:block;width:100%;height:auto}
@@ -1384,6 +1421,142 @@ const SESSIONS = [
         "after": [
           "<span class=\"pm-line\"><b>PM angle:<\/b> guardrails are product requirements, not just engineering. Someone has to decide the refund limit that needs approval, which tools each agent gets, and the step and cost caps. Track two numbers per gate: how often it blocks real harm, and how often it blocks a legitimate user (false positives). Too strict, and people stop using the agent; too loose, and one bad action costs more than the whole project saved.<\/span>",
           "Log every gate decision with the reason. That's observability (Topic 3): when something goes wrong, you can see which gate let it through and why."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "architecture",
+    "label": "System Architecture",
+    "title": "Enterprise AI System Architecture",
+    "intro": "Designing an end-to-end AI system for an enterprise customer: the layers, the ten big decisions, and a worked example.",
+    "lessons": [
+      {
+        "title": "The designer's job",
+        "body": [
+          "An enterprise rarely needs “an LLM”. It needs a <b>system<\/b>: people, data, tools, models and controls working together, safely, at a cost it can predict. The designer's job is to choose each part on purpose and keep the parts swappable.",
+          "Four principles run through every good design:",
+          "<ul class=\"plain-list\"><li><b>Model-agnostic:<\/b> put models behind a gateway, so you can switch on cost, quality or availability without a rewrite.<\/li><li><b>Secure by default:<\/b> the AI only sees and does what the signed-in person is allowed to.<\/li><li><b>Measured:<\/b> no launch without a test set and a quality bar; no change without re-running it.<\/li><li><b>Cost-aware:<\/b> every request has a price, so design for the cheapest setup that meets the bar.<\/li><\/ul>",
+          "<b>Running example in this topic:<\/b> a manufacturing company wants a <b>procurement assistant<\/b>. Buyers should ask questions about supplier contracts, pull figures from the ERP system, and get draft supplier emails that a person approves before sending."
+        ]
+      },
+      {
+        "title": "The reference architecture: six layers",
+        "body": [
+          "Every enterprise AI system, from a simple FAQ bot to a multi-agent platform, can be drawn as the same six layers. Click a layer to see what lives in it, the choices you make there, and where you learned about it."
+        ],
+        "widget": "archLayers"
+      },
+      {
+        "title": "Trace one request end to end",
+        "body": [
+          "Here is one real request from the procurement assistant, travelling down through the layers and back up. Step through it to see which layer does what."
+        ],
+        "widget": "archTrace"
+      },
+      {
+        "title": "Decision 1: which model for which job?",
+        "body": [
+          "There's no single best model. Match each <b>job<\/b> to a model, and judge on five things: <b>accuracy<\/b> on your tasks, <b>cost<\/b>, <b>latency<\/b>, <b>privacy<\/b> (where data goes) and <b>portability<\/b> (how easily you can switch).",
+          "<div class=\"tbl\"><table><thead><tr><th>Family<\/th><th>Type<\/th><th>Known for<\/th><\/tr><\/thead><tbody><tr><td><b>Claude<\/b> (Anthropic)<\/td><td>Proprietary<\/td><td>Reasoning, coding, long documents, agents<\/td><\/tr><tr><td><b>Gemini<\/b> (Google)<\/td><td>Proprietary<\/td><td>Multimodal (text, images, audio, video), very long context<\/td><\/tr><tr><td><b>GPT<\/b> (OpenAI)<\/td><td>Proprietary<\/td><td>Broad ecosystem, tool use, agents<\/td><\/tr><tr><td><b>Llama<\/b> (Meta)<\/td><td>Open-weight<\/td><td>Self-hosting for privacy and control<\/td><\/tr><tr><td><b>Mistral<\/b> (Mistral AI)<\/td><td>Open-weight and commercial<\/td><td>Efficient, multilingual, European provider<\/td><\/tr><tr><td><b>DeepSeek<\/b><\/td><td>Open-weight<\/td><td>Reasoning and coding at low cost; many enterprises self-host it rather than use the hosted service<\/td><\/tr><tr><td><b>Qwen<\/b> (Alibaba)<\/td><td>Open-weight<\/td><td>Multilingual, many sizes from tiny to very large<\/td><\/tr><tr><td><b>Granite<\/b> (IBM)<\/td><td>Open-weight<\/td><td>Built for business use, with documented training data<\/td><\/tr><\/tbody><\/table><\/div>",
+          "<b>Designer's pattern:<\/b> use a <b>model router<\/b>. A small, cheap model handles routine jobs (classify the request, extract a field, summarise); a large model handles hard reasoning. Embedding models are a separate choice again (Topic 5)."
+        ],
+        "after": [
+          "<span class=\"link-line\"><b>Builds on:<\/b> model comparisons and “models are interchangeable parts” (Topic 1).<\/span>"
+        ]
+      },
+      {
+        "title": "Decision 2: workflow, RAG, single agent or multi-agent?",
+        "body": [
+          "Think of it as a ladder of autonomy. <b>Start on the lowest step that solves the problem<\/b>; every step up adds flexibility, but also cost, latency and risk.",
+          "<div class=\"tbl\"><table><thead><tr><th>Pattern<\/th><th>How it works<\/th><th>Use it when<\/th><\/tr><\/thead><tbody><tr><td><b>Deterministic workflow<\/b><\/td><td>Fixed steps in code; the LLM fills in some of them<\/td><td>The process is known and repeatable: invoice → extract → validate → approve<\/td><\/tr><tr><td><b>RAG<\/b><\/td><td>Search your documents, then answer from them<\/td><td>People need answers from company knowledge<\/td><\/tr><tr><td><b>Single agent<\/b><\/td><td>One LLM decides which tools to call, in a loop<\/td><td>Tasks vary and need several tools<\/td><\/tr><tr><td><b>Multi-agent<\/b><\/td><td>Several specialised agents hand work to each other<\/td><td>Large tasks with clearly separate roles, after one agent has proven not enough<\/td><\/tr><\/tbody><\/table><\/div>",
+          "For the procurement assistant: <b>RAG<\/b> for contract questions, plus a <b>single agent<\/b> with a few tools for the “find, compare and draft” tasks. Multi-agent isn't needed yet."
+        ],
+        "after": [
+          "<span class=\"link-line\"><b>Builds on:<\/b> tool calling (Topic 3), RAG and agentic RAG (Topic 5).<\/span>"
+        ]
+      },
+      {
+        "title": "Decision 3: where does it run?",
+        "body": [
+          "Where the system runs decides where your data goes, so it usually follows the customer's data rules.",
+          "<div class=\"tbl\"><table><thead><tr><th>Option<\/th><th>Main services<\/th><th>Choose it when<\/th><\/tr><\/thead><tbody><tr><td><b>AWS<\/b><\/td><td>Bedrock (managed model APIs, including Claude, Llama and Mistral), SageMaker AI, EKS, Lambda<\/td><td>The company already runs on AWS<\/td><\/tr><tr><td><b>Google Cloud<\/b><\/td><td>Vertex AI (Gemini, Claude and open models), Agent Engine, GKE, Cloud Run<\/td><td>Gemini-first, or heavy data work on Google Cloud<\/td><\/tr><tr><td><b>Microsoft Azure<\/b><\/td><td>Foundry (Azure AI Foundry, with OpenAI and other models), Azure ML, AKS, Functions<\/td><td>Microsoft 365 and Teams shops<\/td><\/tr><tr><td><b>On-premises / private cloud<\/b><\/td><td>vLLM, Ollama or NVIDIA NIM to serve open-weight models; Kubernetes or OpenShift to run them<\/td><td>Regulated data, data must not leave the building, or very high steady volume<\/td><\/tr><tr><td><b>Hybrid<\/b><\/td><td>Sensitive work on private models; everything else on cloud APIs<\/td><td>Mixed data sensitivity, which is common in large companies<\/td><\/tr><\/tbody><\/table><\/div>",
+          "Using a model through your own cloud account (for example Claude via Bedrock or Vertex AI) keeps traffic inside that cloud's contracts, network and region, which often satisfies security teams faster than a direct API."
+        ]
+      },
+      {
+        "title": "Decision 4: how do we build it?",
+        "body": [
+          "<div class=\"tbl\"><table><thead><tr><th>Approach<\/th><th>Examples<\/th><th>Best for<\/th><\/tr><\/thead><tbody><tr><td><b>Low-code<\/b><\/td><td>Copilot Studio, n8n, Zapier-style builders<\/td><td>Business teams, quick pilots, simple flows<\/td><\/tr><tr><td><b>SDK and frameworks<\/b><\/td><td>Provider SDKs (Topic 1), LangGraph, LlamaIndex, CrewAI, AutoGen<\/td><td>Production systems that need control and testing<\/td><\/tr><tr><td><b>AI coding tools<\/b><\/td><td>Claude Code, OpenAI Codex, Gemini CLI, GitHub Copilot, Cursor<\/td><td>Not a third way, but a speed-up: developers build either of the above faster<\/td><\/tr><\/tbody><\/table><\/div>",
+          "Common path: prove value with low-code or a managed service, then rebuild the parts that matter in code once you need control, tests and scale."
+        ]
+      },
+      {
+        "title": "Decision 5: integrating enterprise data and tools",
+        "body": [
+          "The assistant is only as useful as what it can reach. There are four kinds of connection:",
+          "<ul class=\"plain-list\"><li><b>Documents → RAG pipeline:<\/b> connectors pull from SharePoint, Drive or file shares, then chunk, embed and index (Topic 5).<\/li><li><b>Systems → tools:<\/b> ERP, CRM and ticketing systems exposed as tools, ideally through <b>MCP<\/b> servers so any model can use them (Topic 4).<\/li><li><b>Structured data → SQL tools:<\/b> let the agent query a read-only view, not the live tables.<\/li><li><b>Other agents → A2A:<\/b> the Agent2Agent protocol lets agents from different teams or vendors hand work to each other.<\/li><\/ul>",
+          "<b>The rule enterprises care most about: identity pass-through.<\/b> The assistant must act with the <b>signed-in person's<\/b> permissions, not a super-user account. A buyer in India must not retrieve contracts only the US team may see, even if they ask nicely. Filter RAG results and tool calls by the user's access rights."
+        ]
+      },
+      {
+        "title": "Decision 6: evaluating quality and groundedness",
+        "body": [
+          "“It looked good in the demo” is not a quality bar. Build evaluation in from day one:",
+          "<ul class=\"plain-list\"><li><b>Golden test set:<\/b> 50–200 real questions with known correct answers, written with the business users.<\/li><li><b>Offline evals before every change:<\/b> new model, new prompt or new chunking? Re-run the test set and compare scores.<\/li><li><b>Groundedness:<\/b> check each answer is supported by the retrieved sources, and that citations point to the right clause.<\/li><li><b>LLM-as-judge:<\/b> a second model scores answers at scale; spot-check its scores against human ones.<\/li><li><b>Online signals:<\/b> thumbs up or down, edits people make to drafts, escalations, and “I don't know” rate.<\/li><\/ul>",
+          "Agree the launch bar with the customer up front, for example “90% correct on the golden set, zero answers without a source”."
+        ],
+        "after": [
+          "<span class=\"link-line\"><b>Builds on:<\/b> structured outputs and Pydantic (Learning Concepts), and the groundedness check in agentic RAG (Topic 5).<\/span>"
+        ]
+      },
+      {
+        "title": "Decision 7: security and compliance",
+        "body": [
+          "<ul class=\"plain-list\"><li><b>Identity:<\/b> single sign-on, role-based access, and identity pass-through to every tool and data source.<\/li><li><b>Guardrails:<\/b> the six gates from Topic 6, sized to the risk of each action.<\/li><li><b>Data handling:<\/b> classify data, redact personal data before it leaves your boundary, and use provider terms that exclude training on your data.<\/li><li><b>Secrets:<\/b> keys in a vault, never in code or notebooks (the Notion token lesson from Topic 4).<\/li><li><b>Audit trail:<\/b> log who asked what, what the AI saw and did, and who approved it.<\/li><li><b>Regulation:<\/b> map the use case to the laws that apply, such as GDPR in Europe, India's Digital Personal Data Protection Act, and the EU AI Act's risk categories.<\/li><\/ul>",
+          "Bring the customer's security and legal teams in at the design stage. Retrofitting compliance after a pilot is the most common reason enterprise AI projects stall."
+        ],
+        "after": [
+          "<span class=\"link-line\"><b>Builds on:<\/b> keys and secrets (Topic 1), Guardrails (Topic 6).<\/span>"
+        ]
+      },
+      {
+        "title": "Decision 8: scale and reliability",
+        "body": [
+          "Model providers have outages, rate limits and slow moments. Design so users barely notice:",
+          "<ul class=\"plain-list\"><li><b>Fallback models:<\/b> if the main model is down or slow, the gateway routes to a second provider.<\/li><li><b>Retries with backoff and timeouts:<\/b> retry briefly, then fail gracefully with a clear message.<\/li><li><b>Quotas and rate limits<\/b> per team, so one heavy user can't exhaust capacity for everyone.<\/li><li><b>Caching:<\/b> reuse answers to repeated questions and the provider's prompt caching for repeated context.<\/li><li><b>Queues for long jobs:<\/b> run big batch work (for example, re-reading 10,000 contracts) in the background.<\/li><li><b>Service levels:<\/b> agree targets such as “95% of answers in under 8 seconds” and monitor them.<\/li><\/ul>"
+        ]
+      },
+      {
+        "title": "Decision 9: cost and token optimisation (FinOps)",
+        "body": [
+          "Cost = number of requests × tokens per request × price per token. Each lever cuts one of those:",
+          "<ul class=\"plain-list\"><li><b>Route<\/b> easy requests to a small model (often 10–20× cheaper).<\/li><li><b>Trim context:<\/b> smaller chunks and a sensible top-k (Topic 5) mean fewer input tokens.<\/li><li><b>Cache<\/b> repeated context and answers.<\/li><li><b>Batch<\/b> non-urgent work; many providers discount batch jobs.<\/li><li><b>Cap<\/b> steps and retries (Topic 6), and set monthly budgets per team with alerts.<\/li><\/ul>",
+          "Try the levers on an example:"
+        ],
+        "widget": "archCost"
+      },
+      {
+        "title": "Decision 10: open-weight vs proprietary models",
+        "body": [
+          "<div class=\"tbl\"><table><thead><tr><th><\/th><th>Proprietary (Claude, Gemini, GPT)<\/th><th>Open-weight (Llama, Mistral, Qwen, DeepSeek, Granite)<\/th><\/tr><\/thead><tbody><tr><td>Quality<\/td><td>Usually the strongest on hard reasoning<\/td><td>Close behind, and improving fast<\/td><\/tr><tr><td>Data control<\/td><td>Data goes to the provider (or your cloud account's managed service)<\/td><td>Can run fully inside your walls<\/td><\/tr><tr><td>Cost<\/td><td>Pay per token; no servers to run<\/td><td>Pay for GPUs and people to run them; cheaper at high, steady volume<\/td><\/tr><tr><td>Speed to start<\/td><td>Minutes<\/td><td>Days to weeks<\/td><\/tr><tr><td>Customisation<\/td><td>Prompting, some fine-tuning<\/td><td>Full fine-tuning and control<\/td><\/tr><tr><td>Lock-in<\/td><td>Higher, unless behind a gateway<\/td><td>Lower<\/td><\/tr><\/tbody><\/table><\/div>",
+          "Most enterprises end up <b>hybrid<\/b>: proprietary models for the hardest tasks, open-weight models for sensitive or very high-volume ones, all behind one gateway."
+        ]
+      },
+      {
+        "title": "Design your own: architecture configurator",
+        "body": [
+          "Answer four questions about a use case, and get a starting architecture with the reasoning behind each choice."
+        ],
+        "widget": "archConfig"
+      },
+      {
+        "title": "The blueprint for the procurement assistant",
+        "body": [
+          "<div class=\"tbl\"><table><thead><tr><th>Layer<\/th><th>Choice for this customer<\/th><\/tr><\/thead><tbody><tr><td>Experience<\/td><td>Microsoft Teams app, plus a simple web page; company single sign-on<\/td><\/tr><tr><td>Gateway &amp; guardrails<\/td><td>Model router with a fallback provider; input and output filters; per-team quotas<\/td><\/tr><tr><td>Orchestration<\/td><td>LangGraph: RAG for questions, one agent with four tools for tasks; human approval before any email is sent<\/td><\/tr><tr><td>Knowledge &amp; tools<\/td><td>Contracts indexed from SharePoint, chunked by clause, filtered by the user's access; ERP through a read-only MCP server<\/td><\/tr><tr><td>Models<\/td><td>A large proprietary model via the company's Azure account for reasoning and drafting; a small model for routing and extraction<\/td><\/tr><tr><td>Platform &amp; operations<\/td><td>Azure; tracing of every step, a 150-question golden test set, cost dashboard per team<\/td><\/tr><\/tbody><\/table><\/div>",
+          "<b>Rollout in three phases:<\/b>",
+          "<ul class=\"plain-list\"><li><b>Pilot (6–8 weeks):<\/b> 20 buyers, contract Q&amp;A only. Measure accuracy and time saved against the golden set.<\/li><li><b>Production:<\/b> add ERP lookups and email drafting with approval; security review; service levels agreed.<\/li><li><b>Scale:<\/b> more categories and countries, cost optimisation, and new use cases on the same platform.<\/li><\/ul>",
+          "<span class=\"pm-line\"><b>Takeaways:<\/b> design in layers so each part can change on its own; keep models swappable; give the AI exactly the user's permissions; measure before you launch; and treat cost, latency, privacy and accuracy as trade-offs you decide with the customer, not after.<\/span>"
         ]
       }
     ]
@@ -2592,8 +2765,125 @@ function bindGuard(){
   draw();
 }
 
+/* ============================================================
+   SYSTEM ARCHITECTURE WIDGETS
+   ============================================================ */
+const LAYERS = [
+  { n: "Experience", c: "Where people use it", parts: ["Web app", "Teams / Slack", "Email", "Mobile", "APIs for other systems"], choices: "Which channels; sign-in with company single sign-on; how answers, sources and approvals are shown.", topic: "Persona Chat front end (Backend Concept)" },
+  { n: "Gateway & guardrails", c: "The front door", parts: ["Authentication", "Input / output filters", "Model router", "Rate limits & quotas", "Fallback provider"], choices: "Which checks run on every request, and how requests are routed between models.", topic: "Guardrails (Topic 6), ask() as a mini gateway (Topic 1)" },
+  { n: "Orchestration", c: "The brain's plan", parts: ["Workflows", "Agents & tool calling", "LangGraph / LlamaIndex / CrewAI", "Human approval", "Memory"], choices: "Workflow, RAG, single agent or multi-agent; where people approve.", topic: "Chatbots (Topic 2), Tool Calling (Topic 3), RAG (Topic 5)" },
+  { n: "Knowledge & tools", c: "What it can reach", parts: ["RAG pipelines", "Vector database", "MCP servers", "ERP / CRM APIs", "SQL (read-only)", "A2A agents"], choices: "Which sources, how they're chunked and indexed, and how access rights are enforced.", topic: "MCP (Topic 4), RAG (Topic 5)" },
+  { n: "Models", c: "The engines", parts: ["Large reasoning model", "Small fast model", "Embedding model", "Proprietary or open-weight"], choices: "Which model for which job, and how easily you can switch.", topic: "Calling LLMs (Topic 1), Cosine Similarity (Concepts)" },
+  { n: "Platform & operations", c: "Running it well", parts: ["Cloud or on-premises hosting", "Tracing & observability", "Evaluation", "Cost (FinOps)", "Security & compliance"], choices: "Where it runs, how you measure quality and cost, and who is alerted when things break.", topic: "Observability (Topic 3), Guardrails (Topic 6)" }
+];
+let archSel = 2;
+const TRACE = [
+  [0, "A buyer asks in Teams: “Which suppliers charge more than 2% for late payment? Draft a reminder to the one we owe most.” They're already signed in with company single sign-on."],
+  [1, "The gateway confirms who the buyer is, the input filter scans for injection and personal data, and the router sends this multi-step task to the large model."],
+  [2, "The agent plans three steps: find penalty clauses, look up what we owe each supplier, then draft the email."],
+  [3, "RAG searches the contracts index, filtered to contracts this buyer may see, and returns the clauses that mention late-payment penalties."],
+  [3, "Through a read-only MCP server, the agent queries the ERP for outstanding invoices per supplier."],
+  [4, "The model extracts each penalty % into a Pydantic schema, ranks the suppliers, and drafts a polite reminder to the top one."],
+  [2, "Sending an email is an external action, so the graph pauses for human approval and shows the buyer the draft."],
+  [1, "The output filter checks the reply for leaks and tone; each figure carries a link to its source clause."],
+  [5, "Every step is traced: tokens, cost, latency and sources are logged, and a sample of answers goes to the evaluation queue."],
+  [0, "The buyer sees the supplier list with citations and the draft email, makes one edit, and clicks Send."]
+];
+let traceAt = 0;
+const AQ = [
+  ["data", "How sensitive is the data?", [["public", "Public or low sensitivity"], ["internal", "Internal business data"], ["regulated", "Regulated or highly confidential"]]],
+  ["task", "What should the AI do?", [["docs", "Answer questions from documents"], ["fixed", "Run a fixed, repeatable process"], ["open", "Open-ended tasks that need tools"], ["roles", "Large tasks with separate specialist roles"]]],
+  ["users", "Who will use it?", [["team", "One team (a pilot)"], ["company", "The whole company"], ["external", "External customers"]]],
+  ["team", "Who builds it?", [["biz", "Business users, few developers"], ["dev", "A team with developers"]]]
+];
+let aAns = { data: "internal", task: "docs", users: "team", team: "dev" };
+
+function archWidget(kind){
+  if (kind === "archLayers") return `<div class="widget"><div class="arch-wrap"><div class="arch-stack" role="tablist" aria-label="Architecture layers">${LAYERS.map((l, i) => `<button class="arch-l" role="tab" data-layer="${i}" aria-selected="${i === archSel}"><span class="mono">${i + 1}</span><b>${esc(l.n)}</b><small>${esc(l.c)}</small></button>`).join("")}</div><div class="arch-detail" id="archDetail" aria-live="polite"></div></div></div>`;
+  if (kind === "archTrace") return `<div class="widget"><div class="arch-wrap"><div class="arch-stack small" id="traceStack">${LAYERS.map((l, i) => `<div class="arch-l" data-tl="${i}"><span class="mono">${i + 1}</span><b>${esc(l.n)}</b></div>`).join("")}</div><div class="arch-detail"><span class="eyebrow" id="traceN"></span><p id="traceT"></p><div class="pipe-nav"><button class="btn ghost" id="traceBack">← Back</button><button class="btn" id="traceNext">Next step →</button></div></div></div></div>`;
+  if (kind === "archConfig") return `<div class="widget"><div class="cfg-q">${AQ.map(([k, q, opts]) => `<fieldset><legend>${esc(q)}</legend><div class="swap">${opts.map(([v, t]) => `<button class="chip" data-cfg="${k}" data-v="${v}" aria-pressed="${aAns[k] === v}">${esc(t)}</button>`).join("")}</div></fieldset>`).join("")}</div><div class="cfg-out" id="cfgOut" aria-live="polite"></div></div>`;
+  if (kind === "archCost") return `<div class="widget"><div class="cost-grid">
+      <label for="cUsers">Users</label><input type="number" id="cUsers" min="1" value="500">
+      <label for="cQ">Questions per user per working day</label><input type="number" id="cQ" min="0" step="1" value="5">
+      <label for="cIn">Input tokens per question <small>(prompt + RAG context)</small></label><input type="number" id="cIn" min="0" step="100" value="4000">
+      <label for="cOut">Output tokens per question</label><input type="number" id="cOut" min="0" step="50" value="500">
+      <label for="cBigIn">Large model price, $ per 1M input / output</label><span class="pair"><input type="number" id="cBigIn" min="0" step="0.1" value="3"><input type="number" id="cBigOut" min="0" step="0.1" value="15"></span>
+      <label for="cSmIn">Small model price, $ per 1M input / output</label><span class="pair"><input type="number" id="cSmIn" min="0" step="0.05" value="0.25"><input type="number" id="cSmOut" min="0" step="0.05" value="1.25"></span>
+      <label for="cRoute">Share routed to the small model <b id="cRouteV">0%</b></label><input type="range" id="cRoute" min="0" max="90" step="5" value="0">
+      <label for="cCache">Share of input tokens served from cache <small>(billed at 10%)</small> <b id="cCacheV">0%</b></label><input type="range" id="cCache" min="0" max="80" step="5" value="0">
+    </div><div class="cost-out" id="costOut" aria-live="polite"></div>
+    <p class="fig-cap"><small>Illustrative prices: change them to your provider's current rates. Assumes 22 working days a month; cache discount varies by provider.</small></p></div>`;
+  return "";
+}
+
+function bindArch(){
+  if ($("#archDetail")){
+    const draw = () => {
+      document.querySelectorAll("[data-layer]").forEach(b => b.setAttribute("aria-selected", +b.dataset.layer === archSel));
+      const l = LAYERS[archSel];
+      $("#archDetail").innerHTML = `<span class="eyebrow">Layer ${archSel + 1}</span><h4>${esc(l.n)}</h4><div class="tags">${l.parts.map(x => `<span class="tag">${esc(x)}</span>`).join("")}</div><p><b>Decisions here:</b> ${esc(l.choices)}</p><p class="fig-cap"><b>You learned it in:</b> ${esc(l.topic)}</p>`;
+    };
+    document.querySelectorAll("[data-layer]").forEach(b => b.onclick = () => { archSel = +b.dataset.layer; draw(); });
+    draw();
+  }
+  if ($("#traceT")){
+    const draw = () => {
+      const [li, t] = TRACE[traceAt];
+      document.querySelectorAll("[data-tl]").forEach(d => d.classList.toggle("on", +d.dataset.tl === li));
+      $("#traceN").textContent = `Step ${traceAt + 1} of ${TRACE.length} · ${LAYERS[li].n}`;
+      $("#traceT").textContent = t;
+      $("#traceBack").disabled = traceAt === 0;
+      $("#traceNext").textContent = traceAt === TRACE.length - 1 ? "Start again ↺" : "Next step →";
+    };
+    $("#traceBack").onclick = () => { if (traceAt > 0){ traceAt--; draw(); } };
+    $("#traceNext").onclick = () => { traceAt = traceAt === TRACE.length - 1 ? 0 : traceAt + 1; draw(); };
+    draw();
+  }
+  if ($("#cfgOut")){
+    const draw = () => {
+      document.querySelectorAll("[data-cfg]").forEach(b => b.setAttribute("aria-pressed", aAns[b.dataset.cfg] === b.dataset.v));
+      const a = aAns, rows = [];
+      rows.push(["Pattern", { docs: "RAG over your documents. Add agentic steps only if real questions fail.", fixed: "A deterministic workflow, with the LLM doing specific steps such as extraction. Predictable, cheap and easy to test.", open: "A single agent with tool calling, built as a graph so you can add checks and approvals.", roles: "Start with a single agent; move to multi-agent only for clearly separate roles once one agent proves not enough." }[a.task]]);
+      rows.push(["Where it runs", { public: "Public cloud model APIs: the fastest start.", internal: "Managed models inside your own cloud account (Bedrock, Vertex AI or Foundry), with private networking and no-training terms.", regulated: "Private cloud or on-premises with open-weight models (served with vLLM or NVIDIA NIM), or a hybrid that sends only non-sensitive work to cloud APIs." }[a.data]]);
+      rows.push(["Models", a.data === "regulated" ? "Open-weight models (Llama, Qwen, Mistral or Granite), self-hosted. Benchmark them against a proprietary model on non-sensitive samples." : "A large proprietary model for reasoning plus a small model for routing and extraction, behind a gateway so you can switch."]);
+      rows.push(["Build approach", a.team === "biz" ? (a.task === "roles" || a.task === "open" ? "Low-code for a first pilot, but this task will soon need developers: plan to move to LangGraph." : "Low-code (for example Copilot Studio or n8n) or a managed option such as Gemini File Search for the pilot; move to code when you need control.") : (a.task === "docs" ? "Start with a managed RAG service or LlamaIndex; move to LangGraph when you need control. Use AI coding tools to build faster." : "Provider SDKs with LangGraph, built faster with AI coding tools (Claude Code, Codex, Cursor).")]);
+      const g = ["Input and output filters", "logging and tracing"];
+      if (a.task === "open" || a.task === "roles") g.push("tool allowlist", "human approval for risky actions", "max-steps limit");
+      if (a.task === "fixed") g.push("schema validation (Pydantic) at each step");
+      if (a.users === "external") g.push("strict output filtering and abuse monitoring", "rate limits per user");
+      if (a.data === "regulated") g.push("personal-data redaction", "full audit trail", "data residency controls");
+      if (a.data !== "public") g.push("identity pass-through to every data source");
+      rows.push(["Must-have guardrails", g.join(", ") + "."]);
+      rows.push(["Watch out for", { team: "Define success metrics and a golden test set before you build, so the pilot ends with a clear yes or no.", company: "Scale and cost: quotas, caching, budgets per team, and a fallback model for outages.", external: "Brand and legal risk: red-team it for prompt injection and harmful outputs before launch, and keep a human escalation path." }[a.users]]);
+      $("#cfgOut").innerHTML = `<span class="eyebrow">Suggested starting architecture</span><dl class="kv">${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`;
+    };
+    document.querySelectorAll("[data-cfg]").forEach(b => b.onclick = () => { aAns[b.dataset.cfg] = b.dataset.v; draw(); });
+    draw();
+  }
+  if ($("#costOut")){
+    const v = id => Math.max(0, parseFloat($("#" + id).value) || 0);
+    const money = x => x >= 100 ? "$" + Math.round(x).toLocaleString() : "$" + x.toFixed(x >= 1 ? 2 : 4);
+    const draw = () => {
+      const users = v("cUsers"), q = v("cQ"), tin = v("cIn"), tout = v("cOut"), route = v("cRoute") / 100, cache = v("cCache") / 100;
+      $("#cRouteV").textContent = Math.round(route * 100) + "%"; $("#cCacheV").textContent = Math.round(cache * 100) + "%";
+      const perQ = (pi, po, c) => (tin * (1 - c) + tin * c * 0.1) / 1e6 * pi + tout / 1e6 * po;
+      const big = perQ(v("cBigIn"), v("cBigOut"), cache), small = perQ(v("cSmIn"), v("cSmOut"), cache);
+      const base = perQ(v("cBigIn"), v("cBigOut"), 0);
+      const per = (1 - route) * big + route * small, n = users * q * 22;
+      const monthly = per * n, baseM = base * n, save = baseM ? 1 - monthly / baseM : 0;
+      $("#costOut").innerHTML = `<div class="cost-big"><span>Monthly cost</span><b>${money(monthly)}</b></div>
+        <div class="cost-big"><span>Per question</span><b>${money(per)}</b></div>
+        <div class="cost-big"><span>Questions a month</span><b>${Math.round(n).toLocaleString()}</b></div>
+        <div class="cost-big ${save > 0.005 ? "good" : ""}"><span>Saved vs large model only, no cache</span><b>${save > 0.005 ? Math.round(save * 100) + "%" : "–"}</b></div>`;
+    };
+    document.querySelectorAll(".cost-grid input").forEach(i => i.oninput = draw);
+    draw();
+  }
+}
+
 function widget(kind, s){
   const rw = ragWidget(kind); if (rw) return rw;
+  const aw = archWidget(kind); if (aw) return aw;
   if (kind === "guardSim") return guardWidget();
   if (kind === "steps") return `<div class="widget"><span class="eyebrow">Click through the four steps</span>
     <div class="steps">${["authenticate","choose a model","send messages","read the response"].map((t,i)=>
@@ -2667,6 +2957,7 @@ function bind(){
   if ($("#quiz")) quiz(current.errors);
   bindRagTopic();
   bindGuard();
+  bindArch();
   document.querySelectorAll("[data-goto-concept]").forEach(a => a.onclick = () => { concept = a.dataset.gotoConcept; store.set("fieldnotes-concept", concept); });
 }
 
