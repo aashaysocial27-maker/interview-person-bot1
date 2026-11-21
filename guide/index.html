@@ -246,6 +246,36 @@ tr:last-child td{border-bottom:none}
 .json-try:focus{outline:2px solid var(--accent);outline-offset:0}
 .json-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
+/* cosine demos */
+.cos-demo{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:center}
+.cos-demo svg{width:100%;height:auto;background:var(--sunk);border-radius:8px}
+.cos-ctrl{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.cos-ctrl label{display:flex;justify-content:space-between;color:var(--muted)}
+.cos-ctrl label b{color:var(--fg);font:600 13px var(--mono);font-variant-numeric:tabular-nums}
+.cos-ctrl input{accent-color:var(--accent)}
+.cos-score{margin-top:8px;background:var(--accent-soft);border-radius:8px;padding:10px 12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.cos-score span{font-size:13px;color:var(--muted)}
+.cos-score b{font:600 26px var(--mono);color:var(--accent);font-variant-numeric:tabular-nums}
+.cos-score small{font-size:13px;color:var(--accent)}
+.cos-q{display:flex;flex-wrap:wrap;gap:6px}
+.cos-k{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.cos-k input{flex:0 1 200px;accent-color:var(--accent)}
+.cos-k b{font:600 14px var(--mono);color:var(--fg)}
+.cos-results{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.cos-results li{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(60px,1fr) 44px 64px;gap:10px;align-items:center;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.cos-results li.hit{border-color:var(--ok);background:var(--ok-soft)}
+.cr-bar{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden}
+.cr-bar i{display:block;height:100%;background:var(--muted);border-radius:99px;transition:width .3s}
+.cos-results li.hit .cr-bar i{background:var(--ok)}
+.cos-results b{font:600 13px var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.cr-tag{font:600 10px var(--mono);text-transform:uppercase;color:var(--ok);text-align:right}
+@media (max-width:640px){
+  .cos-demo{grid-template-columns:1fr}
+  .cos-results li{grid-template-columns:minmax(0,1fr) 44px;gap:4px 10px}
+  .cr-bar{grid-column:1/-1;grid-row:2}
+  .cr-tag{grid-column:1/-1;text-align:left}
+}
+
 /* image attachment */
 .img-attach{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 .img-attach img{display:block;width:100%;height:auto}
@@ -1062,6 +1092,7 @@ const CONCEPTS = [
   { id: "sdk", label: "SDK" },
   { id: "json", label: "JSON" },
   { id: "pydantic", label: "Pydantic" },
+  { id: "cosine", label: "Cosine Similarity" },
   { id: "backend", label: "Backend Concept" }
 ];
 let concept = store.get("fieldnotes-concept", "temperature");
@@ -1079,7 +1110,7 @@ function renderConcepts(){
   let h = `<div class="section"><div><span class="eyebrow">Learning Concepts</span><h2>Ideas behind the code</h2></div>
     <div class="subtabs" role="tablist">${CONCEPTS.map(c =>
       `<button class="subtab" role="tab" aria-selected="${c.id === concept}" data-c="${c.id}">${c.label}</button>`).join("")}</div>
-    <div class="concept-body">${concept === "sdk" ? sdkView() : concept === "pydantic" ? pydanticView() : concept === "json" ? jsonView() : concept === "backend" ? backendView() : temperatureView()}</div></div>`;
+    <div class="concept-body">${concept === "sdk" ? sdkView() : concept === "pydantic" ? pydanticView() : concept === "json" ? jsonView() : concept === "backend" ? backendView() : concept === "cosine" ? cosineView() : temperatureView()}</div></div>`;
   if (nb) h += notebookView(nb);
   $("#main").innerHTML = h;
   document.querySelectorAll("[data-c]").forEach(b => b.onclick = () => {
@@ -1087,6 +1118,7 @@ function renderConcepts(){
   bindNotebook();
   if (concept === "temperature") bindTemperature();
   if (concept === "json") bindJson();
+  if (concept === "cosine") bindCosine();
   document.querySelectorAll(".code-copy").forEach(b => b.onclick = async () => {
     const pre = b.closest(".code-block").querySelector("pre");
     try { await navigator.clipboard.writeText(pre.textContent); b.textContent = "Copied"; }
@@ -1230,6 +1262,129 @@ function startMolecules(){
 }
 
 const JSON_SAMPLE = "{\n \"color\" : \"Purple\",\n \"id\" : \"210\",\n \"composition\" : {\n\t\"R\" : 70,\n\t\"G\" : 39,\n\t\"B\" : 89\n }\n}";
+
+const COS_DOCS = [
+  ["2% fee per week if the invoice is paid late", [0.7, 0.9, 0.0, 0.1]],
+  ["Invoices are due within 30 days", [0.95, 0.2, 0.0, 0.0]],
+  ["Supplier must be paid within a month", [0.9, 0.15, 0.0, 0.05]],
+  ["Delivery delays incur a 1% charge per day", [0.1, 0.8, 0.6, 0.0]],
+  ["Goods are shipped by sea freight", [0.0, 0.1, 0.95, 0.1]],
+  ["Defective items are replaced free of charge", [0.05, 0.2, 0.1, 0.95]]
+];
+const COS_QUERIES = [
+  ["late payment penalty", [0.7, 0.8, 0.0, 0.0]],
+  ["when do we pay the supplier?", [0.95, 0.1, 0.0, 0.0]],
+  ["shipping delays", [0.0, 0.6, 0.8, 0.0]],
+  ["broken products", [0.0, 0.1, 0.1, 0.95]]
+];
+const cosSim = (a, b) => { let d = 0, na = 0, nb = 0; a.forEach((x, i) => { d += x * b[i]; na += x * x; nb += b[i] * b[i]; }); return d / (Math.sqrt(na) * Math.sqrt(nb)); };
+
+function cosineView(){
+  return `
+  <div class="prose">
+    <h3>Cosine similarity search</h3>
+    <p><b>Cosine similarity search</b> finds the stored items whose <i>meaning</i> is closest to your query, even when they don't share the same words. It's the "search" step in RAG (retrieval-augmented generation), where an AI looks up relevant documents before it answers.</p>
+  </div>
+
+  <div class="card">
+    <h3>How it works, in three steps</h3>
+    <div class="prose"><ul>
+      <li><b>1. Turn text into numbers (embeddings).</b> An embedding model converts each piece of text into a long list of numbers, called a vector. Texts with similar meaning get vectors that point in a similar direction.</li>
+      <li><b>2. Measure the angle between two vectors.</b> Cosine similarity compares direction, not length: <b>1</b> means the same direction (very similar meaning), <b>0</b> means unrelated, <b>−1</b> means opposite. With text embeddings, scores usually fall between 0 and 1.</li>
+      <li><b>3. Search.</b> Embed the user's question, compare it with every stored vector, and return the top few matches (the "top-k").</li>
+    </ul></div>
+    <div class="code-block"><div class="nb-bar"><span class="mono">formula</span><button class="nb-copy code-copy">Copy</button></div><pre>cosine_similarity(A, B) = (A · B) / (|A| × |B|)</pre></div>
+    <p class="fig-cap">The top line multiplies matching numbers and adds them up. The bottom line divides by the two lengths, which is why length doesn't count.</p>
+  </div>
+
+  <div class="card">
+    <h3>Try it: angle, not length</h3>
+    <p class="fig-cap">Turn vector B and change its length. The score only moves when the angle changes.</p>
+    <div class="cos-demo">
+      <svg id="cosSvg" viewBox="-130 -125 260 150" role="img" aria-label="Two arrows from the same point; the angle between them sets the cosine similarity"></svg>
+      <div class="cos-ctrl">
+        <label for="cosAng">Angle between A and B <b id="cosAngV">30°</b></label>
+        <input type="range" id="cosAng" min="0" max="180" step="1" value="30">
+        <label for="cosLen">Length of B <b id="cosLenV">1.0×</b></label>
+        <input type="range" id="cosLen" min="0.3" max="1.3" step="0.1" value="1">
+        <div class="cos-score"><span>Cosine similarity</span><b id="cosVal">0.87</b><small id="cosWord">similar</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Try it: a mini semantic search</h3>
+    <p class="fig-cap">Pick a question. Each clause is scored against it, and the top-k go to the LLM as context. Note how "late payment penalty" finds the 2% fee clause even though they share only the word "late".</p>
+    <div class="cos-q" role="radiogroup" aria-label="Search question">${COS_QUERIES.map((q, i) => `<button class="chip" role="radio" aria-checked="${i === 0}" aria-pressed="${i === 0}" data-q="${i}">${esc(q[0])}</button>`).join("")}</div>
+    <div class="cos-k"><label for="cosK">Top-k sent to the LLM</label><input type="range" id="cosK" min="1" max="6" value="3"><b id="cosKV">3</b></div>
+    <ol class="cos-results" id="cosResults"></ol>
+    <p class="fig-cap"><small>Illustrative numbers: each clause uses a hand-made 4-number vector (payment, lateness, shipping, quality). Real embeddings have hundreds or thousands of numbers, but the maths is the same.</small></p>
+  </div>
+
+  <div class="card">
+    <h3>Small example in Python</h3>
+    <div class="code-block"><div class="nb-bar"><span class="mono">python</span><button class="nb-copy code-copy">Copy</button></div><pre>import numpy as np
+
+def cosine(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+query   = np.array([0.9, 0.1, 0.0])   # &quot;late payment penalty&quot;
+clause1 = np.array([0.8, 0.2, 0.1])   # &quot;2% fee per week if paid late&quot;
+clause2 = np.array([0.0, 0.1, 0.9])   # &quot;goods shipped by sea freight&quot;
+
+print(cosine(query, clause1))  # ~0.98 → close match
+print(cosine(query, clause2))  # ~0.01 → unrelated</pre></div>
+  </div>
+
+  <div class="card">
+    <h3>Why it beats keyword search, and where it's used</h3>
+    <p>A search for "late payment penalty" finds "2% fee per week if paid late", even though the two share only the word "late".</p>
+    <div class="prose"><ul>
+      <li><b>RAG:</b> find the 3–5 most relevant contract clauses or policy pages, then give them to the LLM as context so it answers from your documents.</li>
+      <li><b>Vector databases</b> (Pinecone, Chroma, pgvector, FAISS) store the vectors and run this search quickly over millions of items.</li>
+      <li><b>Recommendations and duplicate detection:</b> "similar suppliers" or "this ticket looks like an earlier one".</li>
+    </ul></div>
+    <p class="analogy"><b>PM angle:</b> answer quality depends on three choices: the embedding model (it decides what "similar" means), how documents are split up (whole contracts or individual clauses), and how many matches you pass to the LLM (too few misses context; too many costs more and adds noise).</p>
+  </div>`;
+}
+
+function bindCosine(){
+  const svg = $("#cosSvg"); if (!svg) return;
+  const ang = $("#cosAng"), len = $("#cosLen");
+  const drawAngle = () => {
+    const a = +ang.value, l = +len.value, r = 110, rad = a * Math.PI / 180, c = Math.cos(rad);
+    const bx = Math.cos(rad) * r * l * 0.85, by = -Math.sin(rad) * r * l * 0.85;
+    const arc = 34, ax2 = Math.cos(rad) * arc, ay2 = -Math.sin(rad) * arc;
+    svg.innerHTML = `<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="context-stroke"/></marker></defs>
+      <line x1="-120" y1="0" x2="120" y2="0" stroke="var(--line)" stroke-width="1"/>
+      <path d="M ${arc} 0 A ${arc} ${arc} 0 0 0 ${ax2.toFixed(1)} ${ay2.toFixed(1)}" fill="none" stroke="var(--muted)" stroke-dasharray="3 3"/>
+      <line x1="0" y1="0" x2="${r * 0.85}" y2="0" stroke="var(--accent)" stroke-width="3" marker-end="url(#ah)"/>
+      <text x="${r * 0.85 - 4}" y="16" fill="var(--accent)" font-size="12" font-family="IBM Plex Mono,monospace" text-anchor="end">A</text>
+      <line x1="0" y1="0" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="var(--ok)" stroke-width="3" marker-end="url(#ah)"/>
+      <text x="${(bx * 1.1).toFixed(1)}" y="${(by * 1.1 - 4).toFixed(1)}" fill="var(--ok)" font-size="12" font-family="IBM Plex Mono,monospace" text-anchor="middle">B</text>
+      <circle cx="0" cy="0" r="3" fill="var(--fg)"/>`;
+    $("#cosAngV").textContent = a + "°"; $("#cosLenV").textContent = l.toFixed(1) + "×";
+    $("#cosVal").textContent = (Math.abs(c) < 0.005 ? 0 : c).toFixed(2);
+    $("#cosWord").textContent = c > 0.8 ? "very similar" : c > 0.4 ? "somewhat similar" : c > -0.2 ? "unrelated" : "opposite";
+  };
+  ang.oninput = drawAngle; len.oninput = drawAngle; drawAngle();
+
+  let qi = 0;
+  const k = $("#cosK");
+  const drawSearch = () => {
+    const q = COS_QUERIES[qi][1], kk = +k.value; $("#cosKV").textContent = kk;
+    const ranked = COS_DOCS.map(d => [d[0], cosSim(q, d[1])]).sort((x, y) => y[1] - x[1]);
+    $("#cosResults").innerHTML = ranked.map(([t, s], i) => `<li class="${i < kk ? "hit" : ""}">
+      <span class="cr-t">${esc(t)}</span><span class="cr-bar"><i style="width:${Math.max(0, s) * 100}%"></i></span>
+      <b>${s.toFixed(2)}</b>${i < kk ? '<span class="cr-tag">to LLM</span>' : ""}</li>`).join("");
+  };
+  document.querySelectorAll("[data-q]").forEach(b => b.onclick = () => {
+    qi = +b.dataset.q;
+    document.querySelectorAll("[data-q]").forEach(x => { const on = x === b; x.setAttribute("aria-pressed", on); x.setAttribute("aria-checked", on); });
+    drawSearch();
+  });
+  k.oninput = drawSearch; drawSearch();
+}
 
 function backendView(){
   const src = "assets/persona-chat-how-it-works.webp";
