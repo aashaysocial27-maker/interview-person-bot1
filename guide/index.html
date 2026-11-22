@@ -446,6 +446,49 @@ table.cmp{min-width:820px}
   .cost-out{grid-template-columns:1fr 1fr}
 }
 
+/* agentic pattern widgets */
+.chain{display:flex;align-items:stretch;gap:4px;flex-wrap:wrap}
+.chain-st{flex:1 1 110px;display:flex;flex-direction:column;gap:2px;text-align:left;border:1px solid var(--line);border-top:3px solid var(--accent);background:var(--surface);border-radius:6px;padding:8px 10px;min-width:0}
+.chain-st small{font-size:11px;color:var(--muted)}
+.chain-st.done{opacity:.7}
+.chain-st.on{background:var(--fg);color:var(--bg);border-color:var(--fg)} .chain-st.on small{color:var(--bg);opacity:.75}
+.chain-out{max-height:240px;overflow:auto;white-space:pre-wrap;font-size:12.5px}
+.router{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rt-node{display:flex;flex-direction:column;gap:2px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px;font-size:13px;min-width:0}
+.rt-node small{font-size:11.5px;color:var(--muted)}
+.rt-in{flex:1 1 180px;border-color:var(--accent);background:var(--accent-soft)}
+.rt-tri{flex:0 0 auto}
+.rt-routes{display:flex;flex-direction:column;gap:4px;flex:0 1 170px}
+.rt-routes .rt-node{opacity:.45}
+.rt-routes .rt-node.on{opacity:1;border-color:var(--ok);background:var(--ok-soft);color:var(--ok);box-shadow:inset 3px 0 0 var(--ok)}
+.rt-reply{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;display:flex;flex-direction:column;gap:4px}
+.rt-reply .mono{font-size:12px;color:var(--muted)} .rt-reply b{color:var(--ok)}
+.par{display:flex;flex-direction:column;gap:6px}
+.par-row{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center;font-size:13px}
+.par-track{position:relative;height:18px;background:var(--surface);border:1px solid var(--line);border-radius:4px}
+.par-track i{position:absolute;top:2px;bottom:2px;background:var(--accent);border-radius:3px;transition:left .4s,width .4s}
+.par-row.axis .par-track{border:none;background:none;height:14px}
+.par-track em{position:absolute;transform:translateX(-50%);font:11px var(--mono);color:var(--muted);font-style:normal}
+.par-track em:first-child{transform:none}
+.par-track em:last-child{transform:translateX(-100%)}
+.ref-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:12px}
+.ref-rules{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.ref-rules li{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;background:var(--surface);border:1px solid var(--line)}
+.ref-rules li span{font-weight:700;width:14px}
+.ref-rules li.ok{border-color:var(--ok)} .ref-rules li.ok span{color:var(--ok)}
+.ref-rules li.bad{border-color:var(--bad);background:var(--bad-soft)} .ref-rules li.bad span{color:var(--bad)}
+.hitl-draft{background:var(--surface);border:1px dashed var(--accent);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.hitl-draft .eyebrow{color:var(--accent)}
+.hitl-log{margin:0 0 8px;padding-left:20px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+@media (max-width:640px){
+  .ref-grid{grid-template-columns:1fr}
+  .router{flex-direction:column;align-items:stretch}
+  .rt-in,.rt-tri,.rt-routes{flex:0 0 auto}
+  .router .gs-arrow{transform:rotate(90deg);align-self:center}
+  .rt-routes{flex-basis:auto}
+  .par-row{grid-template-columns:80px 1fr}
+}
+
 /* image attachment */
 .img-attach{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 .img-attach img{display:block;width:100%;height:auto}
@@ -1296,6 +1339,272 @@ const SESSIONS = [
     ]
   },
   {
+    "id": "agentic-patterns",
+    "label": "Agentic Patterns",
+    "title": "Agentic Patterns",
+    "intro": "How AI agents work together: seven patterns for orchestrating agents, built with the OpenAI Agents SDK.",
+    "lessons": [
+      {
+        "title": "Why agent patterns?",
+        "body": [
+          "Agents are good at doing <b>one task at a time<\/b>, but not our tasks end to end.",
+          "Think of a company full of intelligent people who can't collaborate: nothing gets finished. AI agents are the same. We can build any number of them; what matters is <b>how they work together, how they share context, and how they're used<\/b>.",
+          "<b>Agent patterns<\/b> are the proven ways to orchestrate different agents. In this topic we build seven of them with the <b>OpenAI Agents SDK<\/b>. It's made by OpenAI, but it works with any model, including Gemini, Claude and Groq, through a helper called LiteLLM."
+        ],
+        "diagram": {
+          "label": "From one agent to a team",
+          "cols": [
+            [
+              {
+                "t": "One agent",
+                "s": "does one task well",
+                "k": "ghost"
+              }
+            ],
+            [
+              {
+                "t": "Agent pattern",
+                "s": "who does what, in what order, sharing which context",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "A team of agents",
+                "s": "finishes the whole job",
+                "k": "ok"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "title": "The OpenAI Agents SDK in 2 minutes",
+        "body": [
+          "The SDK has very few pieces. That's its whole idea:",
+          "<div class=\"tbl\"><table><thead><tr><th>Piece<\/th><th>What it is<\/th><th>Used in<\/th><\/tr><\/thead><tbody><tr><td><code>Agent<\/code><\/td><td>A model + instructions (+ tools)<\/td><td>Every pattern<\/td><\/tr><tr><td><code>Runner<\/code><\/td><td>Runs an agent and gives back the result<\/td><td>Every pattern<\/td><\/tr><tr><td><code>@function_tool<\/code><\/td><td>Turns a Python function into a tool<\/td><td>ReAct, human in the loop<\/td><\/tr><tr><td><code>handoffs<\/code><\/td><td>An agent passes the conversation to another agent<\/td><td>Router<\/td><\/tr><tr><td><code>agent.as_tool()<\/code><\/td><td>An agent used as a tool by another agent<\/td><td>Orchestrator–worker<\/td><\/tr><\/tbody><\/table><\/div>",
+          "<div class=\"code-block\"><div class=\"nb-bar\"><span class=\"mono\">python<\/span><button class=\"nb-copy code-copy\">Copy<\/button><\/div><pre># pip install &quot;openai-agents[litellm]&quot;\nfrom agents import Agent, Runner\n\nexplainer = Agent(\n    name=&quot;Explainer&quot;,\n    model=&quot;litellm/gemini/gemini-3.8-flash&quot;,   # provider/model through LiteLLM\n    instructions=&quot;You explain tech ideas in simple words, in 2 lines max.&quot;,   # the system prompt\n)\n\nresult = await Runner.run(explainer, &quot;What is an AI agent?&quot;)   # Runner.run_sync(...) outside notebooks\nprint(result.final_output)<\/pre><\/div>",
+          "<b>Workflow or agent?<\/b> The patterns sit on a line between the two:",
+          "<div class=\"tbl\"><table><thead><tr><th><\/th><th>Workflow<\/th><th>Agent<\/th><\/tr><\/thead><tbody><tr><td>Who decides the steps?<\/td><td><b>You<\/b>, in code<\/td><td><b>The LLM<\/b>, while it runs<\/td><\/tr><tr><td>Path<\/td><td>Same every time<\/td><td>Changes for each input<\/td><\/tr><tr><td>Easy to test?<\/td><td>Yes<\/td><td>Harder<\/td><\/tr><tr><td>Good for<\/td><td>Tasks you can draw on a whiteboard<\/td><td>Open-ended tasks<\/td><\/tr><\/tbody><\/table><\/div>",
+          "<b>Rule:<\/b> start with the simplest pattern that works. Clients care that it's reliable, not that it's “agentic”."
+        ]
+      },
+      {
+        "title": "Pattern 1: Prompt chaining",
+        "body": [
+          "Break a big task into small steps. <b>Each step's output is the next step's input.<\/b>",
+          "Example: you have a messy transcript from a client meeting and want a follow-up email: notes → summarise → write email → polish → final email. Click each step to see what it produced in your notebook:"
+        ],
+        "widget": "patChain",
+        "after": [
+          "Why not one big prompt? Small steps are <b>easier to test and fix<\/b>: if the email is wrong, you can see exactly which step went wrong. And because it's plain Python, adding a check between steps is just an <code>if<\/code>.",
+          "In the office, the same idea runs a customer-service flow: the chatbot tries to solve the issue → if not solved, escalate to level 2 → then to a human.",
+          "<span class=\"link-line\"><b>Use it when:<\/b> the task has clear, fixed steps: reports, emails, document processing.<\/span>"
+        ]
+      },
+      {
+        "title": "Pattern 2: Router",
+        "body": [
+          "A customer-service agent gets all kinds of issues. A refund question should go to the payments team; a login problem should go to the technical team. The <b>router (triage) agent<\/b> looks at what the user is asking and routes it:",
+          "<ul class=\"plain-list\"><li>“I have been charged twice” → billing (refund) team<\/li><li>“I'm facing a login issue” → technical team<\/li><\/ul>",
+          "Try the real tickets from your notebook:"
+        ],
+        "widget": "patRouter",
+        "after": [
+          "<b>Things to remember when you build each agent:<\/b><ul class=\"plain-list\"><li><b><code>handoff_description<\/code><\/b>: when this agent should be involved. You're setting the context, so the router picks the right agent and passes the query on.<\/li><li><b><code>instructions<\/code><\/b>: the system instructions it follows.<\/li><li><b><code>tools<\/code><\/b>: what access it has. Billing can have a payments-database tool; general support can use File Search over the help docs (Topic 5). Every agent gets its own hands and legs.<\/li><\/ul>",
+          "The router has its own instructions and the ability to hand off to the other agents with <code>handoffs=[...]<\/code>. The SDK's handoff means the triage agent <b>hands the conversation over<\/b> to one specialist, who then answers the customer directly. <code>result.last_agent<\/code> tells you which agent gave the final answer, so you can always see where each ticket went.",
+          "<b>Cost trick:<\/b> picking a team is an easy job, so the triage agent runs on a smaller, cheaper model (<code>ROUTE_MODEL<\/code>).",
+          "<div class=\"code-block\"><div class=\"nb-bar\"><span class=\"mono\">python<\/span><button class=\"nb-copy code-copy\">Copy<\/button><\/div><pre>billing_agent = Agent(\n    name=&quot;Billing Support&quot;, model=MODEL,\n    handoff_description=&quot;Payments, double charges, refunds and coupons&quot;,   # WHEN to pick this agent\n    instructions=&quot;You are FreshKart&#x27;s billing support. Reply politely in 2 lines. Never promise a refund amount.&quot;,\n)\n# ...technical_agent and general_agent are built the same way\n\ntriage_agent = Agent(\n    name=&quot;Triage&quot;,\n    model=&quot;litellm/gemini/gemini-3.5-flash-lite&quot;,          # cheap model: routing is easy\n    instructions=&quot;Decide which FreshKart team should handle this ticket, and hand off to them. Don&#x27;t answer yourself.&quot;,\n    handoffs=[billing_agent, technical_agent, general_agent],\n)\n\nresult = await Runner.run(triage_agent, &quot;I was charged twice for my order yesterday!&quot;)\nprint(result.last_agent.name)   # Billing Support<\/pre><\/div>",
+          "<span class=\"link-line\"><b>Use it when:<\/b> different kinds of input need different handling, or easy questions should go to a cheap model and hard ones to a big model.<\/span>"
+        ]
+      },
+      {
+        "title": "Pattern 3: Parallel calls",
+        "body": [
+          "When activities <b>don't depend on each other<\/b>, run them at the same time. For each customer review, three agents work at once: one analyses the sentiment, one lists the issues, one drafts the email response.",
+          "Run one after another, it takes a long time; run all together, it takes about as long as the slowest one. We've cut the <b>latency<\/b>. Compare:"
+        ],
+        "widget": "patParallel",
+        "after": [
+          "<div class=\"code-block\"><div class=\"nb-bar\"><span class=\"mono\">python<\/span><button class=\"nb-copy code-copy\">Copy<\/button><\/div><pre>import asyncio\n\nsentiment, issues, reply = await asyncio.gather(     # all three at the same time\n    Runner.run(sentiment_agent, review),\n    Runner.run(issues_agent, review),\n    Runner.run(reply_agent, review),\n)<\/pre><\/div>",
+          "The combine step doesn't need an LLM: it's a normal f-string. Plain Python is faster, cheaper and never makes things up, so use an LLM only where you need one.",
+          "<span class=\"link-line\"><b>Use it when:<\/b> you have independent checks or views of the same input. Also for <b>voting<\/b>: ask three times and take the majority answer.<\/span>"
+        ]
+      },
+      {
+        "title": "Pattern 4: ReAct agent",
+        "body": [
+          "The ReAct agent is a <b>tool-calling agent<\/b> (Topic 3). So far <b>we<\/b> decided every step (except the router's one choice). Now we let the <b>LLM decide<\/b>: give it 10 tools, and it works out which tool fits which question.",
+          "<b>ReAct<\/b> = <b>Re<\/b>ason + <b>Act<\/b>. The LLM works in a loop: think → act (call a tool) → observe the result → think again, until it has enough to answer. Step through the Tokyo trip question from your notebook:"
+        ],
+        "widget": "patReact",
+        "after": [
+          "Good news: <b>every SDK agent with tools is already a ReAct agent.<\/b> <code>Runner<\/code> runs the loop for you. We never wrote the order: the LLM chose which tools, with which inputs, and when to stop.",
+          "<b>Safety net:<\/b> <code>Runner<\/code> stops after <b>10 turns<\/b> by default. Change it with <code>Runner.run(agent, question, max_turns=5)<\/code>, so a confused agent can't loop forever (the max-steps guardrail in Topic 7).",
+          "<span class=\"link-line\"><b>Use it when:<\/b> you can't know the steps in advance: research, debugging, open questions. Watch out: agents are less predictable and cost more, so always test with real examples before going live.<\/span>"
+        ]
+      },
+      {
+        "title": "Pattern 5: Orchestrator–worker",
+        "body": [
+          "A lead LLM (the <b>orchestrator<\/b>) looks at the task, splits it into pieces, and hands each piece to the right <b>worker<\/b>. Then it combines their work."
+        ],
+        "diagram": {
+          "label": "Writing a proposal for FreshKart's AI support bot",
+          "cols": [
+            [
+              {
+                "t": "Task",
+                "s": "write a proposal",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "Proposal lead",
+                "s": "orchestrator: splits the work"
+              }
+            ],
+            [
+              {
+                "t": "Problem analyst",
+                "s": "the problem and its cost"
+              },
+              {
+                "t": "Solution architect",
+                "s": "the technical design"
+              },
+              {
+                "t": "Project planner",
+                "s": "timeline, team, cost"
+              }
+            ],
+            [
+              {
+                "t": "Lead combines",
+                "s": "one proposal, a section each",
+                "k": "ok"
+              }
+            ]
+          ]
+        },
+        "after": [
+          "How is this different from the router?",
+          "<div class=\"tbl\"><table><thead><tr><th><\/th><th>Router: <code>handoffs=[...]<\/code><\/th><th>Orchestrator: <code>agent.as_tool()<\/code><\/th><\/tr><\/thead><tbody><tr><td>Who answers the user?<\/td><td>The specialist <b>takes over<\/b><\/td><td>The leader <b>stays in charge<\/b><\/td><\/tr><tr><td>How many specialists?<\/td><td>Usually one<\/td><td>As many as needed<\/td><\/tr><tr><td>Good for<\/td><td>Routing a conversation<\/td><td>Splitting a task and combining<\/td><\/tr><\/tbody><\/table><\/div>",
+          "In the SDK, you turn each worker into a tool with <code>agent.as_tool(tool_name=..., tool_description=...)<\/code>. The leader is a normal ReAct agent whose tools are other agents; the description is what it reads to decide who does what.",
+          "You see this pattern whenever you work with <b>Claude Code or Codex<\/b>: a capable, more expensive model plans and oversees, while cheaper models (or sub-agents) do the pieces, and the lead checks their work.",
+          "<span class=\"link-line\"><b>Use it when:<\/b> a task splits into parts that need different experts, but you don't know the exact parts until you see the input.<\/span>"
+        ]
+      },
+      {
+        "title": "Pattern 6: Reflection",
+        "body": [
+          "One LLM <b>writes<\/b>, another LLM <b>checks<\/b>. If the check fails, the writer tries again with the feedback, like a junior and a senior reviewing work. The checker returns structured output (Pydantic: <code>is_good<\/code> and <code>feedback<\/code>), and a plain Python <code>for<\/code> loop allows at most 3 tries.",
+          "Your notebook's task: a cold email to FreshKart's CEO that follows five house rules. See both attempts:"
+        ],
+        "widget": "patReflect",
+        "after": [
+          "The writer never sees the rules. It only gets the checker's feedback, and fixes what it's told. If the checker passes it first time, make the rules stricter (for example “under 40 words”) to see the loop. If all 3 tries fail, you still get the last draft, so a person can finish it.",
+          "<b>Why does this work?<\/b> Checking is easier than writing. An LLM that misses a rule while writing often spots it when it's only asked to check. It's also the simplest way to say “if it failed, try again”.",
+          "<span class=\"link-line\"><b>Use it when:<\/b> there are clear rules for “good”: word limits, required facts, code that must pass tests.<\/span>"
+        ]
+      },
+      {
+        "title": "Pattern 7: Human in the loop",
+        "body": [
+          "Some actions are too important to let AI do alone: emailing a client, issuing a refund, deleting data. So within your agentic workflow you include a <b>pause<\/b>: the agent asks a person, and continues based on the answer.",
+          "In the SDK you mark the risky tool with <code>@function_tool(needs_approval=True)<\/code>. The agent can <b>ask<\/b> to use it, but it won't run until a person says yes. Play the manager:"
+        ],
+        "widget": "patHitl",
+        "after": [
+          "<div class=\"code-block\"><div class=\"nb-bar\"><span class=\"mono\">python<\/span><button class=\"nb-copy code-copy\">Copy<\/button><\/div><pre>@function_tool(needs_approval=True)          # the run pauses before this tool runs\ndef send_reply(message: str) -&gt; str:\n    &quot;&quot;&quot;Send a reply message to the customer.&quot;&quot;&quot;\n    return &quot;Reply sent&quot;\n\nresult = await Runner.run(support_agent, complaint)\nwhile result.interruptions:                   # tool calls waiting for a person\n    state = result.to_state()\n    for item in result.interruptions:\n        if input(&quot;Send? yes / what to change: &quot;) == &quot;yes&quot;:\n            state.approve(item)\n        else:\n            state.reject(item, rejection_message=&quot;The manager wants this changed&quot;)\n    result = await Runner.run(support_agent, state)   # carry on from the pause<\/pre><\/div>",
+          "In a real app the pause could last hours (a manager approves on Slack, say): save the paused run with <code>state.to_string()<\/code> and resume it later.",
+          "AI agents are great at the work, but you need human intervention where a task is specialised or high-stakes: approving a large refund, signing off a contract clause, or anything with legal or medical consequences.",
+          "<span class=\"link-line\"><b>Use it when:<\/b> an action is costly, can't be undone, or faces a customer. It's often what makes a client say yes to going live.<\/span>"
+        ]
+      },
+      {
+        "title": "Which pattern when?",
+        "body": [
+          "<div class=\"tbl\"><table><thead><tr><th>Pattern<\/th><th>In the OpenAI Agents SDK<\/th><th>Use it when<\/th><th>FreshKart example<\/th><\/tr><\/thead><tbody><tr><td>Prompt chaining<\/td><td><code>Runner.run<\/code> one after another<\/td><td>Fixed steps, one after another<\/td><td>Meeting notes → email<\/td><\/tr><tr><td>Router<\/td><td><code>handoffs=[...]<\/code><\/td><td>Different inputs need different handling<\/td><td>Ticket → right team<\/td><\/tr><tr><td>Parallel calls<\/td><td><code>asyncio.gather<\/code><\/td><td>Independent jobs on the same input<\/td><td>Review → sentiment + issues + reply<\/td><\/tr><tr><td>ReAct agent<\/td><td><code>Agent<\/code> with <code>tools<\/code><\/td><td>Steps aren't known in advance<\/td><td>Travel questions with live tools<\/td><\/tr><tr><td>Orchestrator–worker<\/td><td><code>agent.as_tool()<\/code><\/td><td>Task splits into parts that need different experts<\/td><td>Proposal from 3 specialists<\/td><\/tr><tr><td>Reflection<\/td><td><code>output_type<\/code> + a <code>for<\/code> loop<\/td><td>Clear rules for “good”<\/td><td>Cold email that follows the rules<\/td><\/tr><tr><td>Human in the loop<\/td><td><code>@function_tool(needs_approval=True)<\/code><\/td><td>Risky or customer-facing actions<\/td><td>Approve reply before sending<\/td><\/tr><\/tbody><\/table><\/div>",
+          "Test yourself on procurement situations:"
+        ],
+        "widget": "patQuiz"
+      },
+      {
+        "title": "Patterns combine: the FreshKart bot",
+        "body": [
+          "Real systems mix patterns. A real FreshKart bot is a <b>router<\/b> that sends “where is my order” tickets to a <b>ReAct agent<\/b>, with a <b>human in the loop<\/b> before any refund:"
+        ],
+        "diagram": {
+          "label": "Three patterns in one bot",
+          "cols": [
+            [
+              {
+                "t": "Ticket",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "Router",
+                "s": "cheap model triages"
+              }
+            ],
+            [
+              {
+                "t": "Order agent (ReAct)",
+                "s": "tools: order lookup, courier tracking"
+              },
+              {
+                "t": "Billing / tech / general",
+                "s": "specialists"
+              }
+            ],
+            [
+              {
+                "t": "Human approval",
+                "s": "before any refund"
+              }
+            ],
+            [
+              {
+                "t": "Reply",
+                "k": "ok"
+              }
+            ]
+          ]
+        },
+        "after": [
+          "Everything around the model that makes this reliable enough for a client (the step limits, approvals, checks, logging and tests) is called the <b>harness<\/b>. Guardrails (Topic 7) and System Architecture (Topic 8) are how you design it."
+        ]
+      }
+    ],
+    "notebooks": [
+      {
+        "file": "Agentic_Patterns.ipynb",
+        "path": "guide/Agentic_Patterns.ipynb",
+        "kb": 75,
+        "cells": 68,
+        "code": 31,
+        "outputs": true,
+        "sections": [
+          "1. Setup (Gemini, OpenAI, Claude and Groq through LiteLLM)",
+          "2. The SDK in 2 minutes",
+          "3. Workflows vs agents",
+          "4. Prompt chaining",
+          "5. Router",
+          "6. Parallel calls",
+          "7. ReAct agent",
+          "8. Orchestrator–worker",
+          "9. Reflection",
+          "10. Human in the loop",
+          "11. Which pattern when?"
+        ]
+      }
+    ]
+  },
+  {
     "id": "guardrails",
     "label": "Guardrails",
     "title": "Guardrails for AI agents",
@@ -1513,11 +1822,11 @@ const SESSIONS = [
       {
         "title": "Decision 7: security and compliance",
         "body": [
-          "<ul class=\"plain-list\"><li><b>Identity:<\/b> single sign-on, role-based access, and identity pass-through to every tool and data source.<\/li><li><b>Guardrails:<\/b> the six gates from Topic 6, sized to the risk of each action.<\/li><li><b>Data handling:<\/b> classify data, redact personal data before it leaves your boundary, and use provider terms that exclude training on your data.<\/li><li><b>Secrets:<\/b> keys in a vault, never in code or notebooks (the Notion token lesson from Topic 4).<\/li><li><b>Audit trail:<\/b> log who asked what, what the AI saw and did, and who approved it.<\/li><li><b>Regulation:<\/b> map the use case to the laws that apply, such as GDPR in Europe, India's Digital Personal Data Protection Act, and the EU AI Act's risk categories.<\/li><\/ul>",
+          "<ul class=\"plain-list\"><li><b>Identity:<\/b> single sign-on, role-based access, and identity pass-through to every tool and data source.<\/li><li><b>Guardrails:<\/b> the six gates from Topic 7, sized to the risk of each action.<\/li><li><b>Data handling:<\/b> classify data, redact personal data before it leaves your boundary, and use provider terms that exclude training on your data.<\/li><li><b>Secrets:<\/b> keys in a vault, never in code or notebooks (the Notion token lesson from Topic 4).<\/li><li><b>Audit trail:<\/b> log who asked what, what the AI saw and did, and who approved it.<\/li><li><b>Regulation:<\/b> map the use case to the laws that apply, such as GDPR in Europe, India's Digital Personal Data Protection Act, and the EU AI Act's risk categories.<\/li><\/ul>",
           "Bring the customer's security and legal teams in at the design stage. Retrofitting compliance after a pilot is the most common reason enterprise AI projects stall."
         ],
         "after": [
-          "<span class=\"link-line\"><b>Builds on:<\/b> keys and secrets (Topic 1), Guardrails (Topic 6).<\/span>"
+          "<span class=\"link-line\"><b>Builds on:<\/b> keys and secrets (Topic 1), Guardrails (Topic 7).<\/span>"
         ]
       },
       {
@@ -1531,7 +1840,7 @@ const SESSIONS = [
         "title": "Decision 9: cost and token optimisation (FinOps)",
         "body": [
           "Cost = number of requests × tokens per request × price per token. Each lever cuts one of those:",
-          "<ul class=\"plain-list\"><li><b>Route<\/b> easy requests to a small model (often 10–20× cheaper).<\/li><li><b>Trim context:<\/b> smaller chunks and a sensible top-k (Topic 5) mean fewer input tokens.<\/li><li><b>Cache<\/b> repeated context and answers.<\/li><li><b>Batch<\/b> non-urgent work; many providers discount batch jobs.<\/li><li><b>Cap<\/b> steps and retries (Topic 6), and set monthly budgets per team with alerts.<\/li><\/ul>",
+          "<ul class=\"plain-list\"><li><b>Route<\/b> easy requests to a small model (often 10–20× cheaper).<\/li><li><b>Trim context:<\/b> smaller chunks and a sensible top-k (Topic 5) mean fewer input tokens.<\/li><li><b>Cache<\/b> repeated context and answers.<\/li><li><b>Batch<\/b> non-urgent work; many providers discount batch jobs.<\/li><li><b>Cap<\/b> steps and retries (Topic 7), and set monthly budgets per team with alerts.<\/li><\/ul>",
           "Try the levers on an example:"
         ],
         "widget": "archCost"
@@ -2770,11 +3079,11 @@ function bindGuard(){
    ============================================================ */
 const LAYERS = [
   { n: "Experience", c: "Where people use it", parts: ["Web app", "Teams / Slack", "Email", "Mobile", "APIs for other systems"], choices: "Which channels; sign-in with company single sign-on; how answers, sources and approvals are shown.", topic: "Persona Chat front end (Backend Concept)" },
-  { n: "Gateway & guardrails", c: "The front door", parts: ["Authentication", "Input / output filters", "Model router", "Rate limits & quotas", "Fallback provider"], choices: "Which checks run on every request, and how requests are routed between models.", topic: "Guardrails (Topic 6), ask() as a mini gateway (Topic 1)" },
+  { n: "Gateway & guardrails", c: "The front door", parts: ["Authentication", "Input / output filters", "Model router", "Rate limits & quotas", "Fallback provider"], choices: "Which checks run on every request, and how requests are routed between models.", topic: "Guardrails (Topic 7), ask() as a mini gateway (Topic 1)" },
   { n: "Orchestration", c: "The brain's plan", parts: ["Workflows", "Agents & tool calling", "LangGraph / LlamaIndex / CrewAI", "Human approval", "Memory"], choices: "Workflow, RAG, single agent or multi-agent; where people approve.", topic: "Chatbots (Topic 2), Tool Calling (Topic 3), RAG (Topic 5)" },
   { n: "Knowledge & tools", c: "What it can reach", parts: ["RAG pipelines", "Vector database", "MCP servers", "ERP / CRM APIs", "SQL (read-only)", "A2A agents"], choices: "Which sources, how they're chunked and indexed, and how access rights are enforced.", topic: "MCP (Topic 4), RAG (Topic 5)" },
   { n: "Models", c: "The engines", parts: ["Large reasoning model", "Small fast model", "Embedding model", "Proprietary or open-weight"], choices: "Which model for which job, and how easily you can switch.", topic: "Calling LLMs (Topic 1), Cosine Similarity (Concepts)" },
-  { n: "Platform & operations", c: "Running it well", parts: ["Cloud or on-premises hosting", "Tracing & observability", "Evaluation", "Cost (FinOps)", "Security & compliance"], choices: "Where it runs, how you measure quality and cost, and who is alerted when things break.", topic: "Observability (Topic 3), Guardrails (Topic 6)" }
+  { n: "Platform & operations", c: "Running it well", parts: ["Cloud or on-premises hosting", "Tracing & observability", "Evaluation", "Cost (FinOps)", "Security & compliance"], choices: "Where it runs, how you measure quality and cost, and who is alerted when things break.", topic: "Observability (Topic 3), Guardrails (Topic 7)" }
 ];
 let archSel = 2;
 const TRACE = [
@@ -2881,8 +3190,142 @@ function bindArch(){
   }
 }
 
+/* ============================================================
+   AGENTIC PATTERN WIDGETS (outputs from the Agentic_Patterns notebook)
+   ============================================================ */
+const CHAIN = [
+  ["Notes", "Input", "call w/ Priya (CTO, FreshKart) + Arjun (ops head). 45 min.\n- support team gets ~2000 tickets/day, 60% are \"where is my order\"\n- want AI to answer those automatically, rest go to humans\n- they use Freshdesk. Priya to share API access by Friday\n- we send a demo by 15th. Arjun worried about wrong refund promises\n- budget approval needs their CEO, meeting next month"],
+  ["Summarise", "Summariser agent", "• FreshKart aims to automate \"where is my order\" inquiries (60% of their 2,000 daily Freshdesk tickets) using AI, routing other issues to human agents.\n• Operations raised a concern about the AI making incorrect refund commitments.\n• Progress depends on a demo ahead of a CEO budget meeting next month.\n\nAction items:\n• Priya - Share Freshdesk API access - by Friday\n• Our team - Send product demo - by the 15th"],
+  ["Write email", "Email writer agent", "Subject: Great speaking today! Next steps for FreshKart\n\nHi Priya,\n\nThank you for taking the time to chat today! It was great learning more about FreshKart's goals to automate order tracking inquiries while ensuring strict guardrails are in place around refunds…\n\nAction items:\n• Priya: Share Freshdesk API access by Friday\n• Our team: Send over the tailored product demo by the 15th"],
+  ["Polish", "Polisher agent", "Subject: Great speaking today | Next steps for FreshKart\n\nHi Priya,\n\nThank you for taking the time to connect today! It was wonderful learning more about FreshKart's goals to automate order tracking while keeping strict guardrails around refunds.\n\nTo keep our momentum going ahead of your CEO budget meeting next month, here are our agreed-upon next steps:\n• Priya: Share Freshdesk API access by Friday\n• Our team: Deliver the tailored product demo by the 15th\n\nWarm regards"]
+];
+let chainAt = 3;
+const ROUTES = ["Billing Support", "Tech Support", "General Support"];
+const TICKETS = [
+  ["I was charged twice for my order yesterday!", 0, "I sincerely apologize for the inconvenience caused by the duplicate charge on your order. Please share your order ID with us, and our team will promptly investigate the transaction."],
+  ["The app crashes every time I open my cart.", 1, "Here are 3 quick steps to fix the cart crash: update the app; clear the app cache; reinstall the app."],
+  ["Do you deliver to Whitefield, Bangalore?", 2, "Yes, we deliver across Whitefield, Bangalore! Enter your pincode on our app or website to view available delivery slots."],
+  ["I have paid extra for order", 0, "Thank you for reaching out to FreshKart billing support, and we apologize for the inconvenience. Please share your order ID and payment details so we can look into this right away."]
+];
+let tkSel = 0;
+let parMode = "parallel";
+const REACT = [
+  ["think", "The user wants two things: 50,000 rupees in yen, and what to pack for Tokyo next week. I don't know today's rate or next week's weather."],
+  ["act", "convert_currency({\"from_currency\": \"INR\", \"amount\": 50000, \"to_currency\": \"JPY\"})"],
+  ["act", "get_weather({\"city\": \"Tokyo\"})  ← called at the same time as the first tool"],
+  ["observe", "Today's exchange rate comes back from Frankfurter, and a 7-day forecast (daily low/high and rain) from Open-Meteo."],
+  ["think", "I now have both facts. No more tools needed."],
+  ["answer", "Replies in markdown: the yen amount, plus a packing list matched to next week's temperatures and rain."]
+];
+let reactAt = -1;
+const RULES = ["Under 70 words", "Mentions FreshKart by name", "Includes one number (a stat or a result)", "Ends with a question", "No hype words (“revolutionary”, “cutting-edge”, “game-changer”)"];
+const ATTEMPTS = [
+  { ok: [false, true, false, false, true], fb: "The email fails multiple rules: 1. Word count: around 74–79 words, not under 70. 2. It contains two numbers ('60%+' and '5-minute') instead of one. 3. It ends with a sign-off rather than a question.", text: "(first draft: over 70 words, two numbers, ends with a signature)" },
+  { ok: [true, true, true, true, true], fb: "Checker: good ✅", text: "Subject: AI support for FreshKart\n\nHi [First Name],\n\nWith FreshKart's growth, your team is likely buried in repetitive tickets about delivery delays and missing items.\n\nWe build custom AI agents that automatically resolve 60% of frontline support tickets without human intervention, maintaining high CSAT.\n\nWorth exploring how much support overhead we could take off your plate this week?" }
+];
+let refAt = 0;
+const HITL_DRAFTS = {
+  first: "We sincerely apologize for the delay and for the condition of your ice cream. We understand your frustration. Could you please share your order ID so we can look into this right away and assist you with a resolution?",
+  shorter: "So sorry your order was late and the ice cream melted. Please share your order ID and we'll sort this out right away.",
+  coupon: "We're very sorry your order arrived late and the ice cream had melted. Please share your order ID so we can look into it, and here's a 10% coupon for your next order as an apology."
+};
+let hitl = { draft: "first", status: "waiting", log: [] };
+const PQ = [
+  ["Turn each new supplier contract into a 5-field summary, then email it to the category manager.", 0],
+  ["Send every email arriving in the procurement inbox to sourcing, accounts payable or legal.", 1],
+  ["Check one invoice for tax errors, a duplicate payment and a missing purchase order, all at once.", 2],
+  ["Answer “How much have we spent with Acme this year, and is it over budget?” using ERP and budget tools.", 3],
+  ["Write an RFP response with sections from legal, technical and pricing specialists, then merge them.", 4],
+  ["Draft a supplier email that must follow five house-style rules before it goes out.", 5],
+  ["Raise purchase orders automatically, but anything above $10,000 needs a manager's OK.", 6]
+];
+const PNAMES = ["Prompt chaining", "Router", "Parallel calls", "ReAct agent", "Orchestrator–worker", "Reflection", "Human in the loop"];
+
+function patWidget(kind){
+  if (kind === "patChain") return `<div class="widget"><div class="chain">${CHAIN.map((c, i) => `<button class="chain-st" data-chain="${i}"><b>${esc(c[0])}</b><small>${esc(c[1])}</small></button>`).join('<span class="gs-arrow" aria-hidden="true">→</span>')}</div><pre class="chain-out" id="chainOut"></pre><p class="fig-cap" id="chainCap"></p></div>`;
+  if (kind === "patRouter") return `<div class="widget"><span class="eyebrow">Pick a ticket</span><div class="gs-q">${TICKETS.map((t, i) => `<button class="chip" data-tk="${i}" aria-pressed="${i === tkSel}">${esc(t[0])}</button>`).join("")}</div>
+    <div class="router"><div class="rt-node rt-in" id="rtIn"></div><span class="gs-arrow">→</span><div class="rt-node rt-tri"><b>Triage</b><small>cheap model · hands off</small></div><span class="gs-arrow">→</span><div class="rt-routes">${ROUTES.map((r, i) => `<div class="rt-node" data-rt="${i}"><b>${esc(r)}</b></div>`).join("")}</div></div>
+    <div class="rt-reply" id="rtReply"></div></div>`;
+  if (kind === "patParallel") return `<div class="widget"><div class="swap"><button class="chip" data-par="sequential" aria-pressed="false">One after another</button><button class="chip" data-par="parallel" aria-pressed="true">All at once (asyncio.gather)</button></div>
+    <div class="par" id="par"></div><p class="msg" id="parSum"></p><p class="fig-cap"><small>Each call takes about 5 seconds here; your notebook's parallel run took 5.3 seconds for all three.</small></p></div>`;
+  if (kind === "patReact") return `<div class="widget"><span class="eyebrow">“I'm visiting a client in Tokyo next week with 50,000 rupees. How many yen is that, and what should I pack?”</span><ol class="agent-steps" id="reactSteps"></ol><div class="pipe-nav"><button class="btn" id="reactNext">Step through →</button><button class="btn ghost" id="reactAll">Show all</button></div></div>`;
+  if (kind === "patReflect") return `<div class="widget"><div class="swap"><button class="chip" data-att="0" aria-pressed="true">Attempt 1</button><button class="chip" data-att="1" aria-pressed="false">Attempt 2</button></div>
+    <div class="ref-grid"><div><span class="eyebrow">Checker's rules</span><ul class="ref-rules" id="refRules"></ul></div><div><span class="eyebrow">Writer's draft</span><pre class="chain-out" id="refText"></pre></div></div><div class="gs-res" id="refFb"></div></div>`;
+  if (kind === "patHitl") return `<div class="widget"><span class="eyebrow">Customer: “My order came 2 hours late and the ice cream had melted. I want a full refund NOW.”</span><div id="hitlBox"></div></div>`;
+  if (kind === "patQuiz") return `<div class="widget quiz"><span class="eyebrow">Which pattern fits?</span><div class="quiz-q" id="pqQ"></div><div class="opts" id="pqO"></div><div class="quiz-foot"><span>Score <b id="pqS">0</b> / <b id="pqT">0</b></span><button class="btn" id="pqN" disabled>Next situation</button></div></div>`;
+  return "";
+}
+
+function bindPatterns(){
+  if ($("#chainOut")){
+    const draw = () => { document.querySelectorAll("[data-chain]").forEach(b => { const i = +b.dataset.chain; b.classList.toggle("on", i === chainAt); b.classList.toggle("done", i < chainAt); });
+      $("#chainOut").textContent = CHAIN[chainAt][2];
+      $("#chainCap").textContent = chainAt === 0 ? "The raw meeting notes: the input to step 1." : `Output of “${CHAIN[chainAt][0]}”, which becomes the input of ${chainAt < CHAIN.length - 1 ? "“" + CHAIN[chainAt + 1][0] + "”" : "nothing: it's the final email"}.`; };
+    document.querySelectorAll("[data-chain]").forEach(b => b.onclick = () => { chainAt = +b.dataset.chain; draw(); }); draw();
+  }
+  if ($("#rtReply")){
+    const draw = () => { const t = TICKETS[tkSel];
+      document.querySelectorAll("[data-tk]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.tk === tkSel));
+      $("#rtIn").innerHTML = `<b>Ticket</b><small>${esc(t[0])}</small>`;
+      document.querySelectorAll("[data-rt]").forEach(d => d.classList.toggle("on", +d.dataset.rt === t[1]));
+      $("#rtReply").innerHTML = `<span class="mono">result.last_agent.name → <b>${esc(ROUTES[t[1]])}</b></span><p>${esc(t[2])}</p>`; };
+    document.querySelectorAll("[data-tk]").forEach(b => b.onclick = () => { tkSel = +b.dataset.tk; draw(); }); draw();
+  }
+  if ($("#par")){
+    const jobs = [["Sentiment", 4.6], ["Issues", 5.1], ["Reply", 5.3]];
+    const draw = () => { document.querySelectorAll("[data-par]").forEach(b => b.setAttribute("aria-pressed", b.dataset.par === parMode));
+      const total = parMode === "parallel" ? Math.max(...jobs.map(j => j[1])) : jobs.reduce((a, j) => a + j[1], 0), scale = 15;
+      let t = 0;
+      $("#par").innerHTML = jobs.map(([n, d]) => { const s = parMode === "parallel" ? 0 : t; t += d;
+        return `<div class="par-row"><span>${n} agent</span><div class="par-track"><i style="left:${s / scale * 100}%;width:${d / scale * 100}%"></i></div></div>`; }).join("") +
+        `<div class="par-row axis"><span></span><div class="par-track ticks">${[0, 5, 10, 15].map(x => `<em style="left:${x / scale * 100}%">${x}s</em>`).join("")}</div></div>`;
+      $("#parSum").innerHTML = `Total: <b>${total.toFixed(1)} seconds</b>` + (parMode === "parallel" ? " · 3 LLM calls in about the time of 1" : " · each call waits for the one before"); };
+    document.querySelectorAll("[data-par]").forEach(b => b.onclick = () => { parMode = b.dataset.par; draw(); }); draw();
+  }
+  if ($("#reactSteps")){
+    const draw = () => { $("#reactSteps").innerHTML = REACT.map(([k, t], i) => `<li class="ag ${k === "observe" ? "check" : k === "act" ? "search" : k} ${reactAt === -1 || i <= reactAt ? "shown" : ""} ${i === reactAt ? "now" : ""}"><span class="ag-k">${k}</span><span class="${k === "act" ? "mono" : ""}">${esc(t)}</span></li>`).join("");
+      $("#reactNext").textContent = reactAt === -1 || reactAt >= REACT.length - 1 ? "Step through →" : "Next step →"; };
+    $("#reactNext").onclick = () => { reactAt = (reactAt === -1 || reactAt >= REACT.length - 1) ? 0 : reactAt + 1; draw(); };
+    $("#reactAll").onclick = () => { reactAt = -1; draw(); }; draw();
+  }
+  if ($("#refRules")){
+    const draw = () => { const a = ATTEMPTS[refAt];
+      document.querySelectorAll("[data-att]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.att === refAt));
+      $("#refRules").innerHTML = RULES.map((r, i) => `<li class="${a.ok[i] ? "ok" : "bad"}"><span>${a.ok[i] ? "✓" : "✕"}</span>${esc(r)}</li>`).join("");
+      $("#refText").textContent = a.text;
+      $("#refFb").className = "gs-res " + (refAt ? "ok" : "bad");
+      $("#refFb").textContent = refAt ? a.fb : "Checker: not good → " + a.fb + " The feedback goes back to the writer."; };
+    document.querySelectorAll("[data-att]").forEach(b => b.onclick = () => { refAt = +b.dataset.att; draw(); }); draw();
+  }
+  if ($("#hitlBox")){
+    const draw = () => {
+      const log = hitl.log.map(l => `<li>${esc(l)}</li>`).join("");
+      if (hitl.status === "sent") { $("#hitlBox").innerHTML = `<ol class="hitl-log">${log}</ol><div class="gs-res ok">📧 Reply sent to the customer. The agent reports back: “I have sent a reply apologising and asking for the order details.”</div><button class="linkbtn" id="hitlReset">Start again</button>`; $("#hitlReset").onclick = () => { hitl = { draft: "first", status: "waiting", log: [] }; draw(); }; return; }
+      $("#hitlBox").innerHTML = `${log ? `<ol class="hitl-log">${log}</ol>` : ""}<div class="hitl-draft"><span class="eyebrow">⏸ Paused: send_reply needs approval</span><p>${esc(HITL_DRAFTS[hitl.draft])}</p></div>
+        <div class="pipe-nav"><button class="btn" id="hApprove">Approve and send</button><button class="btn ghost" data-rej="shorter">Reject: make it shorter</button><button class="btn ghost" data-rej="coupon">Reject: offer a 10% coupon</button></div>`;
+      $("#hApprove").onclick = () => { hitl.log.push("Manager approved → state.approve(…)"); hitl.status = "sent"; draw(); };
+      document.querySelectorAll("[data-rej]").forEach(b => b.onclick = () => { hitl.log.push(`Manager rejected: “${b.dataset.rej === "shorter" ? "make it shorter" : "offer a 10% coupon"}” → the agent rewrites and asks again`); hitl.draft = b.dataset.rej; draw(); });
+    };
+    draw();
+  }
+  if ($("#pqQ")){
+    let order = PQ.map((_, i) => i).sort(() => Math.random() - .5), pos = 0, score = 0, done = 0;
+    const show = () => { const [q, ans] = PQ[order[pos]];
+      $("#pqQ").textContent = q; $("#pqN").disabled = true;
+      $("#pqO").innerHTML = PNAMES.map(n => `<button>${esc(n)}</button>`).join("");
+      $("#pqO").querySelectorAll("button").forEach((b, i) => b.onclick = () => { if (!$("#pqN").disabled) return;
+        done++; if (i === ans) score++;
+        $("#pqO").querySelectorAll("button").forEach((x, j) => { if (j === ans) x.classList.add("right"); else if (x === b) x.classList.add("wrong"); });
+        $("#pqS").textContent = score; $("#pqT").textContent = done; $("#pqN").disabled = false;
+        $("#pqN").textContent = pos === PQ.length - 1 ? "Start again" : "Next situation"; }); };
+    $("#pqN").onclick = () => { pos++; if (pos >= PQ.length){ pos = 0; score = 0; done = 0; order.sort(() => Math.random() - .5); $("#pqS").textContent = 0; $("#pqT").textContent = 0; } show(); };
+    show();
+  }
+}
+
 function widget(kind, s){
   const rw = ragWidget(kind); if (rw) return rw;
+  const pw = patWidget(kind); if (pw) return pw;
   const aw = archWidget(kind); if (aw) return aw;
   if (kind === "guardSim") return guardWidget();
   if (kind === "steps") return `<div class="widget"><span class="eyebrow">Click through the four steps</span>
@@ -2957,6 +3400,7 @@ function bind(){
   if ($("#quiz")) quiz(current.errors);
   bindRagTopic();
   bindGuard();
+  bindPatterns();
   bindArch();
   document.querySelectorAll("[data-goto-concept]").forEach(a => a.onclick = () => { concept = a.dataset.gotoConcept; store.set("fieldnotes-concept", concept); });
 }
