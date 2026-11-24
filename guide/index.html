@@ -8,16 +8,17 @@
   --bg:#f5f6f8; --surface:#ffffff; --sunk:#eceef3; --fg:#171a21; --muted:#5b6170;
   --line:#d9dce4; --accent:#3a4fd6; --accent-soft:#e3e7fb; --accent-fg:#ffffff;
   --ok:#1f8a5b; --ok-soft:#dcf2e7; --bad:#c2410c; --bad-soft:#fde7dc;
+  --hl:#fff1c2;
   --display:"Space Grotesk",system-ui,sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#12141a; --surface:#1a1d25; --sunk:#232733; --fg:#e8eaf0; --muted:#9aa0b0;
   --line:#2e3341; --accent:#8b9bff; --accent-soft:#262c4d; --accent-fg:#10121a;
-  --ok:#4fd19a; --ok-soft:#173a2b; --bad:#ff9a6b; --bad-soft:#3d2219; color-scheme:dark}}
+  --ok:#4fd19a; --ok-soft:#173a2b; --bad:#ff9a6b; --bad-soft:#3d2219; --hl:#4a3f17; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#12141a; --surface:#1a1d25; --sunk:#232733; --fg:#e8eaf0; --muted:#9aa0b0;
   --line:#2e3341; --accent:#8b9bff; --accent-soft:#262c4d; --accent-fg:#10121a;
-  --ok:#4fd19a; --ok-soft:#173a2b; --bad:#ff9a6b; --bad-soft:#3d2219; color-scheme:dark}
+  --ok:#4fd19a; --ok-soft:#173a2b; --bad:#ff9a6b; --bad-soft:#3d2219; --hl:#4a3f17; color-scheme:dark}
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -495,6 +496,130 @@ table.cmp{min-width:820px}
 .more-tbl{min-width:760px}
 .tag-g{font:11px var(--mono);color:var(--muted)}
 
+/* ---------- Narration (voice) ---------- */
+body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+.narr-set{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:end;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.narr-label{font:600 14px var(--display);align-self:center}
+.nfield{display:flex;flex-direction:column;gap:4px;min-width:0}
+.nfield label{font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.nfield select{font:14px var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;max-width:260px}
+.nfield input[type=range]{accent-color:var(--accent);width:140px}
+.ntoggle label{display:flex;align-items:center;gap:8px;font:14px var(--body);letter-spacing:0;text-transform:none;color:var(--fg);cursor:pointer}
+.ntoggle input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+.ntoggle small{font-size:12px;color:var(--muted)}
+.rate-val{font:12px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;text-transform:none}
+.voice-tip{flex-basis:100%;margin:0;font-size:13px;color:var(--muted)}
+.narr-warn{padding:10px 12px;border-radius:8px;background:var(--hl);font-size:14px}
+.say-now{background:var(--hl)!important;border-radius:4px;box-shadow:0 0 0 3px var(--hl);transition:background .15s}
+.lesson{position:relative}
+.say-btn{position:absolute;top:12px;right:52px;z-index:1;display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font:500 12.5px var(--body);cursor:pointer}
+.say-btn.on{background:var(--accent);color:var(--accent-fg)}
+.say-btn svg{width:12px;height:12px;fill:currentColor}
+.say-btn.inline{position:static;align-self:flex-start}
+.lesson-head h3{padding-right:86px}
+.nplayer{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.nplayer-in{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.now-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.now-title{font:600 15px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nbar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.nbar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.nctrl{display:flex;gap:8px}
+.nctrl button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--fg);display:grid;place-items:center;cursor:pointer}
+.nctrl button:disabled{opacity:.4;cursor:default}
+.nctrl svg{width:16px;height:16px;fill:currentColor}
+@media (max-width:520px){.say-btn{top:10px;right:44px;padding:3px 8px}.say-btn span{display:none}.lesson-head h3{padding-right:44px}}
+
+/* ---------- AI tutor chat ---------- */
+:root{--chat-w:max(380px,50vw)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.chat-fab{position:fixed;z-index:25;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));display:inline-flex;align-items:center;gap:8px;padding:0 18px 0 14px;height:52px;border-radius:26px;border:0;background:var(--accent);color:var(--accent-fg);font:600 14px var(--body);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.chat-fab svg{width:22px;height:22px;fill:currentColor}
+.chat-fab:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.chat-panel{position:fixed;z-index:30;top:0;right:0;bottom:0;width:var(--chat-w);display:flex;flex-direction:column;background:var(--surface);border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(0,0,0,.08);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+body.chat-full .chat-panel{width:100vw}
+body.chat-open{padding-right:var(--chat-w)}
+body.chat-open .nplayer{right:var(--chat-w)}
+body.chat-open .chat-fab{display:none}
+.chat-panel .chat-head{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--surface)}
+.chat-title{display:flex;flex-direction:column;min-width:0}
+.chat-title b{font:600 17px var(--display)}
+.chat-ctx{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-actions{display:flex;gap:6px;flex-shrink:0}
+.icon-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);display:grid;place-items:center;cursor:pointer}
+.icon-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:14px}
+.tmsg{max-width:92%;font-size:14.5px;line-height:1.55}
+.tmsg.user{align-self:flex-end;background:var(--accent);color:var(--accent-fg);padding:9px 13px;border-radius:14px 14px 4px 14px;white-space:pre-wrap}
+.tmsg.bot{align-self:flex-start;background:var(--bg);padding:10px 14px;border-radius:14px 14px 14px 4px}
+.tmsg.bot p{margin:0 0 8px}.tmsg.bot p:last-child{margin-bottom:0}
+.tmsg.bot ul,.tmsg.bot ol{margin:4px 0 8px;padding-left:20px}
+.tmsg.bot code{font-family:var(--mono);font-size:12.5px;background:var(--surface);padding:1px 4px;border-radius:4px}
+.tmsg.bot h5{font:600 14.5px var(--display);margin:6px 0 4px}
+.tmsg a,.note-a a,.thoughts a{color:var(--accent);text-decoration:underline}
+.thinking{color:var(--muted);font-style:italic}
+.msg-tools{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.msg-tools button{font:500 12px var(--body);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+.msg-tools button.saved{color:var(--muted);cursor:default}
+.tmsg.err{align-self:stretch;max-width:none;background:var(--hl);padding:10px 14px;border-radius:10px;font-size:13.5px}
+.search-links{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
+.search-btn{display:inline-flex;align-items:center;gap:6px;font:500 13px var(--body);padding:6px 12px;border-radius:999px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--fg)!important;text-decoration:none!important}
+.chat-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 10px}
+.tchip{font:500 13px var(--body);padding:7px 12px;border-radius:999px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--fg);cursor:pointer;text-align:left}
+.chat-form{border-top:1px solid var(--line);padding:10px 14px 6px;display:flex;flex-direction:column;gap:8px}
+.chat-partial{font-size:12.5px;color:var(--muted);font-style:italic}
+.chat-form textarea{width:100%;resize:none;font:14.5px/1.45 var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:64px;max-height:160px}
+.chat-form textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.chat-bar{display:flex;align-items:center;gap:8px}
+.chat-bar .grow{flex:1}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{font:500 12.5px var(--body);padding:6px 11px;border:0;background:none;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--accent-soft);color:var(--accent)}
+.mic-btn.listening{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.send-btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;border:0;background:var(--accent);color:var(--accent-fg);font:600 13.5px var(--body);cursor:pointer}
+.send-btn svg{width:15px;height:15px;fill:currentColor}
+.chat-note{margin:0;padding:0 14px 10px;font-size:11.5px;color:var(--muted)}
+.chat-tabs{display:flex;gap:4px;padding:8px 14px 0;border-bottom:1px solid var(--line)}
+.chat-tabs button{font:600 13.5px var(--body);padding:8px 12px;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);cursor:pointer}
+.chat-tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.count-badge{display:inline-block;min-width:18px;padding:0 6px;margin-left:4px;border-radius:9px;background:var(--accent-soft);color:var(--accent);font-size:11px;line-height:18px;text-align:center}
+.notes-view{flex:1;display:flex;flex-direction:column;min-height:0}
+.notes-top{padding:12px 14px 8px;display:flex;gap:8px}
+.notes-top input{flex:1;min-width:0;font:14px var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.new-note-btn{flex-shrink:0;font:600 13px var(--body);padding:0 12px;border-radius:8px;border:0;background:var(--accent);color:var(--accent-fg);cursor:pointer}
+.notes-list{flex:1;overflow-y:auto;padding:4px 14px 14px;display:flex;flex-direction:column;gap:14px}
+.notes-group h4{font:500 11.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:6px 0 8px}
+.ncard{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);display:flex;flex-direction:column;gap:6px}
+.ncard+.ncard{margin-top:8px}
+.ncard.mine{border-color:var(--accent)}
+.mine-badge{align-self:flex-start;font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:999px}
+.note-q{font-weight:600;font-size:14px}
+.note-meta{font-size:11.5px;color:var(--muted)}
+.note-a{font-size:13.5px;line-height:1.5}
+.note-a.clamp{max-height:4.5em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 55%,transparent);mask-image:linear-gradient(#000 55%,transparent)}
+.note-a p{margin:0 0 6px}.note-a ul,.note-a ol{margin:2px 0 6px;padding-left:18px}
+.thoughts{border-left:3px solid var(--accent);background:var(--accent-soft);padding:8px 10px;border-radius:0 8px 8px 0;font-size:13.5px}
+.thoughts b{display:block;font-size:11.5px;color:var(--accent);margin-bottom:2px}
+.thoughts p{margin:0 0 4px}
+.note-tools{display:flex;gap:6px;flex-wrap:wrap}
+.note-tools button{font:500 12px var(--body);color:var(--accent);background:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer}
+.note-tools button.danger{color:var(--bad)}
+.notes-empty{color:var(--muted);font-size:13.5px;padding:18px 4px;text-align:center}
+.notes-foot{border-top:1px solid var(--line);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.notes-foot .where{flex:1;min-width:160px;font-size:11.5px;color:var(--muted)}
+.notes-foot button{font:600 12.5px var(--body);padding:7px 12px;border-radius:8px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer}
+.note-editor{display:flex;flex-direction:column;gap:8px}
+.note-editor label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
+.note-editor input,.note-editor select,.note-editor textarea{font:14px/1.45 var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.note-editor textarea{resize:vertical;min-height:90px}
+.ed-actions{display:flex;gap:8px}
+.ed-save{font:600 13px var(--body);padding:7px 14px;border-radius:8px;border:0;background:var(--accent);color:var(--accent-fg);cursor:pointer}
+.ed-cancel{font:500 13px var(--body);padding:7px 14px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--fg);cursor:pointer}
+.chat-toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:var(--fg);color:var(--bg);font-size:13px;padding:8px 14px;border-radius:999px;z-index:2;pointer-events:none}
+@media (max-width:860px){:root{--chat-w:100vw}body.chat-open{padding-right:0;overflow:hidden}body.chat-open .nplayer{right:0}#chatExpand{display:none}}
+@media (prefers-reduced-motion:no-preference){.chat-panel:not([hidden]){animation:chatIn .2s ease-out}}
+@keyframes chatIn{from{transform:translateX(24px);opacity:.6}to{transform:none;opacity:1}}
+
 /* image attachment */
 .img-attach{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 .img-attach img{display:block;width:100%;height:auto}
@@ -604,9 +729,71 @@ table.cmp{min-width:820px}
     <p class="lede" id="lede"></p>
     <div class="tabs" role="tablist" id="tabs"></div>
     <div class="progress"><span><b id="pcount">0</b> of <b id="ptotal">0</b> understood</span><div class="bar"><i id="pbar"></i></div></div>
+    <div id="narrWarn" class="narr-warn" hidden>This browser has no built-in voice. Try Chrome, Edge or Safari.</div>
+    <div class="narr-set" id="narrSet">
+      <span class="narr-label">🔊 Listen</span>
+      <div class="nfield"><label for="nVoice">Voice</label><select id="nVoice"><option>Loading voices…</option></select></div>
+      <div class="nfield"><label for="nRate">Speed <span class="rate-val" id="nRateVal">1.0×</span></label><input type="range" id="nRate" min="0.7" max="1.5" step="0.1" value="1"></div>
+      <div class="nfield ntoggle"><label for="nTeacher"><input type="checkbox" id="nTeacher" checked> Teacher style</label><small>Spoken cues, pauses and a livelier tone</small></div>
+      <p class="voice-tip" id="nTtsNote" hidden>Claude voice was turned off for this page, so the narration switched back to your device's voices. You can turn it on again in this page's Permissions menu.</p>
+      <p class="voice-tip" id="nVoiceTip" hidden>For the most human-sounding voice, open this page in <b>Microsoft Edge</b> and pick a voice marked “Natural”, or in <b>Safari</b> pick a “Premium” or “Enhanced” voice. Voices marked ★ are the best ones on your device.</p>
+    </div>
   </header>
   <main id="main"></main>
 </div>
+
+<div class="nplayer" id="nPlayer">
+  <div class="nplayer-in">
+    <div class="now-info"><span class="now-title" id="nNow">Nothing playing · press play to hear this tab</span><div class="nbar"><i id="nBarFill"></i></div></div>
+    <div class="nctrl">
+      <button id="nPrev" aria-label="Previous lesson"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+      <button id="nToggle" aria-label="Play all"><svg viewBox="0 0 24 24" id="nToggleIcon"><path d="M7 4v16l13-8z"/></svg></button>
+      <button id="nNext" aria-label="Next lesson"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<button class="chat-fab" id="chatFab" hidden aria-label="Ask the AI tutor" aria-expanded="false" aria-controls="chatPanel">
+  <svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm4 7a1.3 1.3 0 1 0 0-2.6A1.3 1.3 0 0 0 8 11zm4 0a1.3 1.3 0 1 0 0-2.6 1.3 1.3 0 0 0 0 2.6zm4 0a1.3 1.3 0 1 0 0-2.6 1.3 1.3 0 0 0 0 2.6z"/></svg>
+  <span>Ask AI</span>
+</button>
+<aside class="chat-panel" id="chatPanel" hidden aria-label="AI tutor">
+  <header class="chat-head">
+    <div class="chat-title"><b>AI tutor</b><span class="chat-ctx" id="chatCtx">Ask about any topic</span></div>
+    <div class="chat-actions">
+      <button class="icon-btn" id="chatSaveAll" title="Save this chat to My notes" aria-label="Save this chat to My notes"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg></button>
+      <button class="icon-btn" id="chatNew" title="New chat" aria-label="Start a new chat"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+      <button class="icon-btn" id="chatExpand" title="Full width" aria-label="Expand to full width"><svg viewBox="0 0 24 24" id="expandIcon"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <button class="icon-btn" id="chatClose" title="Minimize" aria-label="Minimize the AI tutor"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+    </div>
+  </header>
+  <div class="chat-tabs" role="tablist" aria-label="Tutor views">
+    <button type="button" role="tab" id="tabChat" aria-selected="true" aria-controls="chatMsgs">Chat</button>
+    <button type="button" role="tab" id="tabNotes" aria-selected="false" aria-controls="notesView">My notes<span class="count-badge" id="notesCount">0</span></button>
+  </div>
+  <div class="notes-view" id="notesView" hidden>
+    <div class="notes-top"><label for="notesSearch" class="sr">Search your notes</label><input id="notesSearch" type="search" placeholder="Search your notes"><button type="button" class="new-note-btn" id="notesNew">✏️ New note</button></div>
+    <div class="notes-list" id="notesList"></div>
+    <div class="notes-foot"><span class="where" id="notesWhere">Saved in this browser only</span><button type="button" id="notesCopyAll">Copy all</button><button type="button" id="notesExport">⬇ Export</button></div>
+  </div>
+  <div class="chat-msgs" id="chatMsgs" aria-live="polite"></div>
+  <div class="chat-chips" id="chatChips"></div>
+  <form class="chat-form" id="chatForm">
+    <div class="chat-partial" id="chatPartial" hidden></div>
+    <label for="chatInput" class="sr">Your question</label>
+    <textarea id="chatInput" rows="2" placeholder="Ask anything about this topic… (Enter to send)"></textarea>
+    <div class="chat-bar">
+      <div class="seg" role="group" aria-label="Answer style">
+        <button type="button" data-tier="quick" class="on" aria-pressed="true" title="Fast, short answers">⚡ Quick</button>
+        <button type="button" data-tier="default" aria-pressed="false" title="Slower, more thorough answers">🧠 Deep</button>
+      </div>
+      <span class="grow"></span>
+      <button type="button" class="icon-btn mic-btn" id="chatMic" hidden title="Ask by voice" aria-label="Ask by voice"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+      <button type="submit" class="send-btn" id="chatSend"><svg viewBox="0 0 24 24" id="sendIcon"><path d="M3 20l18-8L3 4v6l12 2-12 2z"/></svg><span id="sendLabel">Send</span></button>
+    </div>
+  </form>
+  <p class="chat-note">Uses your Claude account. Answers can be wrong, so check anything important.</p>
+</aside>
 
 <script>
 /* ============================================================
@@ -3501,4 +3688,663 @@ window.addEventListener("hashchange", () => {
 initProjects();
 render();
 const firstLesson = document.querySelector(".lesson"); if (firstLesson) toggle(firstLesson, true);
+
+/* ============================================================
+   VOICE NARRATION + AI TUTOR + MY NOTES
+   Same features as the AI Concepts Narrator: device voices or the
+   Claude voice (tts), teacher style, play all; an AI tutor (sample)
+   with voice input (dictation); private notes (db + user, with a
+   browser fallback) and export (downloads).
+   ============================================================ */
+(() => {
+const $id = id => document.getElementById(id);
+const synth = window.speechSynthesis;
+const PLAY = '<path d="M7 4v16l13-8z"/>', PAUSE = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+const smooth = () => matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+let voices = [], tts = null;
+const N = { units: [], cur: -1, items: [], idx: 0, playing: false, paused: false, playAll: false, token: 0 };
+
+/* ---------- what gets read ---------- */
+const SKIP = ".widget, .dg-wrap, .tbl, .code-block, pre, .attach, button, svg, table, .gs-gates, .router, .cost-grid";
+function unitList() {
+  const main = $id("main");
+  if (view === "topic") return [...main.querySelectorAll(".start, .lesson, .pm-grid, .next")];
+  if (view === "concepts") { const b = main.querySelector(".concept-body"); return b ? [b] : []; }
+  return [];
+}
+const lessonName = u => u.querySelector(".lesson-head h3").textContent.trim().replace(/[.:]$/, "");
+function unitTitle(u) {
+  if (u.classList.contains("lesson")) return `Lesson ${u.querySelector(".num").textContent.trim()}: ${lessonName(u)}`;
+  if (u.classList.contains("start")) return "Start here: " + ((u.querySelector("h3") || {}).textContent || "");
+  if (u.classList.contains("pm-grid")) return "Product view";
+  if (u.classList.contains("next")) return "Takeaway";
+  if (u.classList.contains("concept-body")) { const c = CONCEPTS.find(x => x.id === concept); return "Learning concept: " + (c ? c.label : ""); }
+  return "Section";
+}
+function speakable(t) {
+  return t.replace(/(^|\s)(\d+)\.\s/g, "$1$2, ").replace(/→/g, " to ").replace(/≈/g, " about ").replace(/×/g, " times ").replace(/§/g, "section ")
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B50}\u{2705}\u{274C}]/gu, "").replace(/[•✓✕↗↺⏸]/g, "").replace(/\s+/g, " ").trim();
+}
+function readable(u) {
+  const sel = u.classList.contains("lesson") ? ".lesson-body p, .lesson-body li, .lesson-body dt" : "h3, h4, p, li, dt";
+  const picked = [...u.querySelectorAll(sel)].filter(el => !el.closest(SKIP));
+  return picked.filter(el => !picked.some(o => o !== el && o.contains(el))).map(el => {
+    const c = el.cloneNode(true); c.querySelectorAll(SKIP).forEach(x => x.remove());
+    let t = c.textContent;
+    if (el.tagName === "DT" && el.nextElementSibling && el.nextElementSibling.tagName === "DD") t += ". " + el.nextElementSibling.textContent;
+    return { el, text: speakable(t) };
+  }).filter(x => x.text.length > 1);
+}
+const splitS = t => (t.match(/[^.!?]+[.!?]+(?=\s|$)|[^.!?]+$/g) || [t]).map(s => s.trim()).filter(Boolean);
+const EMPHASIS = /^(for a pm|pm angle|the key|the catch|the idea|the lesson|remember|rule|that is why|that's why|first,|second,|third,|so |this is|use it when)/i;
+const jitter = n => (Math.random() * 2 - 1) * n;
+function buildItems(ui) {
+  const u = N.units[ui], teach = $id("nTeacher").checked, items = [];
+  const head = u.querySelector(".lesson-head h3");
+  if (teach && ui === 0 && view === "topic") items.push({ text: `Topic ${SESSIONS.indexOf(current) + 1}. ${current.title}.`, el: null, pitch: 1.02, rate: .95, pause: 650 });
+  if (u.classList.contains("lesson")) {
+    const lessons = N.units.filter(x => x.classList.contains("lesson")), k = lessons.indexOf(u), name = lessonName(u);
+    const lead = !teach ? name + "." : k === 0 ? `Let's start with ${name}.` : k === lessons.length - 1 ? `And finally, ${name}.` : (k % 2 ? `Next up, ${name}.` : `Now, let's talk about ${name}.`);
+    items.push({ text: lead, el: head, pitch: teach ? 1.06 : 1, rate: teach ? .97 : 1, pause: teach ? 420 : 200 });
+  } else if (teach) items.push({ text: unitTitle(u) + ".", el: null, pitch: 1.04, rate: .96, pause: 420 });
+  readable(u).forEach(({ el, text }) => {
+    const sents = splitS(text);
+    sents.forEach((t, j) => {
+      if (!teach) { items.push({ text: t, el, pitch: 1, rate: 1, pause: 0 }); return; }
+      let pitch = 1 + jitter(.05), rate = 1 + jitter(.04), pause = 230 + (t.match(/,/g) || []).length * 40;
+      if (t.endsWith("?")) { pitch = 1.13; pause = 650; }
+      else if (EMPHASIS.test(t)) { pitch = .95; rate = .9; pause = 480; }
+      if (j === sents.length - 1) pause = 650;
+      items.push({ text: t, el, pitch, rate, pause });
+    });
+  });
+  return items;
+}
+
+/* ---------- voices ---------- */
+function voiceScore(v) {
+  let s = 0;
+  if (/natural|neural|online/i.test(v.name)) s += 6;
+  if (/premium|enhanced|siri/i.test(v.name)) s += 5;
+  if (/google/i.test(v.name)) s += 3;
+  if (/ava|samantha|aria|jenny|guy|libby|sonia|ryan|emma|andrew|brian|daniel/i.test(v.name)) s += 2;
+  if (/en-(US|GB|IN|AU)/i.test(v.lang)) s += 1;
+  if (/compact|espeak|zira|david|fred|albert|bad news|bells|boing|bubbles|cellos|jester|organ|trinoids|whisper|zarvox/i.test(v.name)) s -= 6;
+  return s;
+}
+const usingClaude = () => !!tts && $id("nVoice").value === "claude";
+const selectedVoice = () => { const v = $id("nVoice").value; return v === "claude" ? null : voices[+v]; };
+function loadVoices() {
+  voices = synth ? synth.getVoices().filter(v => v.lang.startsWith("en")) : [];
+  if (!voices.length && synth) voices = synth.getVoices();
+  if (!voices.length && !tts) return;
+  voices.sort((a, b) => voiceScore(b) - voiceScore(a));
+  let saved = null; try { saved = localStorage.getItem("nVoice"); } catch (e) {}
+  const pref = voices.findIndex(v => v.name === saved);
+  $id("nVoice").innerHTML = (tts ? `<option value="claude">✨ Claude voice (natural)</option>` : "") + voices.map((v, i) => `<option value="${i}">${voiceScore(v) >= 5 ? "★ " : ""}${esc(v.name)} (${esc(v.lang)})</option>`).join("");
+  $id("nVoice").value = tts && (!saved || saved === "claude" || pref < 0) ? "claude" : pref >= 0 ? pref : 0;
+  $id("nVoiceTip").hidden = !voices.length || voiceScore(voices[0]) >= 5 || usingClaude();
+}
+
+/* ---------- playback ---------- */
+function clearHl() { document.querySelectorAll(".say-now").forEach(e => e.classList.remove("say-now")); }
+function highlightItem(k) {
+  const it = N.items[k]; if (!it) return;
+  clearHl();
+  if (it.el && it.el.isConnected) {
+    it.el.classList.add("say-now");
+    const r = it.el.getBoundingClientRect();
+    if (r.top < 0 || r.bottom > innerHeight - 90) it.el.scrollIntoView({ behavior: smooth(), block: "center" });
+  }
+  $id("nBarFill").style.width = (k / N.items.length * 100) + "%";
+}
+function unitDone(tok) {
+  if (tok !== N.token) return;
+  if (N.playAll && N.cur < N.units.length - 1) start(N.cur + 1, true); else stopAll(true);
+}
+function speakClaude(tok) {
+  const from = N.idx, lines = N.items.slice(from, from + 100).map((it, k) => ({ text: it.text, id: String(from + k) }));
+  highlightItem(from);
+  tts.speak(lines, { rate: +$id("nRate").value }).then(() => { if (tok !== N.token) return; N.idx = N.items.length; unitDone(tok); }).catch(e => {
+    if (tok !== N.token) return;
+    if (e && (e.code === "not_granted" || e.code === "unavailable")) { tts = null; loadVoices(); $id("nTtsNote").hidden = false; }
+    if (!(e && e.code === "stopped" && (e.reason === "replaced" || e.reason === "stopped"))) { N.playing = false; N.paused = false; updateUI(); }
+  });
+}
+function speakNext(tok) {
+  if (tok !== N.token) return;
+  if (usingClaude()) { speakClaude(tok); return; }
+  if (N.idx >= N.items.length) { unitDone(tok); return; }
+  const it = N.items[N.idx];
+  highlightItem(N.idx);
+  const u = new SpeechSynthesisUtterance(it.text);
+  const v = selectedVoice(); if (v) u.voice = v;
+  u.rate = Math.min(2, Math.max(.5, +$id("nRate").value * it.rate));
+  u.pitch = it.pitch;
+  u.onend = () => { if (tok !== N.token) return; N.idx++; setTimeout(() => speakNext(tok), it.pause); };
+  u.onerror = () => {};
+  synth.speak(u);
+}
+function start(ui, keepAll) {
+  if (!synth && !usingClaude()) return;
+  N.units = unitList(); if (!N.units[ui]) return;
+  if (!keepAll) N.playAll = false;
+  N.token++; synth && synth.cancel();
+  N.cur = ui; N.idx = 0; N.playing = true; N.paused = false;
+  const u = N.units[ui];
+  if (u.classList.contains("lesson") && !u.classList.contains("open")) toggle(u, true);
+  N.items = buildItems(ui);
+  updateUI();
+  u.scrollIntoView({ behavior: smooth(), block: "start" });
+  const t = N.token; setTimeout(() => speakNext(t), 80);
+}
+function togglePause() {
+  if (!N.playing) { N.playAll = true; start(N.cur < 0 || N.cur >= unitList().length ? 0 : N.cur, true); return; }
+  if (usingClaude()) { N.paused = !N.paused; (N.paused ? tts.pause() : tts.resume()).catch(() => {}); updateUI(); return; }
+  N.token++; synth.cancel(); N.paused = !N.paused;
+  if (!N.paused) { const t = N.token; setTimeout(() => speakNext(t), 60); }
+  updateUI();
+}
+function stopAll(finished) {
+  N.token++; synth && synth.cancel(); if (tts && tts.active()) tts.stop().catch(() => {});
+  N.playing = false; N.paused = false; clearHl();
+  $id("nBarFill").style.width = finished && N.cur >= 0 ? "100%" : "0";
+  updateUI();
+}
+function updateUI() {
+  const units = unitList(), active = N.playing && !N.paused;
+  document.querySelectorAll(".say-btn").forEach(b => {
+    const u = b.closest(".lesson") || b.parentElement, on = N.playing && N.units[N.cur] === u;
+    b.classList.toggle("on", on);
+    b.querySelector("svg").innerHTML = on && !N.paused ? PAUSE : PLAY;
+    b.querySelector("span").textContent = on ? (N.paused ? "Resume" : "Pause") : "Listen";
+  });
+  $id("nToggleIcon").innerHTML = active ? PAUSE : PLAY;
+  $id("nToggle").setAttribute("aria-label", active ? "Pause" : (N.playing ? "Resume" : "Play all"));
+  ["nToggle", "nPrev", "nNext"].forEach(id => $id(id).disabled = !units.length);
+  const u = N.units[N.cur];
+  $id("nNow").textContent = !units.length ? "Narration isn't available on this tab"
+    : N.playing && u ? `${unitTitle(u)}${N.paused ? " (paused)" : ""}`
+    : "Nothing playing · press play to hear this tab";
+}
+function decorate() {
+  document.querySelectorAll("#main .lesson").forEach(l => {
+    if (l.querySelector(":scope > .say-btn")) return;
+    const b = document.createElement("button"); b.type = "button"; b.className = "say-btn";
+    b.innerHTML = `<svg viewBox="0 0 24 24">${PLAY}</svg><span>Listen</span>`;
+    b.setAttribute("aria-label", "Listen to " + lessonName(l));
+    b.onclick = e => { e.stopPropagation(); const i = unitList().indexOf(l); if (N.playing && N.units[N.cur] === l) togglePause(); else { N.playAll = false; start(i); } };
+    l.querySelector(".lesson-head").after(b);
+  });
+  const cb = document.querySelector("#main .concept-body");
+  if (cb && !cb.querySelector(":scope > .say-btn")) {
+    const b = document.createElement("button"); b.type = "button"; b.className = "say-btn inline";
+    b.innerHTML = `<svg viewBox="0 0 24 24">${PLAY}</svg><span>Listen</span>`;
+    b.setAttribute("aria-label", "Listen to this concept");
+    b.onclick = () => { if (N.playing && N.units[N.cur] === cb) togglePause(); else { N.playAll = false; start(0); } };
+    cb.prepend(b);
+  }
+  if (N.playing && !(N.units[N.cur] && N.units[N.cur].isConnected)) stopAll();
+  updateUI();
+}
+new MutationObserver(decorate).observe($id("main"), { childList: true });
+
+$id("nToggle").onclick = togglePause;
+$id("nPrev").onclick = () => { N.playAll = true; start(Math.max(0, N.cur - 1), true); };
+$id("nNext").onclick = () => { const n = unitList().length; N.playAll = true; start(Math.min(n - 1, N.cur + 1), true); };
+$id("nRate").oninput = e => { $id("nRateVal").textContent = (+e.target.value).toFixed(1) + "×"; };
+$id("nRate").onchange = e => { try { localStorage.setItem("nRate", e.target.value); } catch (err) {} };
+try { const r = localStorage.getItem("nRate"); if (r) { $id("nRate").value = r; $id("nRateVal").textContent = (+r).toFixed(1) + "×"; } } catch (e) {}
+$id("nVoice").onchange = e => { const v = e.target.value; try { localStorage.setItem("nVoice", v === "claude" ? "claude" : voices[+v].name); } catch (err) {} if (N.playing) stopAll(); };
+try { if (localStorage.getItem("nTeacher") === "off") $id("nTeacher").checked = false; } catch (e) {}
+$id("nTeacher").onchange = e => { try { localStorage.setItem("nTeacher", e.target.checked ? "on" : "off"); } catch (err) {} };
+if (!synth) { $id("narrWarn").hidden = false; $id("nVoice").innerHTML = "<option>Not available</option>"; loadVoices(); }
+else { loadVoices(); synth.onvoiceschanged = loadVoices; }
+decorate();
+
+/* ---------- AI tutor ---------- */
+const chat = { sample: null, dict: null, turns: [], ctl: null, busy: false, tier: "quick", lastQ: null, pairs: [], toolsOK: false };
+const ICON_SEND = '<path d="M3 20l18-8L3 4v6l12 2-12 2z"/>', ICON_STOP = '<path d="M6 6h12v12H6z"/>';
+const ICON_EXPAND = '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>', ICON_SHRINK = '<path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/>';
+const NB_LINKS = [];
+SESSIONS.forEach(s => (s.notebooks || []).forEach(nb => NB_LINKS.push({ title: nb.file + " (notebook for " + s.label + ")", url: `https://github.com/${REPO}/blob/main/${nb.path}` })));
+NB_LINKS.push({ title: MORE_NB.file + " (19 more agentic patterns)", url: `https://github.com/${REPO}/blob/main/${MORE_NB.path}` });
+NB_LINKS.push({ title: "AI Concepts Narrator (audio lessons on 20 AI concepts)", url: "https://claude.ai/artifact/D2vhnvu7LWmwxhNhrxkiSg" });
+const ALLOWED_URLS = new Set(NB_LINKS.map(l => l.url));
+const searchUrl = q => "https://www.google.com/search?q=" + encodeURIComponent(q);
+
+function escapeHtml(t) { return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function inlineMd(t) {
+  return escapeHtml(t)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (m, label, url) => ALLOWED_URLS.has(url.replace(/&amp;/g, "&")) ? `<a href="${url}" target="_blank" rel="noopener">${label} ↗</a>` : label)
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/(^|[^*])\*([^*\s][^*]*?)\*(?!\*)/g, "$1<em>$2</em>");
+}
+function renderMd(text) {
+  const out = []; let list = null, para = [];
+  const flushPara = () => { if (para.length) { out.push(`<p>${para.map(inlineMd).join("<br>")}</p>`); para = []; } };
+  const flushList = () => { if (list) { out.push(`<${list.tag}>${list.items.map(x => `<li>${inlineMd(x)}</li>`).join("")}</${list.tag}>`); list = null; } };
+  String(text).split("\n").forEach(raw => {
+    const line = raw.trimEnd(); let m;
+    if (!line.trim()) { flushPara(); flushList(); return; }
+    if ((m = line.match(/^\s*(?:[-*•]\s*)?SEARCH:\s*(.+)$/i))) {
+      flushPara(); flushList();
+      const q = m[1].replace(/^["“]|["”]$/g, "").trim();
+      const btn = `<a class="search-btn" href="${searchUrl(q)}" target="_blank" rel="noopener">🔎 ${escapeHtml(q)}</a>`;
+      if (out.length && out[out.length - 1].startsWith('<div class="search-links">')) out[out.length - 1] = out[out.length - 1].replace(/<\/div>$/, btn + "</div>");
+      else out.push(`<div class="search-links">${btn}</div>`);
+      return;
+    }
+    if ((m = line.match(/^\s*[-*•]\s+(.*)/))) { flushPara(); if (!list || list.tag !== "ul") { flushList(); list = { tag: "ul", items: [] }; } list.items.push(m[1]); return; }
+    if ((m = line.match(/^\s*\d+[.)]\s+(.*)/))) { flushPara(); if (!list || list.tag !== "ol") { flushList(); list = { tag: "ol", items: [] }; } list.items.push(m[1]); return; }
+    if ((m = line.match(/^#{1,6}\s+(.*)/))) { flushPara(); flushList(); out.push(`<h5>${inlineMd(m[1])}</h5>`); return; }
+    flushList(); para.push(line);
+  });
+  flushPara(); flushList();
+  return out.join("");
+}
+const plainText = md => String(md).replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/^\s*(?:[-*•]\s*)?SEARCH:\s*(.+)$/gim, "Search for: $1").replace(/\*\*|`|^#+\s*/gm, "").replace(/^\s*[-*•]\s+/gm, "").trim();
+
+const textOf = el => el ? (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 6000) : "";
+function focusInfo() {
+  if (view === "projects") return { label: "Projects", title: "your projects", text: textOf($id("main")), topicN: 200, topicTitle: "Projects", step: "" };
+  if (view === "concepts") {
+    const c = CONCEPTS.find(x => x.id === concept) || CONCEPTS[0];
+    return { label: `Learning Concepts · ${c.label}`, title: c.label, text: textOf($id("main").querySelector(".concept-body")), topicN: 101 + CONCEPTS.indexOf(c), topicTitle: "Concept: " + c.label, step: "" };
+  }
+  const units = unitList();
+  let u = N.playing && N.units[N.cur] && N.units[N.cur].isConnected ? N.units[N.cur] : null;
+  if (!u) u = units.find(x => x.getBoundingClientRect().bottom > 140) || units[units.length - 1];
+  const tn = SESSIONS.indexOf(current) + 1, isLesson = u && u.classList.contains("lesson");
+  return { label: `Topic ${tn} · ${current.title}${isLesson ? " · " + unitTitle(u) : ""}`, title: isLesson ? lessonName(u) : current.title,
+    text: (u ? textOf(u) : ""), topicN: tn, topicTitle: current.title, step: isLesson ? unitTitle(u) : "",
+    outline: units.filter(x => x.classList.contains("lesson")).map(unitTitle).join("; ") };
+}
+function updateChatContext() { const f = focusInfo(); $id("chatCtx").textContent = "On: " + f.label; return f; }
+function instructions(f) {
+  return `You are a friendly, patient AI tutor inside a study page called "AI Engineering Guide". The learner is a product manager moving into AI product management, with a procurement background. They learn by building in Colab with Gemini, OpenAI, Claude and Groq, and keep their notes in this guide.
+How to answer:
+- Teach like a good teacher: plain words, short paragraphs, one concrete example. The guide's running examples are procurement: suppliers, contracts, invoices and purchase orders; use them when it helps.
+- Add a short "why it matters for a PM" angle when useful.
+- Keep answers under about 180 words unless the learner asks for more depth.
+- Use simple Markdown only: **bold**, bullet lists, numbered steps. No tables.
+- If you are not sure about a fact, say so plainly. Do not invent product names, numbers or dates.
+- If asked to quiz, ask ONE question at a time and wait for the answer, then give feedback.
+- You cannot browse the web, so never invent links. When the learner asks for links, sources or further reading, share links ONLY from the checked list below, as Markdown links like [title](url), copied exactly.
+- For anything the list doesn't cover (or newer information), suggest 1 to 3 web searches, each on its own line in exactly this form: SEARCH: <short search phrase>. The page turns these into clickable search buttons. Don't apologise for not browsing; just give the links and searches.
+Checked links:
+${NB_LINKS.map(l => `- [${l.title}](${l.url})`).join("\n")}
+The guide's topics: ${SESSIONS.map((s, i) => `${i + 1}. ${s.title}`).join("; ")}.
+Learning concepts: ${CONCEPTS.map(c => c.label).join("; ")}. There is also a Projects tab where the learner documents their own projects.
+The learner is currently looking at: ${f.label}.${f.outline ? "\nLessons in this topic: " + f.outline + "." : ""}
+The text on screen for it is:
+<lesson>
+${f.text}
+</lesson>`;
+}
+function setBusy(b) {
+  chat.busy = b;
+  $id("sendIcon").innerHTML = b ? ICON_STOP : ICON_SEND;
+  $id("sendLabel").textContent = b ? "Stop" : "Send";
+  $id("chatSend").setAttribute("aria-label", b ? "Stop the answer" : "Send");
+}
+const scrollMsgs = () => { const m = $id("chatMsgs"); m.scrollTop = m.scrollHeight; };
+function addMsg(role, html) {
+  const el = document.createElement("div"); el.className = "tmsg " + role;
+  if (role === "user") el.textContent = html; else el.innerHTML = html;
+  $id("chatMsgs").append(el); scrollMsgs(); return el;
+}
+function renderChips() {
+  const f = updateChatContext();
+  const ideas = view === "projects"
+    ? ["How should I document an AI project?", "What makes a strong AI project demo?", "Which project from this guide should I build next?", "Quiz me on the guide so far"]
+    : [`Explain ${f.title} more simply`, "Give me a procurement example", "How does this connect to the other topics?", "Quiz me on this", "Where can I read more about this?"];
+  $id("chatChips").innerHTML = chat.turns.length ? "" : ideas.map(t => `<button type="button" class="tchip">${escapeHtml(t)}</button>`).join("");
+  $id("chatChips").querySelectorAll(".tchip").forEach(b => b.onclick = () => ask(b.textContent));
+}
+function welcome() {
+  const f = updateChatContext();
+  $id("chatMsgs").innerHTML = "";
+  addMsg("bot", `<p>Hi! I'm your AI tutor. Ask me anything about <strong>${escapeHtml(f.title)}</strong> or any topic in this guide, or tap a suggestion below.</p>`);
+  renderChips();
+}
+const ERR = {
+  not_granted: "The AI tutor isn't allowed on this page yet. You can turn it on from this page's Permissions menu.",
+  sampling_disabled: "Claude isn't available for this account, so the tutor can't answer here.",
+  rate_limited: "That's a lot of questions in a short time. Wait a minute, then try again.",
+  session_expired: "Your Claude session has ended. Sign in again, then retry.",
+  refused: "I can't help with that one. Try asking it a different way.",
+  prompt_too_large: "This conversation got too long. Start a new chat with the ↺ button.",
+  empty_completion: "I didn't get an answer that time. Try rephrasing the question.",
+};
+function addTools(el, text, pair) {
+  const tools = document.createElement("div"); tools.className = "msg-tools";
+  if (pair) tools.append(makeSaveButton(pair));
+  const say = document.createElement("button"); say.type = "button"; say.textContent = "🔊 Read aloud";
+  say.onclick = () => readAloud(text, say);
+  tools.append(say); el.append(tools);
+}
+function readAloud(text, btn) {
+  stopAll();
+  const clean = plainText(text);
+  if (tts) {
+    const paras = clean.split(/\n+/).map(t => t.trim()).filter(Boolean).flatMap(t => t.match(/[\s\S]{1,1800}(?=\s|$)/g) || [t]).slice(0, 100);
+    btn.textContent = "🔊 Reading…";
+    tts.speak(paras.map(t => ({ text: t })), { rate: +$id("nRate").value }).catch(() => {}).finally(() => { btn.textContent = btn.dataset.label || "🔊 Read aloud"; });
+  } else if (synth) {
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(clean); const v = selectedVoice(); if (v) u.voice = v; u.rate = +$id("nRate").value;
+    synth.speak(u);
+  }
+}
+async function ask(question) {
+  question = (question || "").trim();
+  if (!question || chat.busy || !chat.sample) return;
+  const f = updateChatContext(), ctx = noteContext(f);
+  chat.lastQ = question;
+  $id("chatInput").value = ""; $id("chatChips").innerHTML = "";
+  addMsg("user", question);
+  chat.turns.push({ role: "user", content: question });
+  chat.turns = chat.turns.slice(-12);
+  if (chat.turns[0].role !== "user") chat.turns.shift();
+  const bubble = addMsg("bot", `<span class="thinking">${chat.tier === "quick" ? "Thinking…" : "Thinking deeply… this can take up to a minute."}</span>`);
+  chat.ctl = new AbortController(); setBusy(true);
+  try {
+    const { text, truncated } = await chat.sample([{ role: "user", content: instructions(f) + (chat.toolsOK ? NOTES_RULES : NOTES_RULES_NO_TOOLS) }, ...chat.turns], {
+      cache: false, modelTier: chat.tier, signal: chat.ctl.signal, ...(chat.toolsOK ? { tools: [saveTool(ctx)] } : {}),
+      onText: ({ text }) => { bubble.innerHTML = renderMd(text); scrollMsgs(); },
+    });
+    bubble.innerHTML = renderMd(text) + (truncated ? `<p class="thinking">(Answer was cut short. Ask me to continue.)</p>` : "");
+    const pair = { q: question, a: text, ctx, saved: false };
+    chat.pairs.push(pair); addTools(bubble, text, pair);
+    chat.turns.push({ role: "assistant", content: text });
+  } catch (e) {
+    const kept = e && e.text;
+    if (kept) { bubble.innerHTML = renderMd(kept); chat.turns.push({ role: "assistant", content: kept }); } else bubble.remove();
+    if (!e || e.code !== "cancelled") {
+      const err = addMsg("err", escapeHtml(ERR[e && e.code] || "Something went wrong connecting to Claude."));
+      if (!ERR[e && e.code] || e.code === "empty_completion") {
+        const r = document.createElement("button"); r.type = "button"; r.textContent = "Try again"; r.className = "tchip"; r.style.marginLeft = "10px";
+        r.onclick = () => { err.remove(); chat.turns = chat.turns.filter((t, k, a) => !(k === a.length - 1 && t.role === "user")); ask(chat.lastQ); };
+        err.append(r);
+      }
+      if (e && (e.code === "not_granted" || e.code === "sampling_disabled")) $id("chatInput").disabled = true;
+    }
+  } finally { setBusy(false); scrollMsgs(); }
+}
+function openChat() {
+  document.body.classList.add("chat-open");
+  $id("chatPanel").hidden = false; $id("chatFab").setAttribute("aria-expanded", "true");
+  if (!$id("chatMsgs").children.length) welcome(); else updateChatContext();
+  setTimeout(() => $id("chatInput").focus(), 50);
+}
+function closeChat() {
+  document.body.classList.remove("chat-open", "chat-full");
+  $id("chatPanel").hidden = true; $id("chatFab").setAttribute("aria-expanded", "false");
+  $id("expandIcon").innerHTML = ICON_EXPAND; $id("chatFab").focus();
+}
+$id("chatFab").onclick = openChat;
+$id("chatClose").onclick = closeChat;
+$id("chatSaveAll").onclick = () => saveWholeChat();
+$id("chatNew").onclick = () => { if (chat.ctl) chat.ctl.abort(); chat.turns = []; chat.pairs = []; $id("chatInput").disabled = false; welcome(); $id("chatInput").focus(); };
+$id("chatExpand").onclick = () => {
+  const full = document.body.classList.toggle("chat-full");
+  $id("expandIcon").innerHTML = full ? ICON_SHRINK : ICON_EXPAND;
+  $id("chatExpand").setAttribute("aria-label", full ? "Back to half width" : "Expand to full width");
+  $id("chatExpand").title = full ? "Half width" : "Full width";
+};
+$id("chatPanel").addEventListener("keydown", e => { if (e.key === "Escape" && e.target.tagName !== "TEXTAREA") { e.preventDefault(); closeChat(); } });
+$id("chatForm").onsubmit = e => { e.preventDefault(); if (chat.busy) { chat.ctl && chat.ctl.abort(); return; } ask($id("chatInput").value); };
+$id("chatInput").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); $id("chatForm").requestSubmit(); } });
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
+  chat.tier = b.dataset.tier;
+  document.querySelectorAll(".seg button").forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-pressed", String(x === b)); });
+});
+let ctxTimer = null;
+const refreshCtx = () => { if ($id("chatPanel").hidden) return; clearTimeout(ctxTimer); ctxTimer = setTimeout(() => { updateChatContext(); if (!chat.turns.length) renderChips(); }, 200); };
+window.addEventListener("scroll", refreshCtx, { passive: true });
+window.addEventListener("hashchange", refreshCtx);
+new MutationObserver(refreshCtx).observe($id("main"), { childList: true });
+
+$id("chatMic").onclick = () => {
+  const d = chat.dict; if (!d) return;
+  if (d.active()) { d.stop().catch(() => {}); return; }
+  d.start().catch(e => { if (e && (e.code === "not_granted" || e.code === "unavailable")) $id("chatMic").hidden = true; });
+};
+
+(async () => {
+  if (!window.claude || !window.claude.use) return;
+  claude.use("sample").then(s => { if (s) { chat.sample = s; $id("chatFab").hidden = false; s.limits().then(l => { chat.toolsOK = !!(l && l.tools); }).catch(() => {}); } });
+  claude.use("dictation").then(d => {
+    if (!d) return;
+    chat.dict = d; $id("chatMic").hidden = false;
+    d.onPartial(({ text }) => { $id("chatPartial").hidden = !text; $id("chatPartial").textContent = text ? "Listening: " + text : ""; });
+    d.onFinal(({ text }) => { const box = $id("chatInput"); box.value = box.value ? box.value + text : text.replace(/^\s+/, ""); });
+    d.onState(({ state, reason }) => {
+      $id("chatMic").classList.toggle("listening", state !== "idle");
+      $id("chatMic").setAttribute("aria-label", state === "idle" ? "Ask by voice" : "Stop listening");
+      if (state === "idle") { $id("chatPartial").hidden = true; if (reason === "not_granted" || reason === "unavailable") $id("chatMic").hidden = true; }
+    });
+  });
+  claude.use("tts").then(t => {
+    if (!t) return;
+    tts = t; loadVoices();
+    t.onLine(({ id }) => { if (usingClaude() && N.playing && id != null) { N.idx = +id; highlightItem(+id); } });
+    t.onState(({ state, reason }) => {
+      if (state === "idle" && usingClaude() && N.playing && (reason === "viewer_stopped" || reason === "hidden" || reason === "time_limit")) { N.playing = false; N.paused = false; updateUI(); }
+    });
+  });
+})();
+
+/* ---------- My notes ---------- */
+const NOTES_PAGE = "guide", PAGE_TITLE = "AI Engineering Guide";
+const ALL_TOPICS = SESSIONS.map((s, i) => [i + 1, s.title]).concat(CONCEPTS.map((c, i) => [101 + i, "Concept: " + c.label])).concat([[200, "Projects"]]);
+function noteContext(f) { f = f || focusInfo(); return { topicN: f.topicN, topicTitle: f.topicTitle, step: f.step || "" }; }
+const notes = { mode: "local", list: [], col: null, ready: false, unsub: null, downloads: null, filter: "", confirmId: null, editing: null };
+const NOTES_KEY = "tutorNotes:" + NOTES_PAGE;
+function loadLocal() { try { notes.list = JSON.parse(localStorage.getItem(NOTES_KEY) || "[]"); } catch (e) { notes.list = []; } notes.list.sort((a, b) => b.createdAt - a.createdAt); }
+function saveLocal() { try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes.list)); return true; } catch (e) { return false; } }
+function setWhere(text) { $id("notesWhere").textContent = text || (notes.mode === "db" ? "Saved to your claude.ai account · private to you" : "Saved in this browser only"); }
+function fallbackLocal() { notes.mode = "local"; if (notes.unsub) { notes.unsub(); notes.unsub = null; } loadLocal(); setWhere(); renderNotes(); }
+async function migrateLocal() {
+  let local = []; try { local = JSON.parse(localStorage.getItem(NOTES_KEY) || "[]"); } catch (e) {}
+  if (!local.length) return;
+  for (const n of local) { const { id, ...body } = n; try { await notes.col.doc(String(id).replace(/[^A-Za-z0-9_.~:@+-]/g, "")).set(body); } catch (e) { return; } }
+  try { localStorage.removeItem(NOTES_KEY); } catch (e) {}
+}
+async function initNotes() {
+  loadLocal(); setWhere(); renderNotes();
+  if (!window.claude || !window.claude.use) return;
+  claude.use("downloads").then(d => { notes.downloads = d; }).catch(() => {});
+  const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+  if (!db || !user) return;
+  const uid = await user.id(); if (!uid) return;
+  if ((await user.can("data.write")) === false) return;
+  notes.col = db.collection("data/users/" + uid);
+  notes.mode = "db"; setWhere("Loading your saved notes…");
+  const timer = setTimeout(() => { if (!notes.ready) setWhere("Your saved notes can't be reached yet. Showing what's here."); }, 10000);
+  notes.unsub = notes.col.where("kind", "==", "note").orderBy("createdAt", "desc").onSnapshot(snap => {
+    notes.list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (!snap.metadata.fromCache && !notes.ready) { notes.ready = true; clearTimeout(timer); setWhere(); migrateLocal(); }
+    renderNotes();
+  }, () => { clearTimeout(timer); fallbackLocal(); });
+}
+async function addNote(fields) {
+  const n = { kind: "note", source: fields.source || "ai", topicN: fields.topicN, topicTitle: fields.topicTitle, step: fields.step || "", question: String(fields.question || "").slice(0, 2000), answer: String(fields.answer || "").slice(0, 20000), mine: String(fields.mine || "").slice(0, 20000), createdAt: Date.now() };
+  if (notes.mode === "db") {
+    try { await notes.col.doc().set(n); return true; }
+    catch (e) {
+      if (e && e.code === "quota_exceeded") { toast("Your notes are full. Delete some old ones, then try again."); return false; }
+      if (e && e.code === "unavailable") { try { await new Promise(r => setTimeout(r, 400 + Math.random() * 600)); await notes.col.doc().set(n); return true; } catch (e2) {} }
+      fallbackLocal();
+    }
+  }
+  n.id = "l" + n.createdAt + Math.random().toString(36).slice(2, 7);
+  notes.list.unshift(n);
+  if (!saveLocal()) { notes.list.shift(); toast("This browser won't let the page save notes."); return false; }
+  renderNotes(); return true;
+}
+async function updateNote(id, patch) {
+  patch = { ...patch, updatedAt: Date.now() };
+  if (notes.mode === "db") { try { await notes.col.doc(id).update(patch); return true; } catch (e) { toast("Couldn't save your change. Try again."); return false; } }
+  const n = notes.list.find(x => x.id === id); if (!n) return false;
+  Object.assign(n, patch); if (!saveLocal()) { toast("This browser won't let the page save notes."); return false; } renderNotes(); return true;
+}
+async function deleteNote(id) {
+  if (notes.mode === "db") { try { await notes.col.doc(id).delete(); } catch (e) { toast("Couldn't delete that note. Try again."); } return; }
+  notes.list = notes.list.filter(n => n.id !== id); saveLocal(); renderNotes();
+}
+const topicKey = n => (n.topicN || 0) < 100 ? `${String(n.topicN || 0).padStart(2, "0")} · ${n.topicTitle || "General"}` : (n.topicTitle || "General");
+function noteMatches(n) { const q = notes.filter.trim().toLowerCase(); if (!q) return true; return [n.question, n.answer, n.mine, n.topicTitle, n.step].join(" ").toLowerCase().includes(q); }
+function fmtDate(t) { try { return new Date(t).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }); } catch (e) { return ""; } }
+const topicOptions = sel => ALL_TOPICS.map(([n, t]) => `<option value="${n}" ${n === sel ? "selected" : ""}>${n < 100 ? String(n).padStart(2, "0") + " · " : ""}${escapeHtml(t)}</option>`).join("");
+function editorHtml(kind, n) {
+  const ctx = noteContext();
+  if (kind === "new" || kind === "edit") {
+    const topicN = n ? n.topicN : ctx.topicN;
+    return `<form class="note-editor" data-kind="${kind}">
+      <label>Title<input name="title" maxlength="200" value="${n ? escapeHtml(n.question || "") : ""}" placeholder="e.g. My summary of RAG chunking" required></label>
+      <label>Topic<select name="topic">${topicOptions(topicN)}</select></label>
+      <label>Your note<textarea name="body" rows="5" maxlength="20000" placeholder="Write in your own words. **bold** and - bullet points work.">${n ? escapeHtml(n.mine || "") : ""}</textarea></label>
+      <div class="ed-actions"><button type="submit" class="ed-save">Save note</button><button type="button" class="ed-cancel">Cancel</button></div>
+    </form>`;
+  }
+  return `<form class="note-editor" data-kind="thoughts">
+      <label>My thoughts<textarea name="body" rows="4" maxlength="20000" placeholder="Your own takeaway, in your words.">${escapeHtml(n.mine || "")}</textarea></label>
+      <div class="ed-actions"><button type="submit" class="ed-save">Save</button><button type="button" class="ed-cancel">Cancel</button></div>
+    </form>`;
+}
+function noteCard(n) {
+  const mine = n.source === "mine", editing = notes.editing === n.id;
+  if (mine && editing) return `<article class="ncard mine" data-id="${escapeHtml(n.id)}">${editorHtml("edit", n)}</article>`;
+  return `<article class="ncard ${mine ? "mine" : ""}" data-id="${escapeHtml(n.id)}">
+      ${mine ? `<span class="mine-badge">✏️ My note</span>` : ""}
+      <div class="note-q">${escapeHtml(n.question || (mine ? "(untitled)" : "(no question)"))}</div>
+      <div class="note-meta">${n.step ? escapeHtml(n.step) + " · " : ""}${fmtDate(n.createdAt)}${n.updatedAt ? " · edited" : ""}</div>
+      ${mine ? (n.mine ? `<div class="note-a mine-body">${renderMd(n.mine)}</div>` : "") : (n.answer ? `<div class="note-a clamp">${renderMd(n.answer)}</div>` : "")}
+      ${!mine && n.mine && !editing ? `<div class="thoughts"><b>My thoughts</b>${renderMd(n.mine)}</div>` : ""}
+      ${!mine && editing ? editorHtml("thoughts", n) : ""}
+      <div class="note-tools">
+        ${!mine && n.answer ? `<button type="button" data-act="more">Show more</button>` : ""}
+        ${mine ? `<button type="button" data-act="edit">✏️ Edit</button>` : `<button type="button" data-act="edit">✏️ ${n.mine ? "Edit my thoughts" : "Add my thoughts"}</button>`}
+        <button type="button" data-act="copy">Copy</button>
+        <button type="button" data-act="say">🔊 Read</button>
+        ${notes.confirmId === n.id ? `<button type="button" class="danger" data-act="del-yes">Delete for good</button><button type="button" data-act="del-no">Keep</button>` : `<button type="button" class="danger" data-act="del">Delete</button>`}
+      </div>
+    </article>`;
+}
+function renderNotes() {
+  $id("notesCount").textContent = notes.list.length;
+  const top = notes.editing === "new" ? `<article class="ncard mine">${editorHtml("new")}</article>` : "";
+  const shown = notes.list.filter(noteMatches);
+  if (!notes.list.length) { $id("notesList").innerHTML = top + (top ? "" : `<p class="notes-empty">No saved notes yet. Tap <strong>⭐ Save</strong> under an answer, ask the tutor “save this”, or write your own with <strong>✏️ New note</strong>.</p>`); focusEditor(); return; }
+  if (!shown.length) { $id("notesList").innerHTML = top + `<p class="notes-empty">No notes match “${escapeHtml(notes.filter)}”.</p>`; focusEditor(); return; }
+  const groups = new Map();
+  shown.slice().sort((a, b) => (a.topicN || 0) - (b.topicN || 0) || b.createdAt - a.createdAt).forEach(n => { const k = topicKey(n); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(n); });
+  $id("notesList").innerHTML = top + [...groups].map(([k, list]) => `<section class="notes-group"><h4>${escapeHtml(k)}</h4>${list.map(noteCard).join("")}</section>`).join("");
+  focusEditor();
+}
+function focusEditor() { const f = $id("notesList").querySelector(".note-editor input, .note-editor textarea"); if (f && notes.editing) f.focus(); }
+function noteMd(n) {
+  const meta = `_${n.step ? n.step + " · " : ""}saved ${fmtDate(n.createdAt)}_`;
+  if (n.source === "mine") return `**My note: ${n.question || "Untitled"}**\n\n${n.mine || ""}\n\n${meta}`;
+  return `**Q:** ${n.question}\n\n${n.answer ? "**A:** " + n.answer + "\n\n" : ""}${n.mine ? "**My thoughts:** " + n.mine + "\n\n" : ""}${meta}`;
+}
+function allNotesMd() {
+  const groups = new Map();
+  notes.list.slice().sort((a, b) => (a.topicN || 0) - (b.topicN || 0) || a.createdAt - b.createdAt).forEach(n => { const k = topicKey(n); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(n); });
+  return `# My AI study notes · ${PAGE_TITLE}\n\nExported ${fmtDate(Date.now())}\n\n` + [...groups].map(([k, list]) => `## ${k}\n\n` + list.map(noteMd).join("\n\n---\n\n")).join("\n\n");
+}
+async function copyText(t, okMsg) { try { await navigator.clipboard.writeText(t); toast(okMsg || "Copied"); } catch (e) { toast("Copy isn't allowed here. Use Export instead."); } }
+function toast(msg) { const t = document.createElement("div"); t.className = "chat-toast"; t.setAttribute("role", "status"); t.textContent = msg; $id("chatPanel").append(t); setTimeout(() => t.remove(), 2600); }
+$id("notesList").addEventListener("click", e => {
+  const b = e.target.closest("button[data-act]"); if (!b) return;
+  const card = b.closest(".ncard"), id = card.dataset.id, n = notes.list.find(x => x.id === id); if (!n) return;
+  const act = b.dataset.act;
+  if (act === "more") { const a = card.querySelector(".note-a"); const open = a.classList.toggle("clamp"); b.textContent = open ? "Show more" : "Show less"; }
+  if (act === "copy") copyText(plainText(noteMd(n)), "Note copied");
+  if (act === "say") { b.dataset.label = "🔊 Read"; readAloud((n.question ? n.question + "\n\n" : "") + (n.answer || n.mine || ""), b); }
+  if (act === "edit") { notes.editing = id; notes.confirmId = null; renderNotes(); return; }
+  if (act === "del") { notes.confirmId = id; renderNotes(); }
+  if (act === "del-no") { notes.confirmId = null; renderNotes(); }
+  if (act === "del-yes") { notes.confirmId = null; deleteNote(id); }
+});
+$id("notesList").addEventListener("click", e => { if (!e.target.closest(".ed-cancel")) return; notes.editing = null; renderNotes(); });
+$id("notesList").addEventListener("keydown", e => { if (e.key === "Escape" && notes.editing) { e.preventDefault(); notes.editing = null; renderNotes(); } });
+$id("notesList").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, kind = f.dataset.kind, data = new FormData(f), btn = f.querySelector(".ed-save");
+  const body = String(data.get("body") || "").trim();
+  btn.disabled = true; btn.textContent = "Saving…";
+  let ok = false;
+  if (kind === "new" || kind === "edit") {
+    const title = String(data.get("title") || "").trim(), tn = +data.get("topic"), topic = ALL_TOPICS.find(t => t[0] === tn) || ALL_TOPICS[0];
+    if (!title && !body) { btn.disabled = false; btn.textContent = "Save note"; toast("Write a title or a note first."); return; }
+    const ctx = noteContext();
+    const fields = { source: "mine", topicN: topic[0], topicTitle: topic[1], question: title, mine: body, step: tn === ctx.topicN ? (ctx.step || "") : "" };
+    ok = kind === "new" ? await addNote(fields) : await updateNote(notes.editing, { topicN: fields.topicN, topicTitle: fields.topicTitle, question: title, mine: body });
+  } else ok = await updateNote(notes.editing, { mine: body });
+  if (ok) { notes.editing = null; renderNotes(); toast(kind === "new" ? "Note saved" : "Saved"); }
+  else { btn.disabled = false; btn.textContent = "Save"; }
+});
+$id("notesNew").onclick = () => { notes.editing = "new"; notes.confirmId = null; notes.filter = ""; $id("notesSearch").value = ""; renderNotes(); $id("notesList").scrollTop = 0; };
+$id("notesSearch").addEventListener("input", e => { notes.filter = e.target.value; renderNotes(); });
+$id("notesCopyAll").onclick = () => { if (!notes.list.length) { toast("No notes to copy yet."); return; } copyText(allNotesMd(), "All notes copied. Paste them into your notes app."); };
+$id("notesExport").onclick = async () => {
+  if (!notes.list.length) { toast("No notes to export yet."); return; }
+  const md = allNotesMd(), name = `ai-study-notes-${NOTES_PAGE}.md`;
+  if (!notes.downloads) { copyText(md, "Download isn't available here, so your notes were copied instead."); return; }
+  try { await notes.downloads.save({ filename: name, data: md }); toast("Notes exported"); }
+  catch (e) { if (e && e.code !== "declined") copyText(md, "Download didn't work, so your notes were copied instead."); }
+};
+function showTab(which) {
+  const notesOn = which === "notes";
+  $id("tabChat").setAttribute("aria-selected", String(!notesOn)); $id("tabNotes").setAttribute("aria-selected", String(notesOn));
+  ["chatMsgs", "chatChips", "chatForm"].forEach(id => { $id(id).hidden = notesOn; });
+  document.querySelector(".chat-note").hidden = notesOn;
+  $id("notesView").hidden = !notesOn;
+  if (notesOn) { notes.confirmId = null; notes.editing = null; renderNotes(); $id("notesSearch").focus(); } else $id("chatInput").focus();
+}
+$id("tabChat").onclick = () => showTab("chat");
+$id("tabNotes").onclick = () => showTab("notes");
+function makeSaveButton(pair) {
+  const b = document.createElement("button"); b.type = "button"; b.textContent = "⭐ Save";
+  b.onclick = async () => {
+    if (pair.saved) return;
+    b.textContent = "Saving…";
+    if (await addNote({ ...pair.ctx, question: pair.q, answer: pair.a })) { pair.saved = true; b.textContent = "✓ Saved"; b.classList.add("saved"); }
+    else b.textContent = "⭐ Save";
+  };
+  pair.btn = b; return b;
+}
+async function saveWholeChat() {
+  const todo = chat.pairs.filter(p => !p.saved);
+  if (!chat.pairs.length) { toast("Ask something first, then save it."); return; }
+  if (!todo.length) { toast("Everything in this chat is already saved."); return; }
+  let ok = 0;
+  for (const p of todo) { if (await addNote({ ...p.ctx, question: p.q, answer: p.a })) { ok++; p.saved = true; if (p.btn) { p.btn.textContent = "✓ Saved"; p.btn.classList.add("saved"); } } }
+  toast(`Saved ${ok} ${ok === 1 ? "answer" : "answers"} to My notes`);
+}
+function saveTool(ctx) {
+  return {
+    name: "save_note",
+    description: "Save one question, optionally with its answer, to the learner's private 'My notes' for this topic. Use only when the learner asks to save, bookmark or keep something. Call once per item. Returns 'saved' or an error.",
+    inputSchema: { type: "object", properties: {
+      question: { type: "string", description: "The question to save, in the learner's words." },
+      answer: { type: "string", description: "The answer to save with it, in Markdown. Use your earlier answer from this chat when the learner wants answers saved. Omit to save only the question." },
+    }, required: ["question"] },
+    execute: async (input) => {
+      const ok = await addNote({ ...ctx, question: String(input.question || ""), answer: input.answer ? String(input.answer) : "" });
+      if (!ok) throw new Error("could not save");
+      return "saved";
+    },
+  };
+}
+const NOTES_RULES = `
+Saving notes: this page has a private "My notes" tab. When the learner asks you to save, bookmark or remember questions or answers, call the save_note tool once per item (include your earlier answer from this chat when they want the answer kept), then confirm in one short sentence and mention they can find it under "My notes". Never say you cannot save.`;
+const NOTES_RULES_NO_TOOLS = `
+Saving notes: this page has a private "My notes" tab. If the learner asks you to save something, tell them to tap "⭐ Save" under an answer, or the ⭐ button at the top of the panel to save the whole chat.`;
+initNotes();
+window.__guideTutor = { N, unitList, buildItems, focusInfo, instructions, addNote, notes, renderMd };   // for testing
+})();
+
 </script>
