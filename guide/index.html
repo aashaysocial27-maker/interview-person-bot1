@@ -681,6 +681,30 @@ table.ev-reg tr.fixd td{background:var(--ok-soft)}
 .grf .gs-arrow{align-self:center}
 @media (max-width:640px){.grf{flex-direction:column}.grf .gs-arrow{transform:rotate(90deg);align-self:center}}
 
+/* observability */
+.obs-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.obs-kpis div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.obs-kpis span{font-size:12px;color:var(--muted)}
+.obs-kpis b{font:600 18px var(--mono);font-variant-numeric:tabular-nums}
+.obs-dots{display:grid;grid-template-columns:repeat(50,1fr);gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px}
+.obs-dots i{display:block;aspect-ratio:1;border-radius:2px;background:var(--ok);opacity:.55}
+.obs-dots i.bad{background:var(--bad);opacity:1;transform:scale(1.35);box-shadow:0 0 0 1px var(--surface)}
+.wf{display:flex;flex-direction:column;gap:3px}
+.wf-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,2fr) 52px;gap:10px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:13px}
+.wf-row.on{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.wf-name{display:flex;gap:6px;align-items:center;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.wf-name.child{padding-left:14px}
+.wf-type{font:600 9.5px var(--mono);text-transform:uppercase;padding:1px 5px;border-radius:4px;background:var(--sunk);color:var(--muted);flex-shrink:0}
+.wf-type.t-tool{background:var(--ok-soft);color:var(--ok)} .wf-type.t-generation{background:var(--accent-soft);color:var(--accent)} .wf-type.t-guardrail{background:var(--bad-soft);color:var(--bad)}
+.wf-track{position:relative;height:14px;background:var(--sunk);border-radius:3px}
+.wf-track i{position:absolute;top:2px;bottom:2px;border-radius:2px;background:var(--accent);transition:left .3s,width .3s}
+.wf-track i.st-error{background:var(--bad)} .wf-track i.st-warn{background:#d08a1e}
+.wf-dur{text-align:right;font-size:12px} .wf-dur.slow{color:var(--bad);font-weight:600}
+.wf-detail{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px}
+.wf-detail .bad{color:var(--bad);font-weight:600}
+#obsRows td.mono{white-space:nowrap}
+@media (max-width:640px){.obs-kpis{grid-template-columns:1fr 1fr}.obs-kpis b{font-size:15px}.obs-dots{grid-template-columns:repeat(25,1fr)}.wf-row{grid-template-columns:minmax(0,1fr) 46px;gap:4px 8px}.wf-track{grid-column:1/-1;grid-row:2}}
+
 /* image attachment */
 .img-attach{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 .img-attach img{display:block;width:100%;height:auto}
@@ -2344,6 +2368,130 @@ const SESSIONS = [
         ]
       }
     ]
+  },
+  {
+    "id": "observability",
+    "label": "Observability",
+    "title": "Observability",
+    "intro": "Observability: seeing what your AI does on every request, so you find failures and slowness before users tell you.",
+    "lessons": [
+      {
+        "title": "Why observability? Don't wait for users to complain",
+        "body": [
+          "Think of an agentic newsroom: you give it a single task, and on the right side you watch it work: tool calls being made, some passing, some failing. That live view of what the AI is actually doing is observability.",
+          "Now scale it up. When your chatbot is live, 1,000 users are using it at the same time. 990 won't have a problem, but 10 will: the model returns nothing useful, a tool call fails, a reply takes 30 seconds. While developing the chatbot, the developer <b>should not wait for a user to say “this didn't work”<\/b>. Most of those 10 will never tell you; they'll just leave.",
+          "So observability has to be <b>built in from the start<\/b>: every request records what happened inside, so you can find the 10 failures yourself, proactively. Find them:"
+        ],
+        "widget": "obsDash"
+      },
+      {
+        "title": "What the user sees vs what actually happens",
+        "body": [
+          "Take the TripMate agent. As a user, all you see is text in and text out. In the background, a lot is happening: a guardrail checks the message, the model plans, it calls several tools, maybe searches documents, writes an answer, and a second guardrail checks it.",
+          "Observability is the way to check, proactively, what's working and what's not inside that hidden part. It's like being <b>the AI's doctor, checking the patient's vital signs<\/b>: you don't wait for the patient to collapse; you watch the readings and act on the first warning."
+        ],
+        "diagram": {
+          "label": "Visible vs hidden",
+          "cols": [
+            [
+              {
+                "t": "User sees",
+                "s": "a question and a reply",
+                "k": "accent"
+              }
+            ],
+            [
+              {
+                "t": "Hidden: input guardrail"
+              },
+              {
+                "t": "Hidden: LLM plans (tokens, cost)"
+              },
+              {
+                "t": "Hidden: tool calls (pass / fail, latency)"
+              },
+              {
+                "t": "Hidden: output guardrail"
+              }
+            ],
+            [
+              {
+                "t": "Observability",
+                "s": "records all of it as a trace",
+                "k": "ok"
+              }
+            ]
+          ]
+        },
+        "after": [
+          "The vocabulary you'll see in every tool:",
+          "<div class=\"tbl\"><table><thead><tr><th>Term<\/th><th>What it means<\/th><th>TripMate example<\/th><\/tr><\/thead><tbody><tr><td><b>Trace<\/b><\/td><td>Everything that happened for one request, start to finish<\/td><td>One question: “Is TM202 on time?”<\/td><\/tr><tr><td><b>Span<\/b> (observation)<\/td><td>One step inside a trace, with its start, duration, input, output and status<\/td><td>The <code>get_flight_status<\/code> tool call<\/td><\/tr><tr><td><b>Generation<\/b><\/td><td>A span that is an LLM call, with model, tokens and cost<\/td><td>Gemini writing the answer<\/td><\/tr><tr><td><b>Session<\/b><\/td><td>Several traces from one conversation<\/td><td>A whole chat about one trip<\/td><\/tr><tr><td><b>User<\/b><\/td><td>Who made the request, so you can follow one person's experience<\/td><td>user-042<\/td><\/tr><tr><td><b>Score<\/b><\/td><td>A quality label attached to a trace: thumbs up/down, or an eval or judge score<\/td><td>“helpful = 0” from the user<\/td><\/tr><\/tbody><\/table><\/div>"
+        ]
+      },
+      {
+        "title": "Reading a trace: where is it slow, where did it fail?",
+        "body": [
+          "The PM perspective: a user complains the assistant is slow, or not responding. Open their trace and look at the <b>waterfall<\/b>: each bar is a step, its length is how long it took. You can see straight away which tool has the latency and where it's stuck.",
+          "And you can act on it: if one service takes 5 seconds and another would take 1 second, you can show exactly what switching would save. Try the three runs, and click any step for its details:"
+        ],
+        "widget": "obsTrace",
+        "after": [
+          "Reading tip: the longest bar is rarely the LLM. In agent products, slow external tools, retries and long prompts (big RAG context) are the usual culprits."
+        ]
+      },
+      {
+        "title": "Langfuse: observability with one decorator",
+        "body": [
+          "We use <b>Langfuse<\/b>, an open-source LLM observability tool (use their cloud, or host it yourself). You add the Python decorator <code>@observe<\/code> to your functions, and it records what each one did (inputs, outputs, timing, errors) and logs it for you as a trace.",
+          "Add your keys (from your Langfuse project settings) to Colab Secrets as <code>LANGFUSE_PUBLIC_KEY<\/code> and <code>LANGFUSE_SECRET_KEY<\/code>.",
+          "<div class=\"code-block\"><div class=\"nb-bar\"><span class=\"mono\">python<\/span><button class=\"nb-copy code-copy\">Copy<\/button><\/div><pre># pip install -q langfuse\nimport os, time\nfrom google.colab import userdata\nfrom langfuse import observe, get_client, propagate_attributes\n\nos.environ[&quot;LANGFUSE_PUBLIC_KEY&quot;] = userdata.get(&quot;LANGFUSE_PUBLIC_KEY&quot;)\nos.environ[&quot;LANGFUSE_SECRET_KEY&quot;] = userdata.get(&quot;LANGFUSE_SECRET_KEY&quot;)\nos.environ[&quot;LANGFUSE_BASE_URL&quot;] = &quot;https://cloud.langfuse.com&quot;     # EU region; US: https://us.cloud.langfuse.com\nlangfuse = get_client()\nprint(&quot;Connected:&quot;, langfuse.auth_check())\n\n@observe(as_type=&quot;tool&quot;)                       # each decorated function becomes a step in the trace\ndef get_flight_status(flight: str) -&gt; str:\n    time.sleep(1.2)                            # pretend this API is slow\n    return f&quot;{flight} is on time, departs 14:35&quot;\n\n@observe(as_type=&quot;tool&quot;)\ndef search_hotels(city: str) -&gt; str:\n    raise TimeoutError(&quot;Hotel API did not answer within 5 seconds&quot;)   # recorded as an ERROR step\n\n@observe(as_type=&quot;generation&quot;, name=&quot;gemini-answer&quot;)\ndef call_llm(prompt: str) -&gt; str:\n    response = gemini.models.generate_content(model=MODEL, contents=prompt)\n    usage = response.usage_metadata\n    langfuse.update_current_generation(model=MODEL, usage_details={\n        &quot;input&quot;: usage.prompt_token_count, &quot;output&quot;: usage.candidates_token_count})   # tokens → cost\n    return response.text\n\n@observe(name=&quot;tripmate-request&quot;)              # the outer function becomes the trace\ndef tripmate(question: str) -&gt; str:\n    status = get_flight_status(&quot;TM202&quot;)\n    try:\n        hotels = search_hotels(&quot;Mumbai&quot;)\n    except TimeoutError:\n        hotels = &quot;Hotel search is unavailable right now.&quot;\n    return call_llm(f&quot;Question: {question}\\nFlight: {status}\\nHotels: {hotels}\\nAnswer in 2 lines.&quot;)\n\nwith propagate_attributes(user_id=&quot;user-042&quot;, session_id=&quot;chat-17&quot;, tags=[&quot;tripmate&quot;]):   # who and which chat\n    print(tripmate(&quot;Is TM202 on time, and can you find me a hotel in Mumbai?&quot;))\n\nlangfuse.flush()                               # send everything before the cell ends<\/pre><\/div>",
+          "Open Langfuse → Traces: you'll see <code>tripmate-request<\/code> taking about 1.2 seconds, nearly all of it in <code>get_flight_status<\/code>, <code>search_hotels<\/code> marked as an error, and the Gemini call with its tokens and cost. I checked this exact structure by running the code with the Langfuse SDK (version 5.2)."
+        ],
+        "after": [
+          "<span class=\"fix-line\"><b>Note:<\/b> Langfuse's SDK changed in 2025. Older tutorials call <code>langfuse.update_current_trace(user_id=...)<\/code>, which no longer exists: use <code>propagate_attributes(...)<\/code> as above. <code>LANGFUSE_HOST<\/code> still works but is deprecated in favour of <code>LANGFUSE_BASE_URL<\/code>.<\/span>"
+        ]
+      },
+      {
+        "title": "Tracing the OpenAI Agents SDK automatically",
+        "body": [
+          "For agents built with the OpenAI Agents SDK (Topic 6), you don't need decorators at all. One line of instrumentation turns every agent run, LLM call, tool call and handoff into steps in Langfuse:",
+          "<div class=\"code-block\"><div class=\"nb-bar\"><span class=\"mono\">python<\/span><button class=\"nb-copy code-copy\">Copy<\/button><\/div><pre># pip install -q langfuse openinference-instrumentation-openai-agents\nfrom langfuse import get_client\nfrom openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor\nfrom agents import Agent, Runner\n\nOpenAIAgentsInstrumentor().instrument()        # every agent run, LLM call and tool call becomes a span\nlangfuse = get_client()                         # reads the LANGFUSE_* keys set earlier\n\nresult = await Runner.run(tripmate_agent, &quot;Is TM202 on time?&quot;)\nlangfuse.flush()<\/pre><\/div>",
+          "I tested this with a TripMate agent and a <code>get_flight_status<\/code> tool: the trace contained the agent, each turn and the tool call, with no changes to the agent code.",
+          "<b>Why your notebook turned tracing off:<\/b> the Agents SDK has its own built-in tracing that sends runs to OpenAI's dashboard, which needs an OpenAI key. That's why the Agentic Patterns notebook called <code>set_tracing_disabled(True)<\/code> for Gemini. Langfuse works with any model."
+        ]
+      },
+      {
+        "title": "The vital signs to monitor",
+        "body": [
+          "<div class=\"tbl\"><table><thead><tr><th>Vital sign<\/th><th>What it tells you<\/th><th>Typical alert<\/th><\/tr><\/thead><tbody><tr><td><b>Latency<\/b> (p50 and p95)<\/td><td>How long typical and slowest-5% requests take; p95 is what unhappy users feel<\/td><td>p95 above 8 seconds<\/td><\/tr><tr><td><b>Time to first token<\/b><\/td><td>How quickly the reply starts appearing (matters when streaming)<\/td><td>Above 2 seconds<\/td><\/tr><tr><td><b>Error rate<\/b><\/td><td>Share of requests that fail or time out<\/td><td>Above 1%<\/td><\/tr><tr><td><b>Tool failure rate<\/b><\/td><td>Per tool: which integration is breaking<\/td><td>Any tool above 2%<\/td><\/tr><tr><td><b>Tokens and cost<\/b><\/td><td>Per request, per user, per feature; spot runaway prompts and loops<\/td><td>Cost per request doubles<\/td><\/tr><tr><td><b>Guardrail triggers<\/b><\/td><td>How often input or output checks block; a sudden spike can mean an attack, or a bad prompt change<\/td><td>Spike against last week<\/td><\/tr><tr><td><b>User feedback<\/b><\/td><td>Thumbs, edits, escalations to a human<\/td><td>Thumbs-down above 5%<\/td><\/tr><tr><td><b>Online eval scores<\/b><\/td><td>An LLM judge scoring a sample of live replies (Topic 9)<\/td><td>Correctness below the launch bar<\/td><\/tr><\/tbody><\/table><\/div>",
+          "Look at <b>p95, not just the average<\/b>: an average of 2 seconds can hide 1 user in 20 waiting 10 seconds. The thresholds above are typical starting points; set your own from your users' expectations."
+        ]
+      },
+      {
+        "title": "From logs to action",
+        "body": [
+          "AI produces a lot of logs: every request can create a dozen steps. So you need a way to check what's working and what isn't, and to analyse it, not just store it:",
+          "<ul class=\"plain-list\"><li><b>Dashboards<\/b> for the vital signs, split by feature, model and customer segment.<\/li><li><b>Alerts<\/b> when a metric crosses its threshold, so someone looks within minutes, not days.<\/li><li><b>Filters<\/b>: show only errors, only slow traces, only thumbs-down, only one user.<\/li><li><b>Online evals:<\/b> score a sample of live traces with an LLM judge, and attach the scores to the traces.<\/li><li><b>Close the loop:<\/b> every confirmed failure becomes a new golden in your eval set (Topic 9), so it can't quietly come back.<\/li><\/ul>",
+          "<span class=\"pm-line\"><b>PM perspective:<\/b> when users say it's slow or not responding, you don't guess. Open their traces, find the step with the latency or the error, and compare options with numbers (“switching hotel provider cuts this request from 7.4 to 3.4 seconds”). The same data shows cost per feature, which model is worth its price, and whether last week's change made things better or worse.<\/span>"
+        ]
+      },
+      {
+        "title": "Privacy and cost of logging",
+        "body": [
+          "Traces contain real user messages, so treat them like production data:",
+          "<ul class=\"plain-list\"><li><b>Mask personal data<\/b> before it leaves your app: Langfuse takes a <code>mask<\/code> function, for example to replace phone numbers and emails with <code>[REDACTED]<\/code>.<\/li><li><b>Sample<\/b> very high traffic: <code>sample_rate=0.2<\/code> keeps 20% of traces, which is usually enough to spot trends.<\/li><li><b>Retention:<\/b> keep detailed traces only as long as you need them, and agree it with your security team.<\/li><li><b>Self-hosting:<\/b> Langfuse is open source, so traces can stay inside your own cloud when data rules require it (System Architecture, Topic 8).<\/li><\/ul>",
+          "<div class=\"code-block\"><div class=\"nb-bar\"><span class=\"mono\">python<\/span><button class=\"nb-copy code-copy\">Copy<\/button><\/div><pre>import re\nfrom langfuse import Langfuse\n\ndef mask_pii(data, **kwargs):                  # runs on every input and output before sending\n    return re.sub(r&quot;\\+?\\d[\\d\\s-]{7,}\\d&quot;, &quot;[REDACTED PHONE]&quot;, data) if isinstance(data, str) else data\n\nlangfuse = Langfuse(mask=mask_pii, sample_rate=0.2)<\/pre><\/div>"
+        ]
+      },
+      {
+        "title": "The tools landscape",
+        "body": [
+          "<div class=\"tbl\"><table><thead><tr><th>Tool<\/th><th>Good to know<\/th><\/tr><\/thead><tbody><tr><td><b>Langfuse<\/b><\/td><td>Open source, cloud or self-hosted; traces, prompts, evals and cost; works with any model<\/td><\/tr><tr><td><b>LangSmith<\/b><\/td><td>From the LangChain team; strongest with LangChain and LangGraph apps<\/td><\/tr><tr><td><b>Arize Phoenix<\/b><\/td><td>Open source, built on OpenTelemetry; strong on evals and debugging<\/td><\/tr><tr><td><b>Helicone<\/b><\/td><td>Sits as a proxy in front of model APIs; very quick to add for cost and latency<\/td><\/tr><tr><td><b>Datadog, New Relic and similar<\/b><\/td><td>Add LLM views to the monitoring many companies already use<\/td><\/tr><tr><td><b>OpenAI Traces<\/b><\/td><td>Built into the OpenAI Agents SDK; needs an OpenAI key<\/td><\/tr><\/tbody><\/table><\/div>",
+          "Most of these speak <b>OpenTelemetry<\/b>, the open standard for traces, including its emerging conventions for AI (“GenAI semantic conventions”). Instrumenting with OpenTelemetry keeps you free to switch tools later, the same provider-agnostic idea as the model gateway in Topic 1.",
+          "<span class=\"link-line\">Builds on Tool Calling (Topic 3: observability), Agentic Patterns (Topic 6), Guardrails (Topic 7) and LLM Evals (Topic 9).<\/span>"
+        ]
+      }
+    ]
   }
 ];
 
@@ -4004,8 +4152,92 @@ function bindGrFlow(){
   draw();
 }
 
+/* ============================================================
+   OBSERVABILITY WIDGETS (illustrative data)
+   ============================================================ */
+const OBS_FAIL = [
+  ["user-118", "Tool failure", "search_hotels: HotelHub API timed out after 5 s", "5.3"], ["user-342", "Tool failure", "search_hotels: HotelHub API timed out after 5 s", "5.4"],
+  ["user-509", "Tool failure", "get_flight_status: 503 from airline API", "1.2"], ["user-777", "Tool failure", "search_hotels: HotelHub API timed out after 5 s", "5.2"],
+  ["user-021", "Empty or invalid reply", "Model returned an empty message after a long prompt", "2.4"], ["user-650", "Empty or invalid reply", "JSON didn't match the booking schema", "1.9"],
+  ["user-903", "Empty or invalid reply", "Reply cut off at max_tokens", "4.8"], ["user-266", "Too slow", "Agent looped through 9 tool calls (max-steps hit)", "31.0"],
+  ["user-488", "Too slow", "Retried the model 3 times after rate limits", "28.6"], ["user-835", "Blocked by mistake", "Input guardrail flagged a normal refund question", "0.6"]
+];
+const OBS_FAIL_IDX = [37, 118, 205, 342, 509, 611, 650, 777, 835, 903];
+let obsShow = false, obsCause = "All";
+const TRACES = {
+  slow: { label: "Slow run (user complaint)", spans: [
+    ["tripmate-request", "trace", 0, 7.4, "ok", "Input: Is TM202 on time, and can you find me a hotel in Mumbai?"],
+    ["input guardrail", "guardrail", 0, 0.4, "ok", "Small model · 210 tokens · safe"],
+    ["TripMate plans", "generation", 0.4, 1.1, "ok", "gemini-3.8-flash · 820 in / 60 out tokens · decides to call 2 tools"],
+    ["get_flight_status", "tool", 1.5, 0.4, "ok", "Airline API · TM202 on time, departs 14:35"],
+    ["search_hotels", "tool", 1.9, 5.0, "ok", "HotelHub API · 5.0 s · 12 hotels returned · the bottleneck"],
+    ["TripMate answers", "generation", 6.9, 0.4, "ok", "gemini-3.8-flash · 1,450 in / 70 out tokens"],
+    ["output guardrail", "guardrail", 7.3, 0.1, "ok", "Python check · no phone numbers"]] },
+  fast: { label: "After switching hotel provider", spans: [
+    ["tripmate-request", "trace", 0, 3.4, "ok", "Same question, same answer quality, 4 seconds faster"],
+    ["input guardrail", "guardrail", 0, 0.4, "ok", "Small model · safe"],
+    ["TripMate plans", "generation", 0.4, 1.1, "ok", "gemini-3.8-flash · decides to call 2 tools"],
+    ["get_flight_status", "tool", 1.5, 0.4, "ok", "Airline API · on time"],
+    ["search_hotels", "tool", 1.9, 1.0, "ok", "FastStay API · 1.0 s · 12 hotels returned"],
+    ["TripMate answers", "generation", 2.9, 0.4, "ok", "gemini-3.8-flash"],
+    ["output guardrail", "guardrail", 3.3, 0.1, "ok", "Python check · clean"]] },
+  fail: { label: "Failed run", spans: [
+    ["tripmate-request", "trace", 0, 7.0, "warn", "Answered without hotels: the user saw “Hotel search is unavailable right now.”"],
+    ["input guardrail", "guardrail", 0, 0.4, "ok", "Small model · safe"],
+    ["TripMate plans", "generation", 0.4, 1.1, "ok", "decides to call 2 tools"],
+    ["get_flight_status", "tool", 1.5, 0.4, "ok", "Airline API · on time"],
+    ["search_hotels", "tool", 1.9, 5.0, "error", "ERROR · TimeoutError: HotelHub API did not answer within 5 seconds"],
+    ["TripMate answers", "generation", 6.9, 0.1, "ok", "Apologises for the missing hotel results"],
+    ["output guardrail", "guardrail", 7.0, 0.0, "ok", "clean"]] }
+};
+let obsRun = "slow", obsSpan = 4;
+
+function obsWidget(kind){
+  if (kind === "obsDash") return `<div class="widget"><div class="obs-kpis">
+      <div><span>Requests today</span><b>1,000</b></div><div><span>Success rate</span><b>99.0%</b></div>
+      <div><span>Latency p50 / p95</span><b>2.1 s / 6.8 s</b></div><div><span>Cost per request</span><b>$0.004</b></div></div>
+    <div class="obs-dots" id="obsDots" role="img" aria-label="1,000 requests: 990 succeeded, 10 failed"></div>
+    <div class="pipe-nav"><button class="btn" id="obsFind">Find the failing users</button><span class="msg" id="obsMsg">Each square is one user's request today.</span></div>
+    <div id="obsFails" hidden><div class="swap" id="obsCauses"></div><div class="tbl"><table><thead><tr><th>User</th><th>Cause</th><th>What the trace shows</th><th>Latency</th></tr></thead><tbody id="obsRows"></tbody></table></div></div>
+    <p class="fig-cap"><small>Illustrative data.</small></p></div>`;
+  if (kind === "obsTrace") return `<div class="widget"><div class="swap">${Object.entries(TRACES).map(([k, t]) => `<button class="chip" data-obr="${k}" aria-pressed="${k === obsRun}">${esc(t.label)}</button>`).join("")}</div>
+    <div class="wf" id="wf"></div><div class="wf-detail" id="wfDetail"></div><p class="fig-cap"><small>Illustrative trace, laid out like Langfuse's timeline view.</small></p></div>`;
+  return "";
+}
+function bindObs(){
+  if ($("#obsDots")){
+    const drawDots = () => { $("#obsDots").innerHTML = Array.from({ length: 1000 }, (_, i) => `<i class="${OBS_FAIL_IDX.includes(i) && obsShow ? "bad" : ""}"></i>`).join(""); };
+    const drawFails = () => {
+      const causes = ["All", ...new Set(OBS_FAIL.map(f => f[1]))];
+      $("#obsCauses").innerHTML = causes.map(c => `<button class="chip" data-obc="${esc(c)}" aria-pressed="${c === obsCause}">${esc(c)} (${c === "All" ? OBS_FAIL.length : OBS_FAIL.filter(f => f[1] === c).length})</button>`).join("");
+      $("#obsRows").innerHTML = OBS_FAIL.filter(f => obsCause === "All" || f[1] === obsCause).map(f => `<tr><td class="mono">${f[0]}</td><td>${esc(f[1])}</td><td>${esc(f[2])}</td><td class="mono">${f[3]} s</td></tr>`).join("");
+      document.querySelectorAll("[data-obc]").forEach(b => b.onclick = () => { obsCause = b.dataset.obc; drawFails(); });
+    };
+    $("#obsFind").onclick = () => { obsShow = !obsShow; drawDots(); $("#obsFails").hidden = !obsShow; $("#obsFind").textContent = obsShow ? "Hide failures" : "Find the failing users";
+      $("#obsMsg").innerHTML = obsShow ? "<b>10 of 1,000</b> requests failed. None of these users filed a complaint." : "Each square is one user's request today."; if (obsShow) drawFails(); };
+    drawDots();
+  }
+  if ($("#wf")){
+    const draw = () => {
+      const t = TRACES[obsRun], total = Math.max(...Object.values(TRACES).map(x => x.spans[0][3]));
+      document.querySelectorAll("[data-obr]").forEach(b => b.setAttribute("aria-pressed", b.dataset.obr === obsRun));
+      $("#wf").innerHTML = t.spans.map(([n, type, s, d, st], i) => `<button class="wf-row ${i === obsSpan ? "on" : ""}" data-wf="${i}">
+        <span class="wf-name ${i ? "child" : ""}"><span class="wf-type t-${type}">${type}</span>${esc(n)}</span>
+        <span class="wf-track"><i class="st-${st}" style="left:${s / total * 100}%;width:${Math.max(.6, d / total * 100)}%"></i></span>
+        <span class="wf-dur mono ${d >= 3 ? "slow" : ""}">${d.toFixed(1)} s</span></button>`).join("");
+      const sp = t.spans[obsSpan];
+      $("#wfDetail").innerHTML = `<b>${esc(sp[0])}</b> <span class="wf-type t-${sp[1]}">${sp[1]}</span> · starts at ${sp[2].toFixed(1)} s · takes <b>${sp[3].toFixed(1)} s</b>${sp[4] === "error" ? ' · <span class="bad">ERROR</span>' : ""}<br>${esc(sp[5])}`;
+      document.querySelectorAll("[data-wf]").forEach(b => b.onclick = () => { obsSpan = +b.dataset.wf; draw(); });
+    };
+    document.querySelectorAll("[data-obr]").forEach(b => b.onclick = () => { obsRun = b.dataset.obr; draw(); });
+    draw();
+  }
+}
+
+
 function widget(kind, s){
   const rw = ragWidget(kind); if (rw) return rw;
+  const ow = obsWidget(kind); if (ow) return ow;
   const gw = grWidget(kind); if (gw) return gw;
   const ew = evWidget(kind); if (ew) return ew;
   const pw = patWidget(kind); if (pw) return pw;
@@ -4087,6 +4319,7 @@ function bind(){
   bindArch();
   bindEvals();
   bindGrFlow();
+  bindObs();
   bindCopy();
   document.querySelectorAll("[data-goto-concept]").forEach(a => a.onclick = () => { concept = a.dataset.gotoConcept; store.set("fieldnotes-concept", concept); });
 }
