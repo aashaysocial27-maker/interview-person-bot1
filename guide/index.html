@@ -846,6 +846,92 @@ table.ev-reg tr.fixd td{background:var(--ok-soft)}
   .pm-grid{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* explainer scenes: a 1280×720 stage */
+.xv-stage{position:relative;width:1280px;height:720px;background:#f7f8fb;color:#171a21;font-family:"IBM Plex Sans",system-ui,sans-serif;overflow:hidden;
+  background-image:linear-gradient(#e3e6ee 1px,transparent 1px),linear-gradient(90deg,#e3e6ee 1px,transparent 1px);background-size:40px 40px}
+.xv-scene{position:absolute;inset:0;padding:56px 72px 120px;display:flex;flex-direction:column;gap:26px}
+.xv-scene>*{transition:none}
+.xv-center{margin:auto;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}
+.xv-eyebrow{font:500 18px "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:#5b6170}
+.xv-h1{font:700 66px/1.1 "Space Grotesk",system-ui,sans-serif;margin:0;letter-spacing:-.01em}
+.xv-h2{font:700 44px/1.15 "Space Grotesk",system-ui,sans-serif;margin:0}
+.xv-sub{font-size:28px;color:#5b6170;margin:0}
+.xv-q{font-size:24px;color:#5b6170;margin:0}
+.xv-note{font-size:24px;margin:0;background:#e3e7fb;border-radius:12px;padding:14px 20px;align-self:flex-start}
+.xv-note small{color:#5b6170;font-size:18px}
+.xv-small{font-size:20px;color:#5b6170;margin:0}
+.xv-flow{display:flex;align-items:center;gap:18px}
+.xv-pill{font-size:26px;background:#fff;border:2px solid #d9dce4;border-radius:999px;padding:12px 24px}
+.xv-pill.ok{border-color:#1f8a5b;color:#1f8a5b;background:#dcf2e7}
+.xv-arrow{font-size:34px;color:#5b6170}
+.xv-arrow.big{font-size:54px}
+.xv-box{display:flex;flex-direction:column;gap:4px;background:#fff;border:2px solid #d9dce4;border-radius:14px;padding:16px 22px;font-size:24px}
+.xv-box b{font:600 28px "Space Grotesk",sans-serif}
+.xv-box small{font:18px "IBM Plex Mono",monospace;color:#5b6170}
+.xv-box.acc{border-color:#3a4fd6;background:#e3e7fb;color:#3a4fd6;font:600 28px "Space Grotesk",sans-serif}
+.xv-box.big{font-size:30px;padding:26px 30px}
+.xv-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.xv-step{background:#fff;border:2px solid #d9dce4;border-radius:14px;padding:18px;font:600 24px "Space Grotesk",sans-serif;display:flex;flex-direction:column;gap:8px;transition:background .2s,border-color .2s}
+.xv-step b{font:600 20px "IBM Plex Mono",monospace;color:#5b6170}
+.xv-step.on{border-color:#3a4fd6;background:#e3e7fb;color:#3a4fd6;box-shadow:0 6px 0 #3a4fd6}
+.xv-code{font:20px/1.55 "IBM Plex Mono",monospace;background:#fff;border:2px solid #d9dce4;border-radius:14px;padding:18px 22px;margin:0;white-space:pre}
+.xv-code span{border-radius:4px;padding:1px 2px;transition:background .2s}
+.xv-code span.on{background:#fff1c2;box-shadow:0 0 0 3px #fff1c2}
+.xv-code.sm{font-size:19px;padding:12px 16px}
+.xv-code i{color:#c2410c;font-style:normal}
+.xv-two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.xv-card{background:#fff;border:2px solid #d9dce4;border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:12px;font-size:22px}
+.xv-card b{font:600 26px "Space Grotesk",sans-serif}
+.xv-card p{margin:0;color:#5b6170}
+.xv-card.bad{border-color:#c2410c;background:#fde7dc}
+.xv-card.ok{border-color:#1f8a5b;background:#dcf2e7}
+.xv-card.acc{border-color:#3a4fd6;background:#e3e7fb}
+.xv-tag{align-self:flex-start;font:600 18px "IBM Plex Mono",monospace;padding:4px 10px;border-radius:8px;background:#eceef3;color:#5b6170}
+.xv-tag.bad{background:#c2410c;color:#fff} .xv-tag.ok{background:#1f8a5b;color:#fff} .xv-tag.acc{background:#3a4fd6;color:#fff}
+.xv-list{display:flex;flex-direction:column;gap:10px;font-size:26px}
+.xv-list.mono{font:500 28px "IBM Plex Mono",monospace}
+.xv-gw{display:flex;align-items:center;gap:24px}
+.xv-col{display:flex;flex-direction:column;gap:14px;flex:1}
+.xv-prov{display:flex;flex-direction:column;gap:4px;background:#fff;border:2px solid #d9dce4;border-radius:14px;padding:14px 20px;transition:background .2s,border-color .2s}
+.xv-prov b{font:600 26px "Space Grotesk",sans-serif}
+.xv-prov code{font:18px "IBM Plex Mono",monospace;color:#5b6170}
+.xv-prov.on{border-color:#1f8a5b;background:#dcf2e7;box-shadow:0 6px 0 #1f8a5b}
+.xv-table{display:flex;flex-direction:column;gap:8px}
+.xv-tr{display:grid;grid-template-columns:1fr 1.6fr 1.6fr;gap:16px;background:#fff;border:2px solid #d9dce4;border-radius:12px;padding:14px 20px;font-size:22px}
+.xv-tr span:nth-child(2){font-family:"IBM Plex Mono",monospace;color:#3a4fd6}
+.xv-tr.th{background:#eceef3;font:600 18px "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em;color:#5b6170}
+.xv-tr.th span{color:#5b6170;font-family:"IBM Plex Mono",monospace}
+.xv-pairs{display:flex;flex-direction:column;gap:16px}
+.xv-pair{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center}
+.xv-vs{font:600 22px "IBM Plex Mono",monospace;color:#5b6170}
+.xv-chips{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:22px}
+.xv-chips i{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:19px;background:#fff;border:2px dashed #d9dce4;border-radius:999px;padding:6px 14px}
+.xv-errs{display:flex;flex-direction:column;gap:12px}
+.xv-err{display:grid;grid-template-columns:1.3fr auto 1fr;gap:18px;align-items:center;background:#fff;border:2px solid #d9dce4;border-radius:12px;padding:12px 20px}
+.xv-err code{font:22px "IBM Plex Mono",monospace;color:#c2410c}
+.xv-err b{font:600 24px "Space Grotesk",sans-serif;color:#3a4fd6}
+.xv-grid4{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.xv-cap{position:absolute;left:72px;right:72px;bottom:30px;min-height:64px;display:flex;align-items:center;justify-content:center;text-align:center;font:500 25px/1.35 "IBM Plex Sans",sans-serif;color:#fff;background:rgba(23,26,33,.86);border-radius:14px;padding:12px 22px}
+.xv-prog{position:absolute;left:0;bottom:0;height:6px;background:#3a4fd6}
+.xv-num{position:absolute;right:28px;top:22px;font:500 16px "IBM Plex Mono",monospace;color:#5b6170}
+/* explainer card */
+.xcard{margin:18px 0 6px;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.xcard-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.xcard-head h3{margin:0;font:600 1.05rem var(--display)}
+.xtabs{display:flex;gap:4px;background:var(--sunk);border-radius:10px;padding:3px}
+.xtabs button{border:0;background:none;color:var(--muted);font:500 .85rem var(--body);padding:6px 12px;border-radius:8px;cursor:pointer}
+.xtabs button.on{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.xview{position:relative;width:100%;aspect-ratio:16/9;background:#f7f8fb;overflow:hidden}
+.xview .xv-stage{position:absolute;left:0;top:0;transform-origin:0 0}
+.xview video{width:100%;height:100%;display:block;background:#000}
+.xctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--line)}
+.xctl button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:8px;padding:6px 12px;font:500 .85rem var(--body);cursor:pointer}
+.xctl button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.xctl button:disabled{opacity:.45;cursor:default}
+.xctl .xinfo{margin-left:auto;font:.8rem var(--mono);color:var(--muted)}
+.xctl a{font-size:.85rem;color:var(--accent)}
+.xstart{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(23,26,33,.28);border:0;cursor:pointer}
+.xstart span{display:flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-fg);font:600 1rem var(--display);padding:12px 20px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 </style>
 
 <div class="wrap">
@@ -2677,9 +2763,157 @@ function progress(){
 
 const chev = `<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>`;
 
+/* ============================================================
+   EXPLAINER VIDEOS: scenes rendered from progress p (0 → 1),
+   shared by the in-guide narrated player and the MP4 renderer.
+   ============================================================ */
+const EXPLAINERS = {
+  "calling-llms-through-apis": {
+    title: "Calling LLMs through APIs", file: "assets/explainer-calling-llms.mp4",
+    scenes: [
+      { cap: "Calling LLMs through APIs. Under every chatbot, copilot and agent is the same thing: send text, get text back.",
+        html: `<div class="xv-center"><span class="xv-eyebrow" data-at=".02">AI Engineering Guide · Topic 1</span><h1 class="xv-h1" data-at=".08">Calling LLMs through APIs</h1>
+          <div class="xv-flow" data-at=".35"><span class="xv-pill">“Explain an invoice”</span><span class="xv-arrow">→</span><span class="xv-box acc">LLM API</span><span class="xv-arrow">→</span><span class="xv-pill ok">“An invoice is…”</span></div>
+          <p class="xv-sub" data-at=".6">Send text, get text back.</p></div>` },
+      { cap: "Every AI product follows four steps. First, authenticate with your API key. Second, choose a model. Third, send your messages. Fourth, read the response.",
+        html: `<h2 class="xv-h2" data-at=".02">An LLM is just an API call: four steps</h2>
+          <div class="xv-steps">${["Authenticate", "Choose a model", "Send messages", "Read the response"].map((t, i) => `<div class="xv-step" data-at="${(.16 + i * .19).toFixed(2)}" data-hl="${(.16 + i * .19).toFixed(2)}-${(.35 + i * .19).toFixed(2)}"><b>${i + 1}</b>${t}</div>`).join("")}</div>
+          <pre class="xv-code" data-at=".1"><span data-hl=".16-.35">gemini = genai.Client(api_key=userdata.get("GEMINI_API_KEY"))</span>
+resp = gemini.models.generate_content(
+<span data-hl=".35-.54">    model="gemini-3.8-flash",</span>
+<span data-hl=".54-.73">    contents="Explain what an invoice is in one sentence.",</span>
+)
+<span data-hl=".73-1.01">print(resp.text)</span></pre>` },
+      { cap: "An API key is a credential, so handle it like a password. Never write it in your code. Keep it in Colab Secrets, an environment variable, or a secrets vault. One key printed in a screenshot is all it takes to leak it.",
+        html: `<h2 class="xv-h2" data-at=".02">Keys are credentials: handle them like passwords</h2>
+          <div class="xv-two"><div class="xv-card bad" data-at=".2"><span class="xv-tag bad">✕ Never</span><pre class="xv-code sm">api_key = "AIzaSyD-4f…k2Q"   <i>← in the code</i></pre><pre class="xv-code sm">print(key)                    <i>← in a screenshot</i></pre></div>
+          <div class="xv-card ok" data-at=".42"><span class="xv-tag ok">✓ Instead</span><div class="xv-list"><span data-at=".45">🔑 Colab Secrets</span><span data-at=".52">⚙️ Environment variables</span><span data-at=".59">🏦 A secrets vault</span></div></div></div>
+          <p class="xv-note" data-at=".78">One leaked key = someone else's bill on your account.</p>` },
+      { cap: "Models are interchangeable parts. Groq and Gemini both accept OpenAI's request format, so the same code works by changing one setting: the base URL. Wrap that in one ask function, and you have a tiny LLM gateway.",
+        html: `<h2 class="xv-h2" data-at=".02">Models are interchangeable parts</h2>
+          <div class="xv-gw"><div class="xv-box acc big" data-at=".12">ask(platform, model, prompt)</div><span class="xv-arrow big" data-at=".2">→</span>
+          <div class="xv-col">${[["OpenAI", "base_url = None (default)"], ["Groq", "api.groq.com/openai/v1"], ["Gemini", "generativelanguage.googleapis.com/…/openai/"]].map(([n, u], i) => `<div class="xv-prov" data-at="${(.25 + i * .06).toFixed(2)}" data-hl="${(.4 + i * .18).toFixed(2)}-${(.58 + i * .18).toFixed(2)}"><b>${n}</b><code>${u}</code></div>`).join("")}</div></div>
+          <p class="xv-note" data-at=".8">Same code, one setting changed: a tiny “LLM gateway” or “model router”.</p>` },
+      { cap: "Every provider is slightly different. Claude needs max tokens, and each provider puts the answer text in a different place. A small wrapper keeps those differences in one place.",
+        html: `<h2 class="xv-h2" data-at=".02">Every provider is slightly different</h2>
+          <div class="xv-table">${[["Provider", "Where the answer is", "Watch out"], ["Gemini", "resp.text", "config object for settings"], ["OpenAI / Groq", "resp.choices[0].message.content", "same request format"], ["Claude", "resp.content[0].text", "needs max_tokens; no temperature"]].map((r, i) => `<div class="xv-tr ${i ? "" : "th"}" data-at="${(.12 + i * .14).toFixed(2)}">${r.map(c => `<span>${c}</span>`).join("")}</div>`).join("")}</div>
+          <p class="xv-note" data-at=".78">That's why teams build a wrapper layer: the differences live in one place.</p>` },
+      { cap: "Picking a model is a trade-off: big or small, free or paid, fast or smart. And not everything in a model list can chat. Some are safety filters, speech to text, or text to speech.",
+        html: `<h2 class="xv-h2" data-at=".02">Picking a model is a trade-off</h2>
+          <div class="xv-pairs">${[["Big", "gpt-oss-120b", "Small", "gpt-oss-20b"], ["Free", "Groq, Gemini free tier", "Paid", "OpenAI, Claude"], ["Fast", "", "Smart", ""]].map(([a, as, b, bs], i) => `<div class="xv-pair" data-at="${(.14 + i * .14).toFixed(2)}"><span class="xv-box"><b>${a}</b>${as ? `<small>${as}</small>` : ""}</span><span class="xv-vs">vs</span><span class="xv-box"><b>${b}</b>${bs ? `<small>${bs}</small>` : ""}</span></div>`).join("")}</div>
+          <div class="xv-chips" data-at=".66"><span>Not chat models:</span><i>prompt-guard (safety filter)</i><i>whisper (speech to text)</i><i>orpheus (text to speech)</i></div>` },
+      { cap: "Temperature trades predictability for creativity. At zero, the same question gave the same startup name three times. At one point five, every answer was different. Use low for extraction and contracts, higher for brainstorming.",
+        html: `<h2 class="xv-h2" data-at=".02">Temperature: predictability vs creativity</h2>
+          <p class="xv-q" data-at=".08">“Give me a catchy name for a procurement analytics startup.” Asked 3 times:</p>
+          <div class="xv-two"><div class="xv-card" data-at=".2"><span class="xv-tag">temperature = 0.0</span><div class="xv-list mono"><span data-at=".24">SpendSight</span><span data-at=".28">SpendSight</span><span data-at=".32">SpendSight</span></div></div>
+          <div class="xv-card acc" data-at=".42"><span class="xv-tag acc">temperature = 1.5</span><div class="xv-list mono"><span data-at=".46">Acquisytics</span><span data-at=".5">BidVision Analytics</span><span data-at=".54">SpendScope</span></div></div></div>
+          <p class="xv-note" data-at=".72">Low for extraction and contract checks · higher for brainstorming. <small>(Real outputs from your notebook.)</small></p>` },
+      { cap: "Debugging is most of the job. Read the last line of the error, and ask which layer broke: authentication, model choice, dependencies, runtime state, or a changed API contract.",
+        html: `<h2 class="xv-h2" data-at=".02">Debugging: read the last line, find the layer</h2>
+          <div class="xv-errs">${[["SecretNotFoundError, 401", "Authentication"], ["404 model not found", "Model choice"], ["ImportError (version clash)", "Environment & dependencies"], ["NameError after a restart", "Runtime state"], ["TypeError: temperature", "API contract changes"]].map(([e, l], i) => `<div class="xv-err" data-at="${(.12 + i * .13).toFixed(2)}"><code>${e}</code><span class="xv-arrow">→</span><b>${l}</b></div>`).join("")}</div>` },
+      { cap: "APIs and models change all the time. Model names get retired and parameters get removed. So list the available models and check the docs, instead of hard-coding names and hoping they keep working.",
+        html: `<h2 class="xv-h2" data-at=".02">APIs and models change all the time</h2>
+          <div class="xv-two"><div class="xv-card bad" data-at=".14"><span class="xv-tag bad">Retired</span><pre class="xv-code sm"><s>model="gpt-5-mini"</s>   → 404</pre><pre class="xv-code sm"><s>temperature=0.7</s>      → TypeError</pre></div>
+          <div class="xv-card ok" data-at=".4"><span class="xv-tag ok">The habit</span><pre class="xv-code sm">for m in client.models.list():
+    print(m.id)</pre><p class="xv-small">…then check the docs.</p></div></div>` },
+      { cap: "For a product manager, this maps to real decisions. Avoid vendor lock-in. Control cost with small models for routine work. Put keys, outages and retired models on the risk register. And use guardrails to screen prompts before they reach the model.",
+        html: `<h2 class="xv-h2" data-at=".02">What it means for a PM</h2>
+          <div class="xv-grid4">${[["Vendor lock-in", "Switch models like suppliers: on cost, quality or availability."], ["Cost control", "Small or free models for routine work; big ones where quality matters."], ["Risk", "Keys, outages and retired models belong on the risk register."], ["Guardrails", "Screen prompts before they reach the main model."]].map(([t, d], i) => `<div class="xv-card" data-at="${(.12 + i * .16).toFixed(2)}"><b>${t}</b><p>${d}</p></div>`).join("")}</div>` },
+      { cap: "Send text, get text back. Everything else in this guide builds on that. Next up: chatbots with memory.",
+        html: `<div class="xv-center"><h1 class="xv-h1" data-at=".05">Send text, get text back.</h1><p class="xv-sub" data-at=".3">Everything else builds on this.</p>
+          <div class="xv-flow" data-at=".55"><span class="xv-pill">Next: Topic 2 · Chatbots with memory</span></div></div>` }
+    ]
+  }
+};
+function xWords(t){ return t.split(/\s+/).length; }
+function xSentences(t){ return (t.match(/[^.!?]+[.!?]+(?=\s|$)/g) || [t]).map(s => s.trim()); }
+function xRender(stage, scene, idx, p){
+  if (stage.dataset.scene !== String(idx)) { stage.innerHTML = `<div class="xv-scene">${scene.html}</div>`; stage.dataset.scene = idx; }
+  stage.querySelectorAll("[data-at]").forEach(el => { const k = Math.min(1, Math.max(0, (p - +el.dataset.at) / .07)); el.style.opacity = k; el.style.transform = `translateY(${((1 - k) * 16).toFixed(1)}px)`; });
+  stage.querySelectorAll("[data-hl]").forEach(el => { const [a, b] = el.dataset.hl.split("-").map(Number); el.classList.toggle("on", p >= a && p < b); });
+}
+/* ---------- explainer player (narrated) ---------- */
+const xSceneDur = s => Math.max(5, xWords(s.cap) / 2.5 + 1.2);
+const XP = { id: null, i: 0, k: 0, t0: 0, playing: false, voiced: false, raf: 0, tok: 0 };
+function explainerCard(id){
+  const x = EXPLAINERS[id]; if (!x) return "";
+  return `<div class="xcard" id="xcard" data-x="${id}"><div class="xcard-head"><h3>🎬 Explainer: ${esc(x.title)} <small style="color:var(--muted);font:400 .8rem var(--body)">· ${x.scenes.length} scenes · about ${Math.round(x.scenes.reduce((a, s) => a + xSceneDur(s), 0) / 60 * 2) / 2} min</small></h3>
+    <div class="xtabs" role="tablist"><button class="on" data-xm="narrated" role="tab">Narrated</button><button data-xm="video" role="tab">Video (MP4)</button></div></div>
+    <div class="xview" id="xview"></div>
+    <div class="xctl" id="xctl"></div></div>`;
+}
+function xStop(){ XP.tok++; XP.playing = false; cancelAnimationFrame(XP.raf); if (XP.voiced && window.__guideVoice) window.__guideVoice.stop(); XP.voiced = false; }
+window.__xvStop = () => { if (XP.playing) { xStop(); xControls(); } };
+function xStage(){ return document.querySelector("#xview .xv-stage"); }
+function xFit(){ const v = $("#xview"), st = xStage(); if (v && st) st.style.transform = `scale(${v.clientWidth / 1280})`; }
+function xShow(p){
+  const x = EXPLAINERS[XP.id], st = xStage(); if (!st) return;
+  const sc = x.scenes[XP.i]; xRender(st.querySelector(".xs"), sc, XP.i, p);
+  const sents = xSentences(sc.cap);
+  st.querySelector(".xv-cap").textContent = sents[Math.min(XP.k, sents.length - 1)];
+  st.querySelector(".xv-num").textContent = `${XP.i + 1} / ${x.scenes.length}`;
+  st.querySelector(".xv-prog").style.width = ((XP.i + Math.min(1, p)) / x.scenes.length * 100) + "%";
+}
+function xControls(){
+  const x = EXPLAINERS[XP.id], c = $("#xctl"); if (!c) return;
+  const mode = document.querySelector(".xtabs .on").dataset.xm;
+  if (mode === "video") { c.innerHTML = `<span class="xinfo" style="margin-left:0">Captions are burned into the video.</span><a href="${x.file}" download>⬇ Download MP4</a>`; return; }
+  c.innerHTML = `<button id="xPrev" ${XP.i ? "" : "disabled"} aria-label="Previous scene">⏮</button>
+    <button class="primary" id="xPlay">${XP.playing ? "⏸ Pause" : XP.i || XP.k ? "▶ Resume" : "▶ Play"}</button>
+    <button id="xNext" ${XP.i < x.scenes.length - 1 ? "" : "disabled"} aria-label="Next scene">⏭</button>
+    <span class="xinfo">${XP.playing ? (XP.voiced ? "🔊 narrating" : "captions only") : "Voice: picked in 🎧 Listen settings"}</span>`;
+  $("#xPrev").onclick = () => xGo(XP.i - 1); $("#xNext").onclick = () => xGo(XP.i + 1);
+  $("#xPlay").onclick = () => XP.playing ? (xStop(), xShow(1), xControls()) : xPlay(XP.i);
+}
+function xGo(i){ const was = XP.playing; xStop(); XP.i = i; XP.k = 0; if (was) xPlay(i); else { xShow(1); xControls(); } }
+function xLoop(tok){
+  if (tok !== XP.tok) return;
+  const sc = EXPLAINERS[XP.id].scenes[XP.i], el = (performance.now() - XP.t0) / 1000, dur = xSceneDur(sc) / XP.rate;
+  if (!XP.voiced) {
+    const sents = xSentences(sc.cap), w = sents.map(xWords), W = w.reduce((a, b) => a + b, 0);
+    let acc = 0; XP.k = sents.length - 1; for (let k = 0; k < sents.length; k++) { acc += w[k] / W; if (el / dur <= acc) { XP.k = k; break; } }
+    if (el >= dur) { if (XP.i < EXPLAINERS[XP.id].scenes.length - 1) { XP.i++; XP.k = 0; XP.t0 = performance.now(); xControls(); } else { xShow(1); xStop(); XP.i = 0; XP.k = 0; xControls(); return; } }
+  }
+  xShow(Math.min(XP.voiced ? .96 : 1, el / dur));
+  XP.raf = requestAnimationFrame(() => xLoop(tok));
+}
+function xPlay(from){
+  const x = EXPLAINERS[XP.id]; xStop(); window.__guideStopNarration && window.__guideStopNarration();
+  const tok = XP.tok, V = window.__guideVoice;
+  XP.i = from; XP.k = 0; XP.t0 = performance.now(); XP.playing = true; XP.rate = V ? V.rate() : 1;
+  XP.voiced = !!(V && V.available());
+  if (XP.voiced) {
+    const lines = []; x.scenes.slice(from).forEach((s, j) => xSentences(s.cap).forEach((t, k) => lines.push({ text: t, id: `${from + j}:${k}` })));
+    V.speakLines(lines, id => {
+      if (tok !== XP.tok) return; const [i, k] = id.split(":").map(Number);
+      if (i !== XP.i) { XP.i = i; XP.t0 = performance.now(); xControls(); } XP.k = k;
+    }).then(() => { if (tok !== XP.tok) return; xShow(1); XP.voiced = false; xStop(); XP.i = 0; XP.k = 0; xControls(); })
+      .catch(() => { if (tok !== XP.tok) return; XP.voiced = false; XP.t0 = performance.now(); xControls(); /* fall back to captions only */ });
+  }
+  xControls(); xLoop(tok);
+}
+function xMode(mode){
+  xStop(); const x = EXPLAINERS[XP.id], v = $("#xview");
+  document.querySelectorAll(".xtabs button").forEach(b => b.classList.toggle("on", b.dataset.xm === mode));
+  if (mode === "video") v.innerHTML = `<video controls preload="metadata" playsinline src="${x.file}"></video>`;
+  else {
+    v.innerHTML = `<div class="xv-stage"><div class="xs"></div><div class="xv-num"></div><div class="xv-cap"></div><div class="xv-prog"></div></div><button class="xstart" id="xStart" aria-label="Play the narrated explainer"><span>▶ Play narrated explainer</span></button>`;
+    xFit(); XP.i = 0; XP.k = 0; xShow(1);
+    $("#xStart").onclick = e => { e.currentTarget.remove(); xPlay(0); };
+  }
+  xControls();
+}
+function bindExplainer(){
+  const c = $("#xcard"); if (!c) { xStop(); return; }
+  XP.id = c.dataset.x; xMode("narrated");
+  document.querySelectorAll(".xtabs button").forEach(b => b.onclick = () => xMode(b.dataset.xm));
+  if (!window.__xvRO) { window.__xvRO = new ResizeObserver(xFit); } window.__xvRO.disconnect(); window.__xvRO.observe($("#xview"));
+}
+
 function render(){
   renderTabs();
   stopMolecules();
+  if (typeof xStop === "function") xStop();
   $(".progress").hidden = view !== "topic";
   if (view === "concepts") return renderConcepts();
   if (view === "projects") return renderProjects();
@@ -2687,7 +2921,7 @@ function render(){
   $("#lede").textContent = current.intro;
   const s = current;
   let h = `<div class="section"><div class="toolbar"><div><span class="eyebrow">Topic ${SESSIONS.indexOf(s) + 1}</span><h2>${esc(s.title)}</h2></div>
-    <button class="linkbtn" id="expandAll">Expand all</button></div>` + (s.start ? startView(s.start) : "");
+    <button class="linkbtn" id="expandAll">Expand all</button></div>` + explainerCard(s.id) + (s.start ? startView(s.start) : "");
   s.lessons.forEach((l, i) => { h += lessonCard(l, i, s.id + ":" + i); });
   h += `</div>`;
 
@@ -2712,6 +2946,7 @@ function render(){
   $("#main").innerHTML = h;
   bindNotebook();
   bind();
+  bindExplainer();
   progress();
 }
 
@@ -4728,6 +4963,7 @@ function speakNext(tok) {
 }
 function start(ui, keepAll) {
   if (!synth && !usingClaude()) return;
+  window.__xvStop && window.__xvStop();
   N.units = unitList(); if (!N.units[ui]) return;
   if (!keepAll) N.playAll = false;
   N.token++; synth && synth.cancel();
@@ -5030,7 +5266,7 @@ $id("chatMic").onclick = () => {
   claude.use("tts").then(t => {
     if (!t) return;
     tts = t; loadVoices();
-    t.onLine(({ id }) => { if (usingClaude() && N.playing && id != null) { N.idx = +id; highlightItem(+id); } });
+    t.onLine(({ id }) => { if (typeof id === "string" && id.startsWith("xv")) { xvLine && xvLine(id.slice(2)); return; } if (usingClaude() && N.playing && id != null) { N.idx = +id; highlightItem(+id); } });
     t.onState(({ state, reason }) => {
       if (state === "idle" && usingClaude() && N.playing && (reason === "viewer_stopped" || reason === "hidden" || reason === "time_limit")) { N.playing = false; N.paused = false; updateUI(); }
     });
@@ -5246,6 +5482,33 @@ Saving notes: this page has a private "My notes" tab. When the learner asks you 
 const NOTES_RULES_NO_TOOLS = `
 Saving notes: this page has a private "My notes" tab. If the learner asks you to save something, tell them to tap "⭐ Save" under an answer, or the ⭐ button at the top of the panel to save the whole chat.`;
 initNotes();
+
+/* voice for the explainer player: Claude voice or the device voice picked in Listen settings */
+let xvLine = null, xvTok = 0;
+window.__guideStopNarration = () => { if (N.playing) stopAll(); };
+window.__guideVoice = {
+  available: () => usingClaude() || (!!synth && voices.length > 0),
+  rate: () => +$id("nRate").value,
+  stop() { xvTok++; xvLine = null; synth && synth.cancel(); if (tts && tts.active()) tts.stop().catch(() => {}); },
+  speakLines(lines, onLine) {
+    const tok = ++xvTok;
+    if (usingClaude()) { xvLine = id => { if (tok === xvTok) onLine(id); }; return tts.speak(lines.map(l => ({ text: l.text, id: "xv" + l.id })), { rate: +$id("nRate").value }); }
+    synth.cancel();
+    return new Promise((res, rej) => {
+      let i = 0;
+      const next = () => {
+        if (tok !== xvTok) return rej({ code: "stopped" });
+        if (i >= lines.length) return res();
+        const l = lines[i++], u = new SpeechSynthesisUtterance(speakable(l.text)), v = selectedVoice();
+        if (v) u.voice = v; u.rate = +$id("nRate").value;
+        u.onstart = () => tok === xvTok && onLine(l.id);
+        u.onend = () => setTimeout(next, 180); u.onerror = e => { if (tok === xvTok && e.error !== "interrupted" && e.error !== "canceled") rej(e); };
+        synth.speak(u);
+      };
+      next();
+    });
+  }
+};
 window.__guideTutor = { N, unitList, buildItems, focusInfo, instructions, addNote, notes, renderMd };   // for testing
 })();
 
