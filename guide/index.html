@@ -914,6 +914,27 @@ table.ev-reg tr.fixd td{background:var(--ok-soft)}
 .xv-cap{position:absolute;left:72px;right:72px;bottom:30px;min-height:64px;display:flex;align-items:center;justify-content:center;text-align:center;font:500 25px/1.35 "IBM Plex Sans",sans-serif;color:#fff;background:rgba(23,26,33,.86);border-radius:14px;padding:12px 22px}
 .xv-prog{position:absolute;left:0;bottom:0;height:6px;background:#3a4fd6}
 .xv-num{position:absolute;right:28px;top:22px;font:500 16px "IBM Plex Mono",monospace;color:#5b6170}
+
+.xv-bub{font-size:22px;padding:12px 16px;border-radius:14px;max-width:92%}
+.xv-bub.u{align-self:flex-end;background:#3a4fd6;color:#fff}
+.xv-bub.a{align-self:flex-start;background:#eceef3}
+.xv-card.bad .xv-bub.a{background:#fff;border:2px solid #c2410c;color:#c2410c}
+.xv-step.row{flex-direction:row;align-items:center;gap:14px;padding:12px 18px;font-size:22px}
+.xv-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.xv-ic{font:19px "IBM Plex Mono",monospace;color:#3a4fd6}
+.xv-roles{display:flex;flex-direction:column;gap:14px}
+.xv-role{display:grid;grid-template-columns:240px 1fr;grid-template-rows:auto auto;column-gap:22px;row-gap:4px;background:#fff;border:2px solid #d9dce4;border-radius:14px;padding:16px 22px;transition:background .2s,border-color .2s}
+.xv-role code{grid-row:span 2;align-self:center;font:600 24px "IBM Plex Mono",monospace;color:#3a4fd6}
+.xv-role span{font:600 24px "Space Grotesk",sans-serif}
+.xv-role i{font-size:20px;color:#5b6170}
+.xv-role.on{border-color:#3a4fd6;background:#e3e7fb;box-shadow:0 6px 0 #3a4fd6}
+.xv-bars{position:relative;display:flex;align-items:flex-end;gap:22px;height:290px;padding:0 10px;margin-bottom:22px;border-bottom:2px solid #d9dce4}
+.xv-bar{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.xv-bar span{width:100%;background:#3a4fd6;border-radius:8px 8px 0 0;opacity:.85}
+.xv-bar small{font:16px "IBM Plex Mono",monospace;color:#5b6170;margin-bottom:-28px}
+.xv-limit{position:absolute;left:0;right:0;top:12px;border-top:3px dashed #c2410c;font:600 18px "IBM Plex Mono",monospace;color:#c2410c;text-align:left;padding-top:4px}
+.xv-chain{display:flex;align-items:center;gap:16px}
+.xv-list.sm{font-size:20px;gap:8px}
 /* explainer card */
 .xcard{margin:18px 0 6px;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
 .xcard-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
@@ -2824,6 +2845,72 @@ resp = gemini.models.generate_content(
           <div class="xv-flow" data-at=".55"><span class="xv-pill">Next: Topic 2 · Chatbots with memory</span></div></div>` }
     ]
   }
+};
+EXPLAINERS["chatbots"] = {
+  title: "Basic Chatbots", file: "assets/explainer-chatbots.mp4",
+  scenes: [
+    { cap: "Basic chatbots. How a stateless model becomes something that remembers you, and how a system prompt gives it a job.",
+      html: `<div class="xv-center"><span class="xv-eyebrow" data-at=".02">AI Engineering Guide · Topic 2</span><h1 class="xv-h1" data-at=".08">Basic Chatbots</h1>
+        <div class="xv-flow" data-at=".35"><span class="xv-pill">memory</span><span class="xv-pill">roles</span><span class="xv-pill">history & cost</span><span class="xv-pill ok">system prompts</span></div>
+        <p class="xv-sub" data-at=".6">A loop, a list, and a job description.</p></div>` },
+    { cap: "First surprise: models have no memory. Every API call starts fresh. Tell it your name, then ask in a new call, and it has no idea. The memory you see in chat apps is created by software around the model.",
+      html: `<h2 class="xv-h2" data-at=".02">Models have no memory</h2>
+        <div class="xv-two"><div class="xv-card" data-at=".14"><span class="xv-tag">Call 1</span><div class="xv-bub u">Hi! My name is Sam and I teach AI.</div><div class="xv-bub a" data-at=".22">Nice to meet you, Sam!</div></div>
+        <div class="xv-card bad" data-at=".34"><span class="xv-tag bad">Call 2 · no history sent</span><div class="xv-bub u">What's my name, and what do I do?</div><div class="xv-bub a" data-at=".44">I don't know your name. You haven't told me yet.</div></div></div>
+        <p class="xv-note" data-at=".66">Every call starts fresh. “Memory” is software around the model.</p>` },
+    { cap: "So a chatbot is a loop plus a history list. Add the user's message. Send the whole conversation. Get the reply. Save the reply. Then repeat.",
+      html: `<h2 class="xv-h2" data-at=".02">A chatbot is a loop plus a history list</h2>
+        <div class="xv-gw"><div class="xv-col" style="flex:0 0 430px">${["Add the user's message", "Send the whole conversation", "Get the reply", "Save the reply", "Repeat ↺"].map((t, i) => `<div class="xv-step row" data-at="${(.12 + i * .05).toFixed(2)}" data-hl="${(.18 + i * .16).toFixed(2)}-${(.34 + i * .16).toFixed(2)}"><b>${i + 1}</b>${t}</div>`).join("")}</div>
+        <pre class="xv-code" data-at=".1" style="flex:1">history = []
+while True:
+<span data-hl=".18-.34">    history.append({"role": "user", "content": input()})</span>
+<span data-hl=".34-.50">    resp = client.chat.completions.create(</span>
+<span data-hl=".34-.50">        model=MODEL, messages=history)</span>
+<span data-hl=".50-.66">    reply = resp.choices[0].message.content</span>
+<span data-hl=".66-.82">    history.append({"role": "assistant", "content": reply})</span></pre></div>` },
+    { cap: "That history can live in three places. The SDK can keep it, like Gemini's chats dot create. The server can keep it, like OpenAI's previous response ID. Or you keep it yourself in a list, as with Claude and Groq, which gives you full control.",
+      html: `<h2 class="xv-h2" data-at=".02">Memory can live in three places</h2>
+        <div class="xv-grid3">${[["SDK-managed", "Gemini", "chats.create(…)", "The SDK keeps it for you."], ["Server-managed", "OpenAI", "previous_response_id", "Stored on OpenAI's servers."], ["Self-managed", "Claude · Groq", "messages = [ … ]", "Your list: full control."]].map(([t, p, c, d], i) => `<div class="xv-card${i === 2 ? " ok" : ""}" data-at="${(.14 + i * .2).toFixed(2)}"><span class="xv-tag${i === 2 ? " ok" : ""}">${p}</span><b>${t}</b><code class="xv-ic">${c}</code><p>${d}</p></div>`).join("")}</div>
+        <p class="xv-note" data-at=".8">Real products usually self-manage, so they can save, edit or trim history.</p>` },
+    { cap: "Roles structure the conversation. System sets the bot's job and tone. User is the human. Assistant is the AI, which Gemini calls model. Getting the roles right is how you control behaviour.",
+      html: `<h2 class="xv-h2" data-at=".02">Roles structure a conversation</h2>
+        <div class="xv-roles">${[["system", "sets the bot's job and tone", "You are a friendly fitness coach."], ["user", "the human", "What should I eat before a workout?"], ["assistant", "the AI (Gemini calls it “model”)", "A banana with peanut butter, 30–60 min before…"]].map(([r, d, ex], i) => `<div class="xv-role r${i}" data-at="${(.14 + i * .18).toFixed(2)}" data-hl="${(.14 + i * .18).toFixed(2)}-${(.32 + i * .18).toFixed(2)}"><code>"role": "${r}"</code><span>${d}</span><i>“${ex}”</i></div>`).join("")}</div>` },
+    { cap: "History costs money. Each turn resends everything, so long chats use more tokens, cost more, run slower, and can hit the context limit. Production chatbots summarise or trim old messages.",
+      html: `<h2 class="xv-h2" data-at=".02">History costs money</h2>
+        <div class="xv-bars">${[1, 2, 3, 4, 5, 6, 7, 8].map(n => `<div class="xv-bar" data-at="${(.08 + n * .045).toFixed(2)}"><span style="height:${n * 28}px"></span><small>turn ${n}</small></div>`).join("")}<div class="xv-limit" data-at=".5">context limit</div></div>
+        <div class="xv-chips" data-at=".64"><span>Each turn resends everything →</span><i>more tokens</i><i>more cost</i><i>slower</i><i>context limit</i></div>
+        <p class="xv-note" data-at=".78">Fix: summarise or trim old messages.</p>` },
+    { cap: "The pattern is the same everywhere, but the details differ. Each platform reads the reply from a different place, Claude requires max tokens, and a reply can hold several blocks, like thinking plus text. A small helper hides the differences.",
+      html: `<h2 class="xv-h2" data-at=".02">Same pattern, different details</h2>
+        <div class="xv-table">${[["Platform", "Read the reply", "Watch out"], ["Gemini", "chat.send_message(…).text", "history kept by the SDK"], ["OpenAI / Groq", "choices[0].message.content", "role: assistant"], ["Claude", "content[-1].text", "max_tokens; several blocks"]].map((r, i) => `<div class="xv-tr ${i ? "" : "th"}" data-at="${(.12 + i * .13).toFixed(2)}">${r.map(c => `<span>${c}</span>`).join("")}</div>`).join("")}</div>
+        <p class="xv-note" data-at=".76">A small helper function hides these differences.</p>` },
+    { cap: "Linking turns correctly matters. In the notebook, turn three linked back to turn one, so turn two was skipped and its context was lost. Always link to the latest response. Many chatbot failures are really context failures.",
+      html: `<h2 class="xv-h2" data-at=".02">Linking turns correctly matters</h2>
+        <div class="xv-chain"><div class="xv-box" data-at=".1"><b>response1</b><small>name, job</small></div><span class="xv-arrow" data-at=".14">→</span><div class="xv-box" data-at=".16"><b>response2</b><small>“What's my name…?”</small></div><span class="xv-arrow" data-at=".2">→</span><div class="xv-box acc" data-at=".22"><b>response3</b><small>“5 students…”</small></div></div>
+        <div class="xv-two"><div class="xv-card bad" data-at=".34"><span class="xv-tag bad">Bug</span><pre class="xv-code sm">previous_response_id=response1.id</pre><p>Skips turn 2: context lost.</p></div>
+        <div class="xv-card ok" data-at=".5"><span class="xv-tag ok">Fix</span><pre class="xv-code sm">previous_response_id=response2.id</pre><p>Always link to the latest turn.</p></div></div>` },
+    { cap: "Now, system prompts. There are two layers of instruction. The system prompt is the bot's permanent job, set by the builder. The user prompt is the question right now. That's how one model becomes a fitness coach, a procurement assistant, or a contract reviewer.",
+      html: `<h2 class="xv-h2" data-at=".02">System prompts: two layers of instruction</h2>
+        <div class="xv-two"><div class="xv-card acc" data-at=".1"><span class="xv-tag acc">System prompt · set by the builder</span><p>The bot's permanent job, rules and style. The user doesn't see it.</p></div>
+        <div class="xv-card" data-at=".24"><span class="xv-tag">User prompt · right now</span><p>The question being asked in this turn.</p></div></div>
+        <div class="xv-gw" data-at=".5"><div class="xv-box acc">one model</div><span class="xv-arrow">→</span><div class="xv-flow">${["🏋️ Fitness coach", "📦 Procurement assistant", "📄 Contract reviewer"].map((t, i) => `<span class="xv-pill" data-at="${(.55 + i * .07).toFixed(2)}">${t}</span>`).join("")}</div></div>` },
+    { cap: "It's the cheapest way to shape behaviour. Format, tone, scope and language are all set in plain English, with no training. Here, one system prompt makes every platform answer in three short bullet points.",
+      html: `<h2 class="xv-h2" data-at=".02">The cheapest way to shape behaviour</h2>
+        <pre class="xv-code" data-at=".1">system = "You are a <span data-hl=".2-.34">friendly</span> fitness coach. Always answer in <span data-hl=".34-.48">3 short bullet points</span>.
+          Always respond in <span data-hl=".48-.62">English</span>."</pre>
+        <div class="xv-two"><div class="xv-card" data-at=".3"><span class="xv-tag">User</span><p style="color:#171a21">What should I eat before a workout?</p></div>
+        <div class="xv-card ok" data-at=".55"><span class="xv-tag ok">Reply (Groq, from your notebook)</span><div class="xv-list sm"><span>• Light carbs + protein (e.g., banana with a spoon of peanut butter) 30–60 min before</span><span>• Stay hydrated: sip water or a low-sugar electrolyte drink</span><span>• Keep portions moderate to avoid feeling heavy</span></div></div></div>` },
+    { cap: "Three cautions. Each platform puts the system prompt in a different place. Rules must not contradict each other, so say which rule wins. And users will try to override it. Asking for Hindi tests whether it holds, and that's where prompt injection starts. Always test on the model you'll actually use.",
+      html: `<h2 class="xv-h2" data-at=".02">Three cautions</h2>
+        <div class="xv-grid3">
+          <div class="xv-card" data-at=".1"><b>Different places</b><div class="xv-list sm mono"><span>Gemini → config</span><span>OpenAI / Groq → "system" message</span><span>Claude → system=</span></div></div>
+          <div class="xv-card" data-at=".3"><b>No contradictions</b><p>“Always English, but follow the user” leaves the model guessing. Say which rule wins.</p></div>
+          <div class="xv-card bad" data-at=".5"><b>Users push back</b><p>“Answer in Hindi.” → “Ignore your instructions…” This is where prompt injection starts.</p></div></div>
+        <p class="xv-note" data-at=".78">Models obey differently: test on the model you'll actually ship.</p>` },
+    { cap: "A chatbot's quality depends on the model and on the context you give it. Memory, system prompts, history limits and cost are product decisions, not just engineering. Next up: tool calling and structured outputs.",
+      html: `<div class="xv-center"><h1 class="xv-h1" data-at=".05" style="font-size:54px">Quality = model + context</h1><p class="xv-sub" data-at=".25">Memory, system prompts, history limits and cost are product decisions.</p>
+        <div class="xv-flow" data-at=".6"><span class="xv-pill">Next: Topic 3 · Tool calling & structured outputs</span></div></div>` }
+  ]
 };
 function xWords(t){ return t.split(/\s+/).length; }
 function xSentences(t){ return (t.match(/[^.!?]+[.!?]+(?=\s|$)/g) || [t]).map(s => s.trim()); }
